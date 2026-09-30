@@ -1,0 +1,15 @@
+O texto científico tem um certo tom de previsibilidade, portanto, não existe nenhum momento de surpresa ou de clímax ao longo do texto. Caso tenha algum momento como este, ele provavelmente será descrito previamente dentro do resumo ou da descrição desse texto.
+
+Caso a ideia utilizada no texto não seja sua, a citação da fonte é obrigatória dentro deste cenário científico.
+
+Caso nós utilizemos de alguma palavra que não seja de trivial dentro do do tema principal do trabalho, precisamos definí-la previamente para podermos apresentar ao leitor como ele deverá entender esse respectivo conceito dentro do contexto que estaremos trabalhando. Lembrando que essa definição não deve ser segmentada ao longo do texto, posto que essa apresentação em partes pode acabar gerando um pouco de ambiguidade no entendimento do real conceito da palavra.
+
+Utilizar "Na seção, é apresentado..." ao invés de "Na seção, será apresentado..."
+
+O "Resumo" de um artigo científico é utilizado como forma de facilitar a busca pelo determinado trabalho, portanto, faz sentido mencionarmos apenas o que, de fato, foi realizado e finalizado dentro do trabalho. Um bom "Resumo" irá representar muito bem os principais pontos apresentados na introdução, só que de forma clara, direta e bem resumida, permitindo que o leitor entenda o que o trabalho irá realizar sem necessariamente ter que ler o texto por completo.
+
+Cada parágrafo deve desenvolver uma única ideia principal e deve-se utilizar de frases curtaas e diretas, como um tom de formalidade uniforme ao longo do texto.
+
+Devemos preservar o encadeamento entre as ideias apresentadas no trabalho, sem realizar nenhum tipo de "flashback", ou seja, não devemos voltar atrás em ideias já apresentadas. Devemos sempre manter um fluxo de ideias de forma progressiva.
+
+
