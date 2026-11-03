@@ -1,0 +1,96 @@
+{
+  "question": "Q4 - Teste ANOVA: custos de materiais",
+  "data_file": "data/data9.xls",
+  "groups": {
+    "quimica": "cursos com código CHEM*",
+    "ciencia_da_computacao": "cursos com código COMP*",
+    "matematica": "cursos com código MATH*"
+  },
+  "group_sizes": {
+    "quimica": 10,
+    "ciencia_da_computacao": 10,
+    "matematica": 10
+  },
+  "group_means": {
+    "quimica": 146.7,
+    "ciencia_da_computacao": 182.4,
+    "matematica": 161.5
+  },
+  "group_medians": {
+    "quimica": 140.0,
+    "ciencia_da_computacao": 178.0,
+    "matematica": 143.0
+  },
+  "group_stds": {
+    "quimica": 49.995666478872614,
+    "ciencia_da_computacao": 52.256206436279996,
+    "matematica": 39.699566188505834
+  },
+  "assumption_checks": {
+    "alpha": 0.05,
+    "normality": {
+      "quimica": {
+        "test": "Shapiro-Wilk",
+        "statistic": 0.8956866767753677,
+        "pvalue": 0.19633123193040736,
+        "reject_normality": false
+      },
+      "ciencia_da_computacao": {
+        "test": "Shapiro-Wilk",
+        "statistic": 0.885866789698749,
+        "pvalue": 0.15226819310286133,
+        "reject_normality": false
+      },
+      "matematica": {
+        "test": "Shapiro-Wilk",
+        "statistic": 0.8491317967328207,
+        "pvalue": 0.056723214950282076,
+        "reject_normality": false
+      }
+    },
+    "levene_center_mean": {
+      "statistic": 0.058038426544431344,
+      "pvalue": 0.9437310810174127
+    }
+  },
+  "hypotheses": {
+    "H0": "mu_quimica = mu_ciencia_da_computacao = mu_matematica",
+    "Ha": "ao menos um par de médias difere"
+  },
+  "anova_table": {
+    "grand_mean": 163.53333333333333,
+    "between": {
+      "ss": 6434.466666666672,
+      "df": 2,
+      "ms": 3217.233333333336
+    },
+    "within": {
+      "ss": 61257.0,
+      "df": 27,
+      "ms": 2268.777777777778
+    },
+    "total": {
+      "ss": 67691.46666666667,
+      "df": 29
+    },
+    "F": 1.4180469170870278,
+    "pvalue": 0.25965356971440023,
+    "eta_squared": 0.09505580220845175
+  },
+  "anova_statistic": 1.4180469170870267,
+  "anova_df": [
+    2,
+    27
+  ],
+  "anova_pvalue": 0.25965356971440057,
+  "alpha": 0.01,
+  "f_critical": 5.4881177684207,
+  "decision": "Não rejeitar H0",
+  "reject_h0": false,
+  "kruskal_wallis_check": {
+    "statistic": 2.6901825467497766,
+    "pvalue": 0.2605159286067697
+  },
+  "conclusion": "Ao nível de 1%, os dados não fornecem evidência suficiente para concluir que os custos médios dos materiais nas três disciplinas não são todos iguais; as diferenças entre as médias amostrais são compatíveis com a variação entre cursos de uma mesma disciplina.",
+  "figure": "resultados/q4_custos.png"
+}

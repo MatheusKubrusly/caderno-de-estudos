@@ -1,0 +1,146 @@
+{
+  "question": "Q3 - Teste ANOVA: categorias de carros",
+  "data_source": "Listagem 1 do enunciado (Consumer Reports, abril de 1993)",
+  "group_sizes": {
+    "compactos": 16,
+    "medios": 22,
+    "grandes": 20
+  },
+  "group_means": {
+    "compactos": 22.5,
+    "medios": 19.545454545454547,
+    "grandes": 17.75
+  },
+  "group_stds": {
+    "compactos": 2.0330600909302543,
+    "medios": 1.8955404488096772,
+    "grandes": 1.51744244666721
+  },
+  "group_variances": {
+    "compactos": 4.133333333333334,
+    "medios": 3.5930735930735924,
+    "grandes": 2.3026315789473686
+  },
+  "normality_alpha": 0.05,
+  "normality_tests": {
+    "compactos": {
+      "shapiro_wilk": {
+        "statistic": 0.9143226546152333,
+        "pvalue": 0.13663509619038716,
+        "reject_normality": false
+      },
+      "dagostino_pearson": {
+        "statistic": 2.8809469314406724,
+        "pvalue": 0.2368156080620218,
+        "reject_normality": false,
+        "small_sample_note": true
+      }
+    },
+    "medios": {
+      "shapiro_wilk": {
+        "statistic": 0.959002295686875,
+        "pvalue": 0.4693782868434166,
+        "reject_normality": false
+      },
+      "dagostino_pearson": {
+        "statistic": 1.0995184855117015,
+        "pvalue": 0.5770887319493625,
+        "reject_normality": false,
+        "small_sample_note": false
+      }
+    },
+    "grandes": {
+      "shapiro_wilk": {
+        "statistic": 0.9363201897187287,
+        "pvalue": 0.2041279230721177,
+        "reject_normality": false
+      },
+      "dagostino_pearson": {
+        "statistic": 0.46551788426093577,
+        "pvalue": 0.7923445513945244,
+        "reject_normality": false,
+        "small_sample_note": false
+      }
+    }
+  },
+  "levene_center": "mean",
+  "levene_statistic": 1.7384688225141927,
+  "levene_pvalue": 0.18530915655762165,
+  "levene_decision": "Não rejeitar H0 (variâncias iguais)",
+  "levene_median_check": {
+    "statistic": 1.5446135623790822,
+    "pvalue": 0.2225076820121474
+  },
+  "max_min_std_ratio": 1.3397938718503004,
+  "alpha": 0.05,
+  "hypotheses": {
+    "H0": "mu_compactos = mu_medios = mu_grandes",
+    "Ha": "ao menos um par de médias difere"
+  },
+  "anova_table": {
+    "grand_mean": 19.74137931034483,
+    "between": {
+      "ss": 201.91614420062695,
+      "df": 2,
+      "ms": 100.95807210031347
+    },
+    "within": {
+      "ss": 181.20454545454544,
+      "df": 55,
+      "ms": 3.2946280991735533
+    },
+    "total": {
+      "ss": 383.1206896551724,
+      "df": 57
+    },
+    "F": 30.6432377377096,
+    "pvalue": 1.142669800129768e-09,
+    "eta_squared": 0.5270301230204025
+  },
+  "anova_statistic": 30.64323773770957,
+  "anova_df": [
+    2,
+    55
+  ],
+  "anova_pvalue": 1.1426698001297829e-09,
+  "f_critical": 3.1649933957687577,
+  "decision": "Rejeitar H0",
+  "reject_h0": true,
+  "tukey_hsd": [
+    {
+      "pair": "compactos - medios",
+      "mean_difference": 2.9545454545454533,
+      "pvalue": 2.152027309010318e-05,
+      "ci95": [
+        1.5180124910404764,
+        4.39107841805043
+      ],
+      "significant_5pct": true
+    },
+    {
+      "pair": "compactos - grandes",
+      "mean_difference": 4.75,
+      "pvalue": 5.48784240272937e-10,
+      "ci95": [
+        3.2835360518422743,
+        6.216463948157726
+      ],
+      "significant_5pct": true
+    },
+    {
+      "pair": "medios - grandes",
+      "mean_difference": 1.7954545454545467,
+      "pvalue": 0.006330927891808558,
+      "ci95": [
+        0.44464712905166826,
+        3.1462619618574252
+      ],
+      "significant_5pct": true
+    }
+  ],
+  "conclusion": "Ao nível de 5%, rejeita-se a hipótese de que as três categorias tenham o mesmo MPG médio: há evidência de que ao menos uma média difere. Pelo teste de Tukey, as três comparações par a par são significativas (compactos > médios > grandes/vans).",
+  "figures": [
+    "resultados/q3_grupos.png",
+    "resultados/q3_qqplots.png"
+  ]
+}

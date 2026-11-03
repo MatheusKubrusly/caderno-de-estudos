@@ -1,0 +1,63 @@
+{
+  "question": "Q1 - Um estilo diferente ajuda?",
+  "data_file": "data/golfe.csv",
+  "columns": {
+    "original_clubs": "Old Score",
+    "new_clubs": "New Score"
+  },
+  "difference_definition": "d = pontuação com taco original - pontuação com taco novo (d > 0 indica menos tacadas com o taco novo)",
+  "n": 75,
+  "mean_original": 74.86666666666666,
+  "mean_new": 72.73333333333333,
+  "mean_difference": 2.1333333333333333,
+  "std_difference": 2.6677925551131443,
+  "standard_error": 0.30805014996733066,
+  "skewness_difference": 0.20412527840549446,
+  "excess_kurtosis_difference": -1.087909296235895,
+  "normality_alpha": 0.05,
+  "normality_test": "Shapiro-Wilk",
+  "normality_statistic": 0.9405579321667655,
+  "normality_pvalue": 0.0015661811593486103,
+  "normality_decision": "Rejeitar H0 (normalidade) ao nível de 5%",
+  "normality_tests": {
+    "shapiro_wilk": {
+      "statistic": 0.9405579321667655,
+      "pvalue": 0.0015661811593486103,
+      "reject_normality": true
+    },
+    "dagostino_pearson": {
+      "statistic": 14.609518483485292,
+      "pvalue": 0.0006723313613392106,
+      "reject_normality": true
+    }
+  },
+  "test": "t-teste pareado (unicaudal à direita)",
+  "alpha": 0.01,
+  "hypotheses": {
+    "H0": "mu_d <= 0 (o taco novo não reduz a pontuação média)",
+    "Ha": "mu_d > 0 (o taco novo reduz a pontuação média)"
+  },
+  "alternative": "greater",
+  "t_statistic": 6.925279320784546,
+  "df": 74,
+  "pvalue": 6.771327131708461e-10,
+  "t_critical": 2.377802049910469,
+  "rejection_region": "t > 2.3778",
+  "scipy_ttest_rel_check": {
+    "statistic": 6.925279320784546,
+    "pvalue": 6.771327131708461e-10
+  },
+  "lower_confidence_bound_99": 1.400851055265787,
+  "ci99_mean_difference": [
+    1.318875576720043,
+    2.9477910899466235
+  ],
+  "wilcoxon_check": {
+    "statistic": 1816.0,
+    "pvalue": 1.3886850736850758e-08
+  },
+  "decision": "Rejeitar H0",
+  "reject_h0": true,
+  "conclusion": "Ao nível de 1%, os dados fornecem evidência de que o novo estilo de taco reduz a pontuação média dos jogadores, ou seja, ajuda no desempenho.",
+  "figure": "resultados/q1_diferencas.png"
+}

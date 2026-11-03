@@ -1,0 +1,100 @@
+{
+  "question": "Q2 - Transmissões: automática versus manual",
+  "data_file": "data/mtcars.csv",
+  "groups": {
+    "automatic": "am = 0",
+    "manual": "am = 1"
+  },
+  "n_automatic": 19,
+  "n_manual": 13,
+  "descriptive_statistics": {
+    "automatic": {
+      "n": 19,
+      "mean": 17.147368421052633,
+      "median": 17.3,
+      "std": 3.833966385561307,
+      "min": 10.4,
+      "q1": 14.95,
+      "q3": 19.2,
+      "max": 24.4
+    },
+    "manual": {
+      "n": 13,
+      "mean": 24.39230769230769,
+      "median": 22.8,
+      "std": 6.166503809353338,
+      "min": 15.0,
+      "q1": 21.0,
+      "q3": 30.4,
+      "max": 33.9
+    }
+  },
+  "normality_alpha": 0.05,
+  "normality_tests": {
+    "automatic": {
+      "shapiro_wilk": {
+        "statistic": 0.9767742645573732,
+        "pvalue": 0.8987357869144041,
+        "reject_normality": false
+      },
+      "dagostino_pearson": {
+        "statistic": 0.026123280859505056,
+        "pvalue": 0.9870232926051986,
+        "reject_normality": false,
+        "small_sample_note": true
+      }
+    },
+    "manual": {
+      "shapiro_wilk": {
+        "statistic": 0.9458036604920002,
+        "pvalue": 0.5362728852251004,
+        "reject_normality": false
+      },
+      "dagostino_pearson": {
+        "statistic": 1.3447018612988142,
+        "pvalue": 0.5105069993746321,
+        "reject_normality": false,
+        "small_sample_note": true
+      }
+    }
+  },
+  "welch_ci95": [
+    -11.280194355040159,
+    -3.2096841874699544
+  ],
+  "ci_parameter": "mu_automatic - mu_manual",
+  "ci_point_estimate": -7.244939271255056,
+  "ci_standard_error": 1.9232021338597203,
+  "ci_t_critical": 2.0981960308491607,
+  "ci_margin_of_error": 4.035255083785102,
+  "test": "t de Welch para duas amostras independentes (unicaudal à direita)",
+  "alpha": 0.05,
+  "hypotheses": {
+    "H0": "mu_manual - mu_automatic <= 0",
+    "Ha": "mu_manual - mu_automatic > 0 (carros manuais têm mpg médio maior)"
+  },
+  "difference_tested": "mean_manual - mean_automatic",
+  "alternative": "greater",
+  "t_statistic": 3.767123145144923,
+  "df": 18.332251638400464,
+  "pvalue": 0.0006868191665355181,
+  "t_critical": 1.7323626027912984,
+  "rejection_region": "t > 1.7324",
+  "scipy_ttest_ind_check": {
+    "statistic": 3.767123145144923,
+    "pvalue": 0.0006868191665355181
+  },
+  "levene_variance_check": {
+    "center": "mean",
+    "statistic": 5.920953829161345,
+    "pvalue": 0.021133448421855095
+  },
+  "decision": "Rejeitar H0",
+  "reject_h0": true,
+  "conclusion": "Ao nível de 5%, há evidência de que os carros com transmissão manual têm, em média, maior rendimento (mpg) do que os carros com transmissão automática.",
+  "figures": [
+    "resultados/q2_boxplot.png",
+    "resultados/q2_histogramas.png",
+    "resultados/q2_qqplot.png"
+  ]
+}

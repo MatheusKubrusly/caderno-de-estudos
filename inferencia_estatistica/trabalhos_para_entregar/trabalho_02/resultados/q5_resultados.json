@@ -1,0 +1,81 @@
+{
+  "question": "Q5 - Teste qui-quadrado de independência",
+  "data_file": "data/treatment.csv",
+  "row_variable": "treatment",
+  "column_variable": "improvement",
+  "n_total": 105,
+  "observed_table": {
+    "not-treated": {
+      "improved": 26,
+      "not-improved": 29
+    },
+    "treated": {
+      "improved": 35,
+      "not-improved": 15
+    }
+  },
+  "row_totals": {
+    "not-treated": 55,
+    "treated": 50
+  },
+  "column_totals": {
+    "improved": 61,
+    "not-improved": 44
+  },
+  "expected_table": {
+    "not-treated": {
+      "improved": 31.952380952380953,
+      "not-improved": 23.047619047619047
+    },
+    "treated": {
+      "improved": 29.047619047619047,
+      "not-improved": 20.952380952380953
+    }
+  },
+  "min_expected_frequency": 20.952380952380953,
+  "all_expected_at_least_5": true,
+  "hypotheses": {
+    "H0": "treatment e improvement são independentes",
+    "Ha": "treatment e improvement são dependentes (há associação)"
+  },
+  "test": "qui-quadrado de independência de Pearson (sem correção de continuidade)",
+  "chi2_statistic": 5.556919794065845,
+  "chi2_cell_contributions": {
+    "not-treated": {
+      "improved": 1.1088638137818465,
+      "not-improved": 1.537288469106651
+    },
+    "treated": {
+      "improved": 1.2197501951600314,
+      "not-improved": 1.691017316017316
+    }
+  },
+  "standardized_residuals": {
+    "not-treated": {
+      "improved": -1.0530260271151166,
+      "not-improved": 1.2398743763408657
+    },
+    "treated": {
+      "improved": 1.1044230145917964,
+      "not-improved": -1.3003912165257483
+    }
+  },
+  "df": 1,
+  "pvalue": 0.018407774251540804,
+  "alpha": 0.05,
+  "chi2_critical": 3.841458820694124,
+  "decision": "Rejeitar H0",
+  "reject_h0": true,
+  "improvement_rate_by_group": {
+    "not-treated": 0.4727272727272727,
+    "treated": 0.7
+  },
+  "phi_coefficient": 0.23005009380082841,
+  "phi_magnitude": "pequena",
+  "yates_correction_check": {
+    "chi2_statistic": 4.6625668947297125,
+    "pvalue": 0.030827072412198585
+  },
+  "conclusion": "Ao nível de 5%, rejeita-se a hipótese de independência: há evidência de associação entre receber o medicamento e apresentar melhora após uma semana. A melhora foi mais frequente entre os tratados (70.0%) do que no grupo de controle (47.3%); pelo coeficiente phi = 0.230, a associação é de magnitude pequena.",
+  "figure": "resultados/q5_contingencia.png"
+}
