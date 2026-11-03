@@ -2,14 +2,14 @@ GCC1625 - Inferência Estatística - Trabalho 02
 Aluno: Matheus Kubrusly de Miranda Montenegro da Silva
 
 VÍDEO DA APRESENTAÇÃO (YouTube, não listado)
-COLE_AQUI_O_LINK_DO_VIDEO
+https://www.youtube.com/watch?v=fyS_4u5t58M
 
 MINUTAGEM INICIAL DE CADA QUESTÃO NO VÍDEO
-Q1 - Um estilo diferente ajuda? ....................... mm:ss
-Q2 - Transmissões: automática versus manual ........... mm:ss
-Q3 - Teste ANOVA: categorias de carros ................ mm:ss
-Q4 - Teste ANOVA: custos de materiais ................. mm:ss
-Q5 - Teste qui-quadrado de independência .............. mm:ss
+Q1 - Um estilo diferente ajuda? ....................... 01:07
+Q2 - Transmissões: automática versus manual ........... 04:36
+Q3 - Teste ANOVA: categorias de carros ................ 08:05
+Q4 - Teste ANOVA: custos de materiais ................. 10:37
+Q5 - Teste qui-quadrado de independência .............. 13:07
 
 COMO EXECUTAR
 1. Instalar as dependências:
