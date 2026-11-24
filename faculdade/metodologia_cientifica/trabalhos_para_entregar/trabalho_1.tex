@@ -1,0 +1,1040 @@
+%=====================================================================
+% T1 - METODOLOGIA CIENTIFICA - CEFET-RJ
+% Modalidade 1: Planejamento de Estudo Primario
+%
+% ARQUIVO UNICO - pronto para colar no Overleaf.
+% As referencias estao embutidas no bloco filecontents abaixo; ao
+% compilar, o Overleaf gera o arquivo referencias.bib sozinho.
+%
+% COMO COMPILAR NO OVERLEAF
+%   1. Novo projeto em branco, cole este arquivo inteiro no main.tex.
+%   2. Menu > Compiler: pdfLaTeX.
+%   3. Compile uma vez, depois "Recompile from scratch" (as citacoes so
+%      aparecem apos a passagem do BibTeX).
+%
+% MARCADORES NO TEXTO
+%   [PREENCHER]  -> dado, numero ou decisao sua
+%   [VERIFICAR]  -> afirmacao que precisa de confirmacao na literatura
+%
+% A entrega final deve usar o template oficial da disciplina
+% (main-planejamento-primario.tex). Transplante as secoes para la.
+%=====================================================================
+
+%---------------------------------------------------------------------
+% REFERENCIAS EMBUTIDAS
+%
+% AVISO: nenhuma entrada abaixo e uma referencia real. Todas sao
+% MARCADORES que descrevem o TIPO de fonte necessaria em cada ponto do
+% texto. Substitua cada uma por um artigo real, localizado por voce,
+% indexado no Scopus, e cujo conteudo voce tenha lido o suficiente para
+% sustentar a afirmacao que o cita.
+%
+% O enunciado exige no minimo DEZ artigos indexados no Scopus.
+% Ha 16 marcadores abaixo, para dar margem.
+%
+% FLUXO: busque no Scopus com as strings indicadas, exporte a entrada
+% BibTeX direto da base, e substitua o marcador MANTENDO A CHAVE.
+%---------------------------------------------------------------------
+
+\begin{filecontents*}[overwrite]{referencias.bib}
+
+@misc{ref:jogos_serios_reabilitacao,
+  title = {[PREENCHER] Jogos serios aplicados a reabilitacao motora},
+  note  = {Busca: ("serious game" OR gamification) AND rehabilitation
+           AND (adherence OR engagement OR motivation)}
+}
+
+@misc{ref:biofeedback_engajamento,
+  title = {[PREENCHER] Biofeedback e engajamento em reabilitacao},
+  note  = {Se nao encontrar evidencia solida, ENFRAQUECA a afirmacao no
+           texto em vez de forcar a citacao.
+           Busca: biofeedback AND rehabilitation AND (engagement OR
+           motivation OR adherence)}
+}
+
+@misc{ref:semg_fundamentos,
+  title = {[PREENCHER] Fundamentos de eletromiografia de superficie},
+  note  = {Pode ser artigo classico da area ou documento de
+           padronizacao (ex.: recomendacoes SENIAM).
+           Busca: "surface electromyography" AND (recommendations OR
+           standards OR fundamentals)}
+}
+
+@misc{ref:semg_facial_clinico,
+  title = {[PREENCHER] sEMG facial em contexto clinico},
+  note  = {Idealmente um artigo que justifique o zigomatico maior como
+           sitio de interesse.
+           Busca: ("facial electromyography" OR "facial sEMG") AND
+           (rehabilitation OR "facial palsy" OR asymmetry)}
+}
+
+@misc{ref:variabilidade_intersessao,
+  title = {[PREENCHER] Variabilidade inter-sessao em sEMG},
+  note  = {REFERENCIA MAIS IMPORTANTE: estabelece que o problema
+           existe. Verifique ESPECIFICAMENTE se a literatura descreve a
+           variabilidade como mudanca de ESCALA de amplitude -- essa e
+           a premissa que sustenta o uso da distancia z-normalizada.
+           Busca: ("surface electromyography" OR sEMG) AND
+           ("inter-session" OR "session-to-session") AND (variability
+           OR calibration OR recalibration)}
+}
+
+@misc{ref:fadiga_semg,
+  title = {[PREENCHER] Fadiga muscular e alteracao do sinal de sEMG},
+  note  = {ATENCAO: muitos artigos tratam de deslocamento ESPECTRAL,
+           que exige sinal bruto. Como sua aquisicao entrega envelope,
+           prefira fonte que trate de alteracao de AMPLITUDE.
+           Busca: (sEMG OR electromyography) AND fatigue AND (amplitude
+           OR "signal decline")}
+}
+
+@misc{ref:recuperacao_motora_semg,
+  title = {[PREENCHER] Alteracao do padrao de sEMG ao longo da
+           recuperacao motora},
+  note  = {REFERENCIA-CHAVE PARA A SECAO 2.5. Sustenta que o sinal muda
+           legitimamente com o progresso terapeutico -- e por isso o
+           sistema precisa de plasticidade, e nao apenas de memoria.
+           Busca: (sEMG OR electromyography) AND (recovery OR
+           "motor learning" OR rehabilitation) AND (longitudinal OR
+           "over time" OR progression)}
+}
+
+@misc{ref:matrix_profile_base,
+  title = {[PREENCHER] Matrix Profile - formulacao original (STAMP)},
+  note  = {Busca: "matrix profile" AND "time series" AND (motif OR
+           discord)}
+}
+
+@misc{ref:matrix_profile_stomp,
+  title = {[PREENCHER] STOMP - atualizacao incremental},
+  note  = {Sustenta a escolha do STOMP pela viabilidade em operacao
+           continua. Busca: STOMP AND "matrix profile" AND (incremental
+           OR streaming)}
+}
+
+@misc{ref:matrix_profile_biosinais,
+  title = {[PREENCHER] Matrix Profile aplicado a biosinais},
+  note  = {Se existir aplicacao a EMG, e citacao obrigatoria: define se
+           sua contribuicao e "aplicacao nova" ou "metodo novo". A
+           ausencia tambem e um achado -- registre no texto.
+           Busca: ("matrix profile" OR "motif discovery") AND
+           (biosignal OR EMG OR physiological OR ECG)}
+}
+
+@misc{ref:aprendizado_continuo,
+  title = {[PREENCHER] Aprendizado continuo - formulacao do problema},
+  note  = {Base conceitual da Secao 2.5: dilema plasticidade x
+           estabilidade, aprendizado sequencial sem acesso completo aos
+           dados anteriores.
+           Busca: ("continual learning" OR "lifelong learning") AND
+           (stability OR plasticity OR sequential)}
+}
+
+@misc{ref:esquecimento_catastrofico,
+  title = {[PREENCHER] Esquecimento catastrofico},
+  note  = {Sustenta o problema que a consolidacao por replay resolve.
+           Busca: "catastrophic forgetting" AND (neural OR incremental
+           OR "continual learning")}
+}
+
+@misc{ref:replay_memoria,
+  title = {[PREENCHER] Replay / memoria episodica em aprendizado
+           continuo},
+  note  = {Sustenta a Secao 4.4. Procure trabalhos sobre selecao de
+           exemplares para o buffer de memoria (a critica ao sorteio
+           uniforme e o que motiva a selecao por motifs).
+           Busca: ("experience replay" OR "episodic memory" OR
+           rehearsal) AND "continual learning" AND (exemplar OR
+           selection)}
+}
+
+@misc{ref:deteccao_drift,
+  title = {[PREENCHER] Deteccao de mudanca de regime / concept drift},
+  note  = {Sustenta a Secao 4.5. Busca: ("concept drift" OR "change
+           point") AND detection AND (stream OR "time series")}
+}
+
+@misc{ref:limiar_adaptativo,
+  title = {[PREENCHER] Limiar adaptativo e deteccao de onset em sEMG},
+  note  = {Busca: sEMG AND ("adaptive threshold" OR "onset detection")}
+}
+
+@misc{ref:jogo_semg_reabilitacao,
+  title = {[PREENCHER] Jogo de reabilitacao controlado por sEMG},
+  note  = {Trabalho relacionado direto. Analise explicitamente COMO ele
+           trata calibracao: e dessa analise que sai sua lacuna.
+           Busca: (sEMG OR electromyography) AND ("serious game" OR
+           "video game") AND rehabilitation AND biofeedback}
+}
+
+@misc{ref:usabilidade_instrumento,
+  title = {[PREENCHER] Instrumento de avaliacao de usabilidade},
+  note  = {Verificar existencia de versao validada em portugues.
+           Busca: (usability OR "user experience") AND (scale OR
+           questionnaire) AND validation}
+}
+
+\end{filecontents*}
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{indentfirst}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usepackage{pgfgantt}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc}
+
+\title{\textbf{EMGInvaders Adaptativo: Aprendizado Contínuo de Perfis de
+Ativação Muscular para Calibração Persistente em um Jogo de
+Reabilitação Baseado em Eletromiografia de Superfície Facial}}
+
+\author{Matheus Kubrusly \and Renato Alves de Sousa \and Gustavo Guedes}
+% [PREENCHER] Confirmar a composicao do grupo do T1. Limite de tres
+% membros, e nao precisa coincidir com a autoria do EMGInvaders.
+
+\date{Centro Federal de Educação Tecnológica Celso Suckow da Fonseca
+(CEFET-RJ)}
+
+\begin{document}
+\maketitle
+
+%---------------------------------------------------------------------
+\begin{abstract}
+\noindent
+Jogos sérios controlados por eletromiografia de superfície (sEMG) são
+usados para tornar sessões de reabilitação mais motivadoras, mas
+esbarram em um obstáculo prático: o sinal muscular registrado muda de
+uma sessão para outra, obrigando a repetir a calibração a cada uso.
+Guardar simplesmente a calibração anterior, porém, não resolve o
+problema, porque em reabilitação o sinal \textit{deve} mudar --- a
+recuperação do paciente altera legitimamente seu padrão de ativação.
+O sistema precisa, portanto, adaptar-se sem descartar o que já
+aprendeu, e precisa distinguir a mudança que é ruído de medição
+daquela que é resultado terapêutico. Este trabalho propõe tratar essa
+questão como um problema de aprendizado contínuo. Propõe-se
+representar cada participante por um conjunto de padrões recorrentes
+de contração extraídos por Matrix Profile, atualizá-lo a cada sessão
+com um mecanismo de consolidação que preserva o histórico, e ajustar o
+limiar de ativação de forma contínua durante a sessão. A avaliação
+planejada compara a proposta com a versão atual do EMGInvaders quanto
+ao tempo de preparação, à retenção do perfil ao longo das sessões, à
+estabilidade da detecção e à usabilidade percebida.
+
+\vspace{0.5em}
+\noindent\textbf{Palavras-chave:} eletromiografia de superfície;
+reabilitação; aprendizado contínuo; Matrix Profile; jogos sérios.
+\end{abstract}
+
+%=====================================================================
+\section{Introdução}
+%=====================================================================
+
+A recuperação de funções motoras após lesões neurológicas ou
+periféricas depende da repetição frequente de exercícios específicos.
+Essa repetição é justamente o que torna o processo cansativo, e a
+desistência do paciente é um obstáculo conhecido ao sucesso do
+tratamento~\cite{ref:jogos_serios_reabilitacao}. Para enfrentar esse
+problema, pesquisadores têm investigado jogos que respondem ao esforço
+muscular do paciente: se o esforço produz efeito visível e imediato na
+tela, o exercício deixa de ser tarefa abstrata e passa a ter retorno
+concreto~\cite{ref:biofeedback_engajamento}.
+
+A eletromiografia de superfície é uma das formas mais comuns de captar
+esse esforço. Ela mede, por eletrodos colocados sobre a pele, a
+atividade elétrica que acompanha a contração
+muscular~\cite{ref:semg_fundamentos}. Por não exigir agulhas nem
+procedimentos invasivos, é adequada ao uso repetido. Aplicada aos
+músculos da face, permite acompanhar quadros como a paralisia facial
+periférica e sequelas de acidente vascular encefálico, nos quais a
+redução da força de contração e a assimetria entre os lados do rosto
+são sinais clínicos relevantes~\cite{ref:semg_facial_clinico}.
+
+É nesse contexto que se insere o EMGInvaders, sistema desenvolvido
+por~\textbf{[PREENCHER: citar o artigo do próprio projeto, se já
+submetido; caso contrário, ``desenvolvido pelos autores'']}. Trata-se
+de um jogo inspirado no Space Invaders, no qual a contração dos
+músculos zigomáticos maiores --- responsáveis por elevar os cantos da
+boca --- controla a ação em tela. O sinal é captado por dois eletrodos,
+um de cada lado do rosto, com eletrodo de referência na testa.
+
+\subsection{Problema}
+
+Sistemas desse tipo enfrentam uma dificuldade que não é de programação,
+mas da natureza do sinal: \textbf{a relação entre o esforço do paciente
+e o valor medido não se mantém estável ao longo do tempo}. Basta que os
+eletrodos sejam recolocados alguns milímetros adiante, que a pele
+esteja mais ou menos hidratada, ou que o paciente esteja mais cansado,
+para que a mesma contração produza leitura
+diferente~\cite{ref:variabilidade_intersessao}.
+
+A consequência prática é direta. O ajuste feito hoje não serve para
+amanhã. A cada sessão é preciso repetir a calibração antes que o jogo
+funcione. Em ambiente clínico, esse tempo compete com o tempo de
+terapia, e quando o preparo consome parcela expressiva da sessão o
+sistema tende a ser abandonado.
+
+Há ainda um segundo efeito, dentro da própria sessão. À medida que o
+músculo se cansa, a amplitude do sinal diminui de forma
+progressiva~\cite{ref:fadiga_semg}. Se o sistema usa valor de corte
+fixo, torna-se gradualmente menos sensível: o paciente precisa se
+esforçar cada vez mais para obter a mesma resposta, justamente quando
+já está fatigado.
+
+\subsection{Por que Guardar a Calibração Não Basta}
+
+Uma solução imediata seria salvar a calibração de cada paciente e
+recarregá-la na sessão seguinte. Essa solução, porém, é inadequada por
+uma razão que é específica do contexto de reabilitação e que orienta
+todo este trabalho.
+
+\textbf{Em reabilitação, o sinal deve mudar.} O objetivo do tratamento
+é que o paciente recupere força e controle motor, e essa recuperação se
+manifesta como alteração progressiva do padrão de
+ativação~\cite{ref:recuperacao_motora_semg}. Um sistema que congela a
+calibração da primeira sessão trabalha contra a própria finalidade
+terapêutica: ele passa a medir o paciente que chegou, e não o paciente
+que está se recuperando.
+
+Surge daí uma tensão que não se resolve escolhendo um dos lados. Se o
+sistema se adapta demais, perde a referência do que já observou e não
+consegue mais reconhecer o participante nem registrar sua evolução. Se
+não se adapta o suficiente, torna-se progressivamente inadequado. Essa
+é exatamente a formulação do dilema entre plasticidade e estabilidade
+estudado em aprendizado contínuo~\cite{ref:aprendizado_continuo}, e é
+por essa razão que a proposta aqui apresentada adota esse referencial
+em vez de tratar o problema como simples persistência de dados.
+
+Há ainda uma dificuldade adicional, e é a mais interessante do ponto de
+vista científico: \textbf{as duas fontes de mudança se confundem}.
+Quando o sinal de hoje difere do de ontem, não é evidente se o eletrodo
+foi recolocado em posição distinta ou se o paciente melhorou. A
+primeira é ruído de medição e deve ser compensada; a segunda é o
+resultado que se deseja medir e deve ser preservada. Um sistema que não
+as separa ou apaga o progresso terapêutico ou o confunde com artefato.
+
+\subsection{Lacuna}
+
+A literatura reconhece a variabilidade do sinal de sEMG como obstáculo.
+A abordagem predominante, contudo, é tratar cada sessão como evento
+isolado: calibra-se do zero, usa-se, descarta-se. A informação
+acumulada em sessões anteriores do mesmo paciente não é
+aproveitada.~\textbf{[VERIFICAR: confirmar pela busca bibliográfica. Se
+houver trabalhos que já acumulem perfil entre sessões, a lacuna deve
+ser reformulada, não forçada.]}
+
+\subsection{Objetivos}
+
+O objetivo geral é propor um mecanismo de aprendizado contínuo de
+perfis de ativação para o EMGInvaders, capaz de reconhecer
+participantes já atendidos, atualizar seu perfil a cada nova sessão sem
+descartar o histórico anterior, e ajustar continuamente o limiar de
+ativação durante o uso.
+
+Objetivos específicos:
+
+\begin{enumerate}
+    \item caracterizar como o sinal de sEMG facial de um mesmo
+    participante varia entre sessões no contexto de uso do EMGInvaders;
+
+    \item propor uma representação de perfil que não dependa da
+    amplitude absoluta do sinal e que, por isso, resista à variação
+    causada por reposicionamento de eletrodos;
+
+    \item propor um mecanismo de atualização de perfil que incorpore
+    informação nova sem apagar a anterior, permitindo acompanhar a
+    evolução do participante ao longo do tratamento;
+
+    \item propor um mecanismo de ajuste contínuo do limiar de ativação,
+    sensível à queda de amplitude provocada pela fadiga;
+
+    \item definir um protocolo de avaliação que compare a proposta com
+    a versão atual do jogo, contemplando medidas objetivas de operação,
+    de retenção do perfil ao longo das sessões e de percepção de uso.
+\end{enumerate}
+
+O restante do texto organiza-se como segue. A Seção~2 apresenta os
+conceitos necessários. A Seção~3 discute trabalhos próximos e delimita
+a lacuna. A Seção~4 descreve a metodologia. A Seção~5 apresenta o plano
+de avaliação. A Seção~6 reúne contribuições esperadas, limitações e
+cronograma.
+
+%=====================================================================
+\section{Revisão da Literatura}
+%=====================================================================
+
+\subsection{Eletromiografia de Superfície}
+
+Quando o sistema nervoso comanda uma contração, cada unidade motora
+recrutada gera um potencial elétrico que se propaga pelas fibras
+musculares. O eletrodo de superfície capta a soma desses potenciais
+atravessando os tecidos até a pele. O sinal resultante é de baixa
+amplitude e ocupa faixa de frequência que se estende aproximadamente de
+20 a 450~Hz, razão pela qual a amplificação e a filtragem são partes
+essenciais de qualquer sistema de
+aquisição~\cite{ref:semg_fundamentos}.
+
+A aplicação à musculatura facial tem particularidades. Os músculos da
+face são finos, superficiais e próximos uns dos outros, o que aumenta a
+chance de um eletrodo captar atividade de músculos vizinhos ---
+fenômeno conhecido como \textit{crosstalk}. O posicionamento dos
+eletrodos torna-se, assim, mais crítico do que em membros, onde os
+ventres musculares são maiores e mais separados.
+
+\textbf{[PREENCHER]} Descrever a justificativa da montagem adotada no
+EMGInvaders: escolha do zigomático maior bilateral, papel do eletrodo
+de referência na testa e distância entre eletrodos. Este material já
+existe no levantamento anterior do projeto.
+
+\subsection{Fontes de Mudança no Sinal}
+
+Convém distinguir três fontes de mudança, porque cada uma exige
+tratamento diferente e a proposta desta pesquisa depende dessa
+separação.
+
+A primeira é o \textbf{reposicionamento entre sessões}. Recolocar os
+eletrodos altera a distância até as fibras musculares; variações de
+impedância da pele e de temperatura têm efeito
+semelhante~\cite{ref:variabilidade_intersessao}. A evidência disponível
+indica que esses fatores afetam predominantemente a \textbf{escala} do
+sinal --- a amplitude sobe ou desce como um todo --- sem descaracterizar
+o formato da contração, isto é, a sequência de início, sustentação e
+relaxamento.~\textbf{[VERIFICAR: esta é a premissa central do método.
+Precisa estar bem sustentada, pois a Seção~4.3 depende dela.]}
+
+A segunda é a \textbf{fadiga}, que ocorre dentro da sessão. Com o
+prolongamento do esforço, a amplitude decresce progressivamente e o
+conteúdo de frequência se altera~\cite{ref:fadiga_semg}. É mudança
+gradual e, ao contrário do reposicionamento, previsível em direção.
+
+A terceira é a \textbf{recuperação motora}, que ocorre ao longo de
+semanas. À medida que o paciente recupera controle, seu padrão de
+ativação se modifica: contrações tendem a tornar-se mais consistentes,
+mais bem sustentadas e mais simétricas entre os
+lados~\cite{ref:recuperacao_motora_semg}. Diferentemente das duas
+primeiras, esta não é uma perturbação a ser compensada, e sim o efeito
+que o tratamento busca produzir.
+
+A distinção operacional que este trabalho explora é a seguinte: o
+reposicionamento altera predominantemente a \textit{escala} do sinal,
+enquanto a recuperação altera o seu \textit{formato}. Se essa distinção
+se sustentar empiricamente, ela oferece um critério para separar
+compensação de registro clínico.
+
+\subsection{Detecção de Ativação}
+
+Para transformar o sinal em comando de jogo é preciso decidir, a cada
+instante, se houve contração. O procedimento usual extrai o
+\textbf{envelope} do sinal --- versão retificada e suavizada, que
+representa a intensidade da atividade ao longo do tempo --- e compara
+esse valor a um limiar.
+
+A escolha do limiar é o ponto delicado. Um valor fixo é simples, mas
+assume condições constantes. Alternativas adaptativas atualizam o
+limiar a partir de estatísticas recentes do próprio sinal,
+acompanhando mudanças graduais sem intervenção
+manual~\cite{ref:limiar_adaptativo}.
+
+\subsection{Matrix Profile}
+
+O \textit{Matrix Profile} é uma estrutura para análise de séries
+temporais. Dada uma série e um comprimento de janela $m$, associa a
+cada trecho de tamanho $m$ a distância até o trecho mais parecido em
+outra posição da série~\cite{ref:matrix_profile_base}. Dela extraem-se
+dois elementos: os \textit{motifs}, padrões que se repetem,
+correspondentes aos vales do perfil; e os \textit{discords}, trechos
+sem equivalente em nenhum outro ponto, que sinalizam eventos atípicos.
+
+A propriedade decisiva para este trabalho é o uso da \textbf{distância
+$z$-normalizada}. Antes de comparar dois trechos, cada um é
+transformado para média zero e desvio padrão unitário. A comparação
+passa a considerar apenas o \textit{formato} do trecho, ignorando sua
+escala e seu nível médio.
+
+Esse detalhe conecta as Seções~2.2 e 2.4 e fundamenta a proposta. Se o
+reposicionamento de eletrodos se manifesta sobretudo como mudança de
+escala, e se a distância $z$-normalizada é insensível a escala, então
+uma representação construída sobre ela tende a permanecer estável sob
+reposicionamento --- e, ao mesmo tempo, permanece \textit{sensível} a
+alterações de formato, que é como a recuperação motora se manifesta. A
+mesma propriedade que confere robustez ao ruído preserva a
+sensibilidade ao sinal clínico de interesse.
+
+Quanto ao cálculo, o STAMP é a formulação
+original~\cite{ref:matrix_profile_base}. O STOMP reaproveita o cálculo
+da iteração anterior e permite incorporar dados novos de forma
+incremental, sem recomputar
+tudo~\cite{ref:matrix_profile_stomp}. Essa característica viabiliza o
+uso em sistema de operação contínua, e por isso o STOMP é o algoritmo
+adotado.
+
+\subsection{Aprendizado Contínuo}
+
+Aprendizado contínuo trata do problema de incorporar informação nova ao
+longo do tempo sem descartar o que já foi aprendido. A dificuldade
+central é conhecida como \textbf{esquecimento catastrófico}: ao ajustar
+um modelo a dados recentes, o desempenho sobre dados antigos degrada de
+forma abrupta~\cite{ref:esquecimento_catastrofico}. O campo organiza-se
+em torno do compromisso entre \textit{plasticidade}, a capacidade de
+incorporar o novo, e \textit{estabilidade}, a de preservar o
+anterior~\cite{ref:aprendizado_continuo}.
+
+Entre as estratégias propostas, a de interesse direto aqui é o
+\textbf{replay}: manter uma memória com exemplos representativos do que
+já foi observado e reapresentá-los junto aos dados novos durante a
+atualização~\cite{ref:replay_memoria}. A questão prática é como
+selecionar o que entra nessa memória. Estratégias de amostragem
+aleatória garantem representatividade estatística, mas são cegas ao
+conteúdo: podem guardar trechos de repouso e descartar contrações.
+
+A Tabela~\ref{tab:mapeamento} apresenta a correspondência entre os
+conceitos do campo e os elementos do problema tratado neste trabalho.
+Essa correspondência não é meramente terminológica: cada linha
+identifica um mecanismo concreto do sistema proposto, detalhado na
+Seção~4.
+
+\begin{table}[htb]
+\centering
+\caption{Correspondência entre conceitos de aprendizado contínuo e o
+contexto do EMGInvaders.}
+\label{tab:mapeamento}
+\small
+\begin{tabular}{@{}p{3.6cm}p{8.2cm}@{}}
+\toprule
+\textbf{Conceito} & \textbf{Correspondência no EMGInvaders} \\
+\midrule
+Tarefa / regime
+& Uma sessão de um participante, com determinada montagem de eletrodos
+e determinado estágio de recuperação \\
+\addlinespace
+Mudança de regime
+& Reposicionamento dos eletrodos, entre sessões ou durante uma delas \\
+\addlinespace
+Plasticidade
+& Acompanhar a evolução do padrão de ativação ao longo do tratamento \\
+\addlinespace
+Estabilidade
+& Continuar reconhecendo o participante e preservar o registro das
+sessões anteriores \\
+\addlinespace
+Esquecimento
+& Perder a capacidade de reconhecer sessões antigas após atualizações
+sucessivas do perfil \\
+\addlinespace
+Memória de \textit{replay}
+& Conjunto de \textit{motifs} representativos das sessões já
+realizadas \\
+\addlinespace
+Seleção de exemplares
+& Escolha por \textit{motifs} do Matrix Profile, em vez de amostragem
+aleatória \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+O último item merece destaque, por ser o ponto em que as duas
+abordagens se articulam. \textit{Motifs} são, por definição, os trechos
+que mais se repetem em uma série. Selecioná-los para compor a memória
+significa guardar exatamente os padrões característicos de contração
+daquele participante, e não trechos escolhidos ao acaso. A estrutura do
+Matrix Profile fornece, assim, o critério de seleção que o mecanismo de
+replay requer.
+
+\subsection{Jogos Sérios em Reabilitação}
+
+\textbf{[PREENCHER]} Apresentar brevemente o campo: como jogos
+controlados por biosinais têm sido usados em reabilitação, que
+resultados relatam quanto a adesão, e como costumam tratar a
+calibração. Este último ponto prepara a Seção~3.
+
+%=====================================================================
+\section{Trabalhos Relacionados}
+%=====================================================================
+
+\textbf{[PREENCHER: de quatro a seis parágrafos.]} Organize a discussão
+nos quatro eixos abaixo e encerre cada parágrafo apontando o que aquele
+trabalho \textit{não} resolve do problema aqui tratado. A seção precisa
+convergir para a lacuna, e não funcionar como lista de resumos.
+
+\begin{itemize}
+    \item \textbf{Jogos de reabilitação controlados por sEMG.} Como
+    esses sistemas lidam com a calibração? Repetem o procedimento a
+    cada uso? Registram alguma evolução do paciente?
+
+    \item \textbf{Adaptação à variabilidade do sinal.} Trabalhos sobre
+    recalibração, adaptação de domínio ou transferência entre sessões
+    em sEMG. Eles acumulam informação ou apenas se ajustam ao presente?
+
+    \item \textbf{Aprendizado contínuo aplicado a sinais fisiológicos.}
+    Existem aplicações a biosinais? Como tratam o esquecimento?
+
+    \item \textbf{Matrix Profile aplicado a sinais fisiológicos.}
+    Existe aplicação a sEMG? A resposta define se a contribuição aqui é
+    de aplicação ou de método --- e a ausência também é achado que
+    merece registro.
+\end{itemize}
+
+A Tabela~\ref{tab:relacionados} resume a comparação.
+
+\begin{table}[htb]
+\centering
+\caption{Comparação entre os trabalhos analisados e a proposta.}
+\label{tab:relacionados}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Trabalho} & \textbf{Domínio} & \textbf{Perfil} & \textbf{Atualiza} & \textbf{Avaliação} \\
+                  &                  & \textbf{entre sessões} & \textbf{sem esquecer} & \textbf{com usuários} \\
+\midrule
+{[PREENCHER]} & sEMG de membro & Não & Não & Sim \\
+{[PREENCHER]} & sEMG facial    & Não & Não & Não \\
+{[PREENCHER]} & sEMG de membro & Sim & Não & Sim \\
+{[PREENCHER]} & Séries gerais  & Sim & Sim & Não \\
+\midrule
+\textbf{Esta proposta} & \textbf{sEMG facial} & \textbf{Sim} & \textbf{Sim} & \textbf{Sim} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ATENCAO: a ultima linha marca "Sim" em tudo. Isso so se sustenta se
+% as colunas forem criterios honestos, e nao criterios escolhidos para
+% que apenas voce os satisfaca. Se algum trabalho ja atualizar perfil
+% entre sessoes, mantenha o "Sim" dele e reposicione sua contribuicao.
+% Comparativo enviesado e o erro mais facil de uma banca identificar.
+
+\textbf{[PREENCHER]} Encerrar com parágrafo que enuncie a lacuna de
+forma direta, retomando a tabela.
+
+%=====================================================================
+\section{Proposta de Metodologia}
+%=====================================================================
+
+\subsection{Visão Geral}
+
+A arquitetura divide-se em três camadas, apresentadas na
+Figura~\ref{fig:arquitetura}. A divisão responde a uma restrição
+concreta de tempo: o jogo precisa decidir a cada quadro se houve
+contração, ao passo que o reconhecimento do participante, a extração de
+padrões e a consolidação do perfil ocorrem em momentos específicos, sem
+prejuízo da fluidez da interação.
+
+A separação é deliberada. O cálculo do Matrix Profile tem custo
+quadrático no tamanho da série e não caberia no laço do jogo. Situado
+na camada de adaptação, opera em fronteiras de segmento e no
+encerramento da sessão, realimentando a camada online por meio de um
+único valor: o limiar atualizado.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[
+    box/.style={draw, rounded corners=2pt, minimum width=2.9cm,
+                minimum height=0.9cm, align=center, font=\small},
+    mem/.style={draw, rounded corners=2pt, minimum width=2.9cm,
+                minimum height=0.9cm, align=center, font=\small,
+                fill=gray!12},
+    lay/.style={font=\scriptsize\itshape, gray},
+    ar/.style={-{Latex[length=2mm]}, thick},
+    arb/.style={-{Latex[length=2mm]}, thick, dashed}
+]
+
+\node[box] (sensor) {Sensor sEMG\\\scriptsize filtro analógico 20--450\,Hz};
+\node[box, right=1.4cm of sensor] (arduino) {Arduino\\\scriptsize amostragem e envio};
+
+\node[box, below=1.2cm of sensor] (env) {Envelope\\\scriptsize janela deslizante};
+\node[box, right=1.4cm of env] (det) {Detecção\\\scriptsize limiar $\tau_t$};
+\node[box, right=1.4cm of det] (game) {Jogo\\\scriptsize resposta em tela};
+
+\node[box, below=1.6cm of env] (mp) {Matrix Profile\\\scriptsize STOMP};
+\node[mem, right=1.4cm of mp] (perfil) {Memória de perfis\\\scriptsize \textit{motifs} acumulados};
+\node[box, right=1.4cm of perfil] (cons) {Consolidação\\\scriptsize atualização + \textit{replay}};
+
+\draw[ar] (sensor) -- (arduino);
+\draw[ar] (arduino.south) -- ++(0,-0.35) -| (env.north);
+\draw[ar] (env) -- (det);
+\draw[ar] (det) -- (game);
+\draw[ar] (env.south) -- ++(0,-0.5) -| (mp.north);
+\draw[ar] (mp) -- (perfil);
+\draw[ar] (perfil) -- (cons);
+\draw[arb] (cons.south) -- ++(0,-0.5) -| (perfil.south);
+\draw[ar] (cons.north) -- ++(0,0.6) -| (det.south);
+
+\node[lay, left=0.2cm of sensor] {\rotatebox{90}{Aquisição}};
+\node[lay, left=0.2cm of env] {\rotatebox{90}{Online}};
+\node[lay, left=0.2cm of mp] {\rotatebox{90}{Adaptação}};
+
+\end{tikzpicture}
+\caption{Arquitetura proposta. A camada online decide a cada quadro. A
+camada de adaptação extrai padrões, consulta a memória de perfis,
+atualiza-a ao final da sessão (seta tracejada) e devolve o limiar
+atualizado ao detector.}
+\label{fig:arquitetura}
+\end{figure}
+
+\subsection{Aquisição do Sinal}
+
+A aquisição utiliza sensor compatível com o Muscle Sensor v3, baseado
+no amplificador de instrumentação AD8226, conectado a um Arduino Uno.
+Convém registrar com precisão onde ocorre cada etapa do processamento:
+\textbf{a filtragem na faixa de 20 a 450~Hz e a retificação são
+realizadas pelo estágio analógico do próprio sensor}, antes da
+conversão digital. O sinal que chega ao computador já é, portanto, um
+envelope, e não o sinal bruto.
+
+Essa distinção delimita o escopo. Análises dependentes do conteúdo de
+frequência --- como a estimativa de fadiga por deslocamento espectral
+--- exigiriam sinal bruto amostrado a taxas bem mais altas e estão fora
+desta proposta. O envelope permite caracterizar a intensidade e o
+formato temporal das contrações, que é o suficiente aqui.
+
+\textbf{[PREENCHER]} Informar a taxa de amostragem efetiva do sistema
+atual e as restrições que a determinam, no firmware e na comunicação
+serial.
+
+\subsection{Representação do Perfil}
+
+O perfil de um participante é o conjunto de \textit{motifs} extraídos
+de suas sessões anteriores --- os padrões de contração que se repetem
+de forma característica quando aquela pessoa joga. A representação
+guarda, para cada \textit{motif}, a forma $z$-normalizada e, em
+separado, a estatística de amplitude correspondente.
+
+Essa separação entre forma e amplitude é intencional e é o que permite
+tratar de maneira distinta os dois tipos de mudança discutidos na
+Seção~2.2. Como o Matrix Profile compara trechos após normalização,
+duas contrações de mesmo formato são consideradas semelhantes ainda que
+uma tenha amplitude muito maior. A componente de forma tende, assim, a
+permanecer estável sob reposicionamento de eletrodos, enquanto a
+componente de amplitude absorve essa variação e é recalibrada a cada
+sessão.
+
+O funcionamento em uma nova sessão é o seguinte. O sistema registra os
+primeiros segundos de sinal, extrai os padrões presentes e os compara
+com os perfis armazenados. Se a semelhança com algum perfil for
+suficiente, o participante é considerado reconhecido, sua componente de
+forma é reaproveitada e apenas a escala de amplitude é reajustada. Caso
+contrário, executa-se a calibração convencional e cria-se novo perfil.
+
+Três parâmetros precisam ser definidos:
+
+\begin{itemize}
+    \item \textbf{Comprimento da janela $m$.} Deve ser especificado em
+    \textit{segundos}, e o valor em amostras derivado da taxa efetiva.
+    Fixar $m$ em amostras faria seu significado temporal mudar
+    silenciosamente caso a taxa de aquisição fosse alterada.
+    \textbf{[PREENCHER: faixa a testar, por exemplo 1, 2{,}5 e 5
+    segundos.]}
+
+    \item \textbf{Número de \textit{motifs} por perfil.} Define a
+    capacidade da memória. \textbf{[PREENCHER]}
+
+    \item \textbf{Limiar de reconhecimento.} Distância abaixo da qual um
+    participante é considerado reconhecido. É o parâmetro mais sensível
+    da proposta: valor permissivo demais confunde participantes
+    distintos; restritivo demais elimina o benefício, pois ninguém é
+    reconhecido. \textbf{[PREENCHER: como será determinado.]}
+\end{itemize}
+
+\subsection{Consolidação do Perfil entre Sessões}
+
+Ao final de cada sessão, o perfil do participante é atualizado com os
+padrões recém-observados. É nesta etapa que o dilema entre plasticidade
+e estabilidade se manifesta concretamente: substituir o perfil pelos
+dados da sessão mais recente equivale a esquecer as anteriores, o que
+comprometeria tanto o reconhecimento futuro quanto o registro da
+evolução do participante.
+
+Adota-se, por isso, um mecanismo de consolidação por \textit{replay}. O
+perfil atualizado é formado a partir da união dos \textit{motifs} da
+sessão nova com os \textit{motifs} já armazenados, e não apenas dos
+primeiros. Quando a capacidade da memória é atingida, a seleção do que
+permanece observa dois critérios:
+
+\begin{itemize}
+    \item \textbf{Representatividade.} Preferem-se os \textit{motifs}
+    com menor distância no Matrix Profile, isto é, os padrões que mais
+    se repetiram --- e que, portanto, melhor caracterizam a contração
+    típica daquele participante.
+
+    \item \textbf{Cobertura temporal.} Reserva-se parte da memória para
+    \textit{motifs} de sessões antigas, de modo que a atualização não
+    seja dominada pelas sessões recentes. Sem essa reserva, o perfil
+    convergiria gradualmente para o estado atual do participante,
+    perdendo o registro de sua trajetória.
+\end{itemize}
+
+A diferença em relação à amostragem aleatória, comum em mecanismos de
+replay~\cite{ref:replay_memoria}, é que a seleção aqui é informada pelo
+conteúdo. Um sorteio uniforme sobre a sessão guardaria
+predominantemente trechos de repouso, que ocupam a maior parte do
+tempo. A seleção por \textit{motifs} guarda contrações.
+
+\textbf{[PREENCHER]} Definir a proporção da memória reservada a sessões
+antigas e o critério de descarte quando a capacidade é excedida.
+
+\subsection{Detecção de Mudança Durante a Sessão}
+
+O reconhecimento descrito na Seção~4.3 ocorre no início da sessão e
+pressupõe que as condições permaneçam válidas até o fim. Essa
+pressuposição pode falhar: um eletrodo pode se deslocar ou perder
+aderência no decorrer do uso, e a calibração torna-se inválida a partir
+daquele instante.
+
+Propõe-se monitorar essa possibilidade comparando continuamente os
+padrões observados com os do perfil ativo. Um afastamento sustentado
+--- e não um pico isolado, que pode corresponder a artefato pontual ---
+indica mudança de condição~\cite{ref:deteccao_drift}. Detectada a
+mudança, o sistema reancora a escala de amplitude sem descartar a
+componente de forma, uma vez que esta última não deveria ter sido
+afetada por deslocamento de eletrodo.
+
+Esse mecanismo também produz um dado útil ao registro clínico: o
+momento e a frequência das reancoragens indicam problemas de fixação
+dos eletrodos, informação hoje indisponível ao terapeuta.
+
+\subsection{Limiar Adaptativo}
+
+O limiar de ativação $\tau_t$ é atualizado ao longo da sessão por média
+móvel exponencial. A cada instante, a estatística de referência do
+sinal combina-se com o valor anterior, de modo que observações recentes
+pesam mais que antigas:
+
+\begin{equation}
+\mu_t = \alpha\, s_t + (1-\alpha)\,\mu_{t-1},
+\qquad
+\tau_t = \mu_t + k\,\sigma_t,
+\end{equation}
+
+\noindent onde $s_t$ é a estatística observada no instante $t$,
+$\alpha \in (0,1)$ controla a velocidade de adaptação e $k$ define a
+sensibilidade da detecção. Valores maiores de $\alpha$ tornam o sistema
+mais reativo; menores, mais estável.
+
+Há aqui uma decisão que não é técnica, mas clínica. Se o limiar
+acompanhar integralmente a queda de amplitude causada pela fadiga, o
+jogo continuará respondendo bem --- porém a fadiga desaparecerá dos
+dados, e ela é frequentemente aquilo que o terapeuta deseja observar.
+Propõe-se, por isso, restringir $\tau_t$ a uma faixa em torno da
+calibração inicial e \textbf{registrar a deriva observada como dado da
+sessão}, em vez de absorvê-la silenciosamente. O sistema permanece
+utilizável sem ocultar informação clinicamente relevante.
+
+\textbf{[PREENCHER]} Definir a amplitude dessa faixa e discutir a
+escolha com a orientação clínica do projeto.
+
+%=====================================================================
+\section{Proposta de Avaliação Experimental}
+%=====================================================================
+
+\subsection{Delineamento}
+
+A avaliação compara duas condições: a versão atual do EMGInvaders, que
+exige calibração completa a cada sessão, e a versão proposta, com
+perfil consolidado e limiar adaptativo. A versão atual funciona como
+\textit{baseline}.
+
+Cada participante realiza múltiplas sessões separadas por dias. Essa
+característica é indispensável em dois sentidos. Sem intervalo entre
+sessões não ocorre o reposicionamento de eletrodos que produz a
+variabilidade a ser tratada. E sem uma sequência de sessões não é
+possível avaliar se a consolidação preserva o que foi aprendido ---
+questão central da proposta.
+
+\textbf{[PREENCHER]} Número de participantes, critérios de inclusão e
+exclusão, número de sessões por participante, intervalo entre elas e
+controle da ordem de apresentação das condições.
+
+\vspace{0.5em}
+\noindent\textbf{[VERIFICAR --- condição para a execução]} O protocolo
+aprovado sob o Parecer CEP 8.416.967 precisa contemplar dois pontos:
+sessões múltiplas por participante com intervalo de dias, e
+armazenamento de dados vinculados ao participante entre sessões. O
+perfil consolidado exige identificar a pessoa ao longo do tempo, o que
+difere de coleta anônima pontual. Caso o protocolo não cubra esses
+aspectos, é necessária emenda, e o prazo deve constar do cronograma.
+
+\subsection{Métricas}
+
+As métricas planejadas constam da Tabela~\ref{tab:metricas}. Elas
+cobrem quatro aspectos: o custo de preparação, que é o problema de
+partida; a retenção do perfil ao longo das sessões, que verifica se a
+consolidação cumpre seu papel; a qualidade da detecção, para confirmar
+que o ganho de tempo não custou confiabilidade; e a percepção de quem
+usa, determinante para a adoção em contexto de reabilitação.
+
+\begin{table}[htb]
+\centering
+\caption{Métricas planejadas.}
+\label{tab:metricas}
+\small
+\begin{tabular}{@{}p{3.0cm}p{5.6cm}p{3.4cm}@{}}
+\toprule
+\textbf{Aspecto} & \textbf{Métrica} & \textbf{Resultado esperado} \\
+\midrule
+Custo de preparação
+& Tempo entre o início da sessão e o momento em que o jogo se torna
+operacional
+& Menor que o do \textit{baseline} \\
+\addlinespace
+Reconhecimento
+& Proporção de sessões em que o participante é corretamente
+identificado
+& {[PREENCHER]} \\
+\addlinespace
+Retenção
+& Capacidade de reconhecer sessões antigas após sucessivas
+atualizações do perfil
+& Sem degradação sistemática \\
+\addlinespace
+Efeito da consolidação
+& Comparação entre atualização com \textit{replay} e substituição
+simples do perfil
+& Vantagem para o \textit{replay} \\
+\addlinespace
+Confiabilidade
+& Frequência de disparos indevidos ao longo da sessão
+& Não superior ao \textit{baseline} \\
+\addlinespace
+Comportamento sob fadiga
+& Variação da resposta entre o início e o fim da sessão
+& {[PREENCHER]} \\
+\addlinespace
+Usabilidade
+& Escala aplicada ao final de cada sessão
+& {[PREENCHER: definir o instrumento]} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A métrica de \textbf{retenção} merece comentário, por ser a que traduz
+o problema do esquecimento para este contexto. Após o perfil de um
+participante ter sido atualizado pelas sessões 2 a $n$, verifica-se se
+ele ainda reconhece o registro da sessão 1. Degradação progressiva
+indicaria que a consolidação não está preservando o histórico, com duas
+consequências: perda de confiabilidade do reconhecimento e perda do
+registro longitudinal de evolução.
+
+\textbf{[PREENCHER]} Para cada métrica, definir como será medida na
+prática. O tempo até o sistema tornar-se operacional, por exemplo,
+requer critério de parada explícito. Quanto à usabilidade, verificar se
+o instrumento escolhido possui versão validada em português.
+
+\subsection{Análise dos Resultados}
+
+Estudos dessa natureza costumam envolver poucos participantes, o que
+limita o uso de testes que pressupõem distribuição normal. Prevê-se,
+portanto, o uso de testes não paramétricos, acompanhados do relato do
+tamanho do efeito --- mais informativo que a simples significância
+quando a amostra é pequena.
+
+O plano de análise é declarado antes da coleta, de modo a evitar que a
+escolha do teste seja influenciada pelos dados observados.
+
+\textbf{[PREENCHER]} Especificar os testes previstos para cada métrica.
+
+%=====================================================================
+\section{Considerações Finais e Cronograma}
+%=====================================================================
+
+\subsection{Contribuições Esperadas}
+
+Espera-se que o trabalho produza quatro contribuições. A primeira é a
+formulação da calibração inter-sessão em sEMG como problema de
+aprendizado contínuo, com o mapeamento explícito apresentado na
+Tabela~\ref{tab:mapeamento}. A segunda é um mecanismo de seleção de
+exemplares baseado em \textit{motifs}, alternativa informada pelo
+conteúdo à amostragem aleatória usual em replay. A terceira é a
+integração desses mecanismos a um sistema em funcionamento, com
+avaliação em condições de uso. A quarta é um protocolo de avaliação
+replicável, que inclui métricas de retenção adaptadas ao contexto de
+reabilitação.
+
+\subsection{Limitações}
+
+Algumas limitações são conhecidas desde o planejamento e convém
+declará-las.
+
+A amostra tende a ser reduzida e composta por participantes sem a
+condição clínica alvo. Isso restringe especialmente a avaliação do
+componente de plasticidade: sem participantes em recuperação efetiva,
+não é possível observar a alteração de padrão que a proposta pretende
+acompanhar. A avaliação, nesta etapa, limita-se à estabilidade e à
+retenção, ficando a plasticidade como objeto de estudo posterior.
+
+A aquisição restringe-se ao envelope do sinal, o que exclui análises
+baseadas em conteúdo de frequência. A montagem emprega apenas dois
+canais, o que reduz o detalhamento possível da atividade facial. Por
+fim, não se identificou base pública de sEMG facial com múltiplas
+sessões que permitisse validação externa do
+método~\textbf{[VERIFICAR na busca bibliográfica]}.
+
+\subsection{Cronograma}
+
+A Figura~\ref{fig:cronograma} apresenta o cronograma em horizonte de
+seis meses. A regularização ética aparece logo no início e em paralelo
+à revisão porque constitui caminho crítico: sem ela, a coleta em
+múltiplas sessões não pode ocorrer, e a avaliação fica inviabilizada.
+
+\begin{figure}[htb]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{ganttchart}[
+    hgrid, vgrid,
+    x unit=1.6cm,
+    y unit title=0.6cm,
+    y unit chart=0.56cm,
+    title label font=\small,
+    bar label font=\small,
+    group label font=\small\bfseries,
+    milestone label font=\small\itshape,
+    bar/.append style={fill=gray!45},
+    group/.append style={fill=gray!75}
+]{1}{6}
+\gantttitle{Mês}{6} \\
+\gantttitlelist{1,...,6}{1} \\
+
+\ganttgroup{Fundamentação}{1}{2} \\
+\ganttbar{Revisão da literatura}{1}{2} \\
+\ganttbar{Regularização ética}{1}{2} \\
+
+\ganttgroup{Desenvolvimento}{2}{4} \\
+\ganttbar{Instrumentação da aquisição}{2}{3} \\
+\ganttbar{Representação de perfil}{3}{4} \\
+\ganttbar{Consolidação e limiar}{3}{4} \\
+\ganttbar{Integração ao jogo}{4}{4} \\
+
+\ganttgroup{Avaliação}{4}{6} \\
+\ganttbar{Coleta em múltiplas sessões}{4}{5} \\
+\ganttbar{Análise dos resultados}{5}{6} \\
+
+\ganttgroup{Redação}{5}{6} \\
+\ganttbar{Escrita do artigo}{5}{6} \\
+\ganttmilestone{Submissão}{6}
+\end{ganttchart}
+}
+\caption{Cronograma estratégico de execução.}
+\label{fig:cronograma}
+\end{figure}
+
+%=====================================================================
+\bibliographystyle{plain}
+\bibliography{referencias}
+%=====================================================================
+
+%=====================================================================
+\section*{Declaração sobre o Uso de Inteligência Artificial Generativa}
+%=====================================================================
+
+\textbf{[PREENCHER]} Descrever com precisão em que etapas houve uso de
+IA generativa, qual ferramenta, e o que foi verificado pelos autores.
+Declarações genéricas do tipo ``a IA foi usada para revisar o texto''
+são frágeis. As referências bibliográficas, em particular, devem ser
+declaradas como localizadas e conferidas manualmente pelos autores ---
+e precisam de fato tê-lo sido.
+
+\end{document}

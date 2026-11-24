@@ -1,17 +1,17 @@
 # Perfil
 
-Como o Matheus aprende, escrito por ele. As ferramentas do método leem este texto para ajustar o ensino: o modo de cada parte de um estudo, a primeira pergunta da autoconferência, o jeito de explicar, a prioridade da revisão e o próximo passo.
+Este documento representa o perfil de aprendizado do Matheus e também cita alguns de seus principais objetivos. As ferramentas do método de estudo, este proposto pelo plugin ai-tutor, leem este texto para ajustar no ensino e na adaptação das respostas geradas pela IA. Algumas das adaptações estão listadas a seguir: o modo de cada parte de um estudo, a primeira pergunta da autoconferência, o jeito de explicar, a prioridade da revisão e o próximo passo.
 
 Antes de escrever:
 
 - O caderno é público: nada que não deva ser visto por qualquer pessoa.
-- Sem "estilos de aprendizagem" ("sou visual", "sou auditivo"): a pesquisa não confirma que ensinar no estilo declarado melhore o aprendizado. Vale mais descrever situações concretas.
+- Sem "estilos de aprendizagem" ("sou visual", "sou auditivo"): as pesquisas realizadas não confirmam que ensinar no estilo declarado melhore o aprendizado. Vale mais descrever situações concretas.
 - O perfil muda com o tempo. O que funciona se descobre pela reflexão e pelos números, e só vira regra quando o Matheus decide.
 
 ## 1. O que você já domina bem e onde se sente mais fraco, área por área?
 
-- **Ciência da Computação:** estou no 7º período do bacharelado. Já passei por banco de dados, análise e projeto de sistemas, programação web, linguagens de programação e padrões de software.
-- **Desenvolvimento:** tenho prática com front-end e React (cursos e projetos próprios, como o sistema de gestão de caminhões).
+- **O que eu tenho a dizer sobre mim em termos de interesses acadêmicos:** estou cursando meu 7° período do bacharelado, no entanto, estou um pouco atrasado na contagem e, por conta disso, estou sendo contabilizado como um aluno do 4°. Apesar de já ter feito algumas matérias que correspodem a períodos acima, eu ainda estou atrasado em termos de carga horária. Eu gosto muito da área que escolhi para atuar e sempre me vejo feliz estudando a maior parte das coisas que estão presentes dentro desse curso. Apesar disso, eu também costumo apreciar outras áreas e já cogitei muitas vezes em fazer outras graduações que envolvam mais a parte de engenharia/física. Além disso, tenho um interesse muito grande pela a área de pesquisa e eu super me vejo me dedicando a trabalhos que buscam desenvolver algo inovador ou que buscam entender algum fenômeno que nunca antes foi compreendido. Ainda sou muito novo para dizer com o que eu gostaria de trabalhar, mas nunca se sabe ... apesar disso, eu não me vejo trabalhando a minha vida toda para uma empresa apenas sendo um funcionário que produz e entrega tarefas. Eu gostaria muito de poder construir coisas novas ou até mesmo de atuar como professor, podendo contribuir com a vida de outros.
+- **Desenvolvimento:** tenho prática com a parte de front-end, no caso, desenvolvimento web. 
 - **Terminal:** tenho dificuldade de memorizar o significado dos símbolos (redirecionamentos como `>&`, `2>&1`, o que vai dentro das aspas). Entendo quando cada parte é explicada separadamente, mas ainda não monto sozinho.
 - **Matemática e Estatística:** cálculo, álgebra linear, estatística e probabilidade e, agora, inferência estatística.
 - **Idiomas:** quero mais fluência no inglês e mais vocabulário no português; erro com frequência nas vozes verbais. 
