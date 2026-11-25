@@ -136,8 +136,8 @@ A camada de adaptação opera fora do laço do jogo: no início da sessão, ela 
 \node[box, right=of arduino] (det) {Detecção\\limiar adaptativo};
 \node[box, right=of det] (game) {Jogo\\ação da nave};
 \node[box, below=of arduino] (verif) {Calibração\\curta};
-\node[mem, below=of det] (mem) {Memória do jogador\\ensaios rotulados};
-\node[box, below=of game] (cons) {Consolidação\\do perfil};
+\node[mem, below=of det] (mem) {Memória\\ensaios rotulados};
+\node[box, below=of game] (cons) {Atualização\\da memória};
 
 \draw[ar] (sensor) -- (arduino);
 \draw[ar] (arduino) -- (det);
@@ -177,7 +177,7 @@ A pesquisa compara duas formas de ajuste: a reescala contínua pela amplitude da
 
 \subsection{Delineamento e Aspectos Éticos}
 
-A avaliação compara duas condições com os mesmos participantes. Na condição~A, o \textit{baseline}, o EMGInvaders funciona como na versão atual: calibração completa a cada sessão, como também fazem os jogos de \citet{seo2022emg} e \citet{boulay2024serious}, ajuste às sessões recentes e reescala da amplitude. Na condição~C, o jogo usa o perfil consolidado, a calibração curta e o limiar adaptativo com registro da deriva.
+A avaliação compara duas condições com os mesmos participantes. Na condição~A, o \textit{baseline}, o EMGInvaders funciona como na versão atual: calibração completa a cada sessão, como também fazem os jogos de \citet{seo2022emg} e \citet{boulay2024serious}, ajuste às sessões recentes e reescala da amplitude. Na condição~C, o jogo usa o perfil atualizado por aprendizado contínuo, a calibração curta e o limiar adaptativo com registro da deriva.
 
 O delineamento previsto é cruzado: cada participante realiza uma sequência de sessões em cada condição, separadas por dias para que ocorra o reposicionamento dos eletrodos, e a ordem das condições é sorteada para equilibrar o aprendizado do jogo. Ele é preferido a dois grupos independentes porque, com poucos participantes, comparar cada pessoa consigo mesma reduz o peso das diferenças individuais; o desenho é revisto depois do estudo piloto. Na primeira etapa, os participantes são adultos saudáveis, recorte que viabiliza a coleta e a aprovação ética. Na primeira sessão de~C, o perfil é criado pela calibração completa, e as comparações usam as seguintes, com montagem, ajuste de ganho dos sensores, condições elétricas do ambiente e versão, ritmo e duração da partida fixos e documentados. O número de participantes e de sessões é definido por análise de poder a partir do estudo piloto, com poder de 80\% e $\alpha = 0{,}05$.
 
@@ -197,8 +197,8 @@ A Tabela~\ref{tab:metricas} lista as variáveis de resposta, que cobrem o custo 
 \textbf{Aspecto} & \textbf{Variável de resposta} & \textbf{Esperado (C/A)} \\
 \midrule
 Preparação & Tempo do fim da colocação dos eletrodos ao início da partida & Menor \\
-Aceitação & Sessões com perfil aceito; aceitação indevida de perfis alheios & Medida só em C \\
-Retenção & Aceitação da sessão~1 após atualizações sucessivas do perfil & Sem queda \\
+Calibração curta & Sessões em que a calibração curta atinge o critério de acerto & Medida só em C \\
+Retenção & Acerto nos ensaios da sessão~1 após atualizações sucessivas & Sem queda \\
 Acerto & Gestos reconhecidos iguais aos pedidos no treino rotulado & Igual ou maior \\
 Confiabilidade & Ações disparadas durante repouso instruído & Igual ou menor \\
 Fadiga & Gestos reconhecidos no último terço da partida / no primeiro & Menor queda \\
@@ -207,19 +207,19 @@ Usabilidade & Escore SUS ao fim de cada sessão & Igual ou maior \\
 \end{tabularx}
 \end{table}
 
-A métrica de retenção traduz o esquecimento para este contexto: depois das atualizações pelas sessões~2 a~$n$, o perfil ainda deve aceitar o registro da sessão~1. Calculada também para uma versão que substitui o perfil a cada sessão, ela isola o efeito da consolidação.
+A métrica de retenção traduz o esquecimento para este contexto: depois das atualizações pelas sessões~2 a~$n$, o perfil ainda deve reconhecer os ensaios da sessão~1. Calculada para cada forma de atualização da Seção~\ref{sec:metodologia}, inclusive a janela da versão atual, ela mostra qual preserva o histórico.
 
 O teste estatístico é escolhido pelo diagnóstico dos dados: se a normalidade das diferenças pareadas entre A e C se sustenta (teste de Shapiro-Wilk e gráfico Q-Q), usa-se o teste $t$ pareado; caso contrário, o de Wilcoxon pareado, ambos bilaterais, com $\alpha = 0{,}05$. Cada comparação relata a diferença, o intervalo de confiança de 95\% e um tamanho de efeito, que informa a magnitude da diferença. Esse procedimento e os critérios de exclusão de sessões são definidos antes da coleta, para que a análise não dependa dos dados observados.
 
-Quanto às ameaças à validade interna, o aprendizado do jogo ao longo das sessões é controlado pelo sorteio da ordem das condições, e o fato de quem posiciona os eletrodos conhecer a condição, por um procedimento escrito de montagem. Quanto à validade externa, a amostra de adultos saudáveis não permite observar a mudança de formato causada pela recuperação, e os resultados se limitam à montagem e ao hardware descritos.
+Quanto às ameaças à validade interna, o aprendizado do jogo ao longo das sessões é controlado pelo sorteio da ordem das condições, e o fato de quem posiciona os eletrodos conhecer a condição, por um procedimento escrito de montagem. Quanto à validade externa, a amostra de adultos saudáveis não permite observar a evolução causada pela recuperação, e os resultados se limitam à montagem e ao hardware descritos.
 
 %=====================================================================
 \section{Considerações Finais e Cronograma}\label{sec:conclusao}
 %=====================================================================
 
-Espera-se que o trabalho contribua com a formulação da calibração entre sessões em sEMG como um problema de aprendizado contínuo (Seção~\ref{sec:aprendizado}), com o uso da separação entre escala e formato para distinguir o artefato da evolução clínica e com um protocolo de avaliação replicável, que inclui métricas de retenção.
+Espera-se que o trabalho contribua com a formulação da calibração entre sessões em sEMG como um problema de aprendizado contínuo (Seção~\ref{sec:aprendizado}), com a separação entre a escala de cada sessão, tratada como artefato, e os parâmetros e as medidas clínicas, tratados como evolução, e com um protocolo de avaliação replicável, que inclui métricas de retenção.
 
-Algumas limitações são conhecidas desde o planejamento. A hipótese de que o reposicionamento altera sobretudo a escala pode não se confirmar na face, onde o \textit{crosstalk} é frequente; nesse caso, a proposta precisa de outra representação do perfil. A aquisição limita-se ao envelope de dois canais, o que exclui as análises de frequência, e a amostra de adultos saudáveis restringe a avaliação à estabilidade e à retenção. Como trabalhos futuros, a coleta com pacientes permitirá avaliar a plasticidade, e a detecção do descolamento de um eletrodo durante a sessão poderá reajustar a escala de imediato.
+Algumas limitações são conhecidas desde o planejamento. A hipótese de que o reposicionamento altera sobretudo a escala pode não se confirmar na face, onde o \textit{crosstalk} é frequente; nesse caso, os ensaios guardados perdem valor, e a proposta precisa de outra forma de normalização. A aquisição limita-se ao envelope de dois canais, o que exclui as análises de frequência, e a amostra de adultos saudáveis restringe a avaliação à estabilidade e à retenção. Como trabalhos futuros, a coleta com pacientes permitirá avaliar a plasticidade, e a detecção do descolamento de um eletrodo durante a sessão poderá reajustar a escala de imediato.
 
 A Tabela~\ref{tab:cronograma} apresenta o cronograma, de janeiro a junho de 2027. A submissão ao Comitê de Ética ocorre no primeiro mês, em paralelo à revisão da literatura, porque é o caminho crítico: sem a aprovação, nem o piloto nem a coleta podem começar.
 
