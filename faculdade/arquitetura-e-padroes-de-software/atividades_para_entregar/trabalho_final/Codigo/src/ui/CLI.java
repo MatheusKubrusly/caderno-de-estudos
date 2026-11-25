@@ -1,14 +1,11 @@
 package ui;
 
+import aplicacao.FachadaEstacionamento;
 import blackboard.Blackboard;
-import blackboard.BlackboardController;
 import model.*;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,22 +16,19 @@ import java.util.Scanner;
  */
 public class CLI {
 
-    private static final DateTimeFormatter FORMATO_DATA_HORA =
-            DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
-
     /** Fim da entrada padrão (Ctrl+D / pipe encerrado). */
     private static class FimDeEntrada extends RuntimeException {
         private static final long serialVersionUID = 1L;
     }
 
     private final Blackboard blackboard;
-    private final BlackboardController controller;
+    private final FachadaEstacionamento fachada;
     private final Display display;
     private final Scanner in = new Scanner(System.in, StandardCharsets.UTF_8);
 
-    public CLI(Blackboard blackboard, BlackboardController controller, Display display) {
+    public CLI(Blackboard blackboard, FachadaEstacionamento fachada, Display display) {
         this.blackboard = blackboard;
-        this.controller = controller;
+        this.fachada = fachada;
         this.display = display;
     }
 
@@ -189,14 +183,10 @@ public class CLI {
         publicarEExecutar(req);
     }
 
-    /** A requisição só chega ao Blackboard quando está completa. Devolve true se o KS aceitou. */
+    /** A requisição só chega ao Blackboard quando está completa, pela fachada. Devolve true se o KS aceitou. */
     private boolean publicarEExecutar(Requisicao req) {
-        if (req.getMomento() == null) req.setMomento(LocalDateTime.now());
-        ResultadoOperacao anterior = blackboard.getUltimoResultado();
-        blackboard.publicarRequisicao(req);
-        controller.executarCiclo();
-        ResultadoOperacao atual = blackboard.getUltimoResultado();
-        return atual != null && atual != anterior && atual.isSucesso();
+        ResultadoOperacao r = fachada.enviar(req);
+        return r != null && r.isSucesso();
     }
 
     // ----------------------------------------------------------------- coleta
@@ -213,14 +203,10 @@ public class CLI {
 
     private Double lerAltura() {
         while (true) {
-            String txt = lerLinha("Altura do veículo (m, 0 para voltar): ").replace(',', '.');
+            String txt = lerLinha("Altura do veículo (m, 0 para voltar): ");
             if (txt.equals("0")) return null;
-            try {
-                double altura = Double.parseDouble(txt);
-                if (altura > 0) return altura;
-            } catch (NumberFormatException e) {
-                // formato inválido
-            }
+            Double altura = FormatoDeEntrada.altura(txt);
+            if (altura != null) return altura;
             display.renderizarAviso("Valor inválido. Informe a altura em metros (ex.: 1.85).");
         }
     }
@@ -240,8 +226,8 @@ public class CLI {
 
     private String lerPlaca() {
         while (true) {
-            String placa = lerLinha("Placa do veículo: ").toUpperCase();
-            if (placa.matches("[A-Z0-9-]{5,8}")) return placa;
+            String placa = FormatoDeEntrada.placa(lerLinha("Placa do veículo: "));
+            if (placa != null) return placa;
             display.renderizarAviso("Placa inválida. Use de 5 a 8 letras/números (ex.: ABC1D23).");
         }
     }
@@ -266,11 +252,9 @@ public class CLI {
 
     private LocalDateTime lerDataHora(String prompt) {
         while (true) {
-            try {
-                return LocalDateTime.parse(lerLinha(prompt), FORMATO_DATA_HORA);
-            } catch (DateTimeParseException e) {
-                display.renderizarAviso("Data inválida. Use o formato dd/MM/aaaa HH:mm (ex.: 14/11/2026 18:00).");
-            }
+            LocalDateTime dataHora = FormatoDeEntrada.dataHora(lerLinha(prompt));
+            if (dataHora != null) return dataHora;
+            display.renderizarAviso("Data inválida. Use o formato dd/MM/aaaa HH:mm (ex.: 20/11/2026 18:00).");
         }
     }
 

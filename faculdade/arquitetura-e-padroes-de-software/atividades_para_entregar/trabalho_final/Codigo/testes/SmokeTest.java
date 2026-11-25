@@ -9,7 +9,12 @@ import knowledge_sources.SubsoloKS;
 import model.*;
 import persistencia.CsvDeEventos;
 import persistencia.RegistroDeEventos;
+import ui.FormatoDeEntrada;
+import ui.janela.ConferenciaDeLayout;
+import ui.janela.PainelCiclo;
+import ui.janela.PainelSetor;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -48,6 +53,7 @@ public class SmokeTest {
         relatorios();
         fachada();
         registro();
+        frontEnds();
         arquitetura();
 
         System.out.println();
@@ -386,6 +392,58 @@ public class SmokeTest {
         Files.deleteIfExists(arquivo);
     }
 
+    // --------------------------------------------- front-ends (sem abrir a tela)
+
+    private static void frontEnds() {
+        titulo("Front-ends (a parte que não depende da tela)");
+        check("Formato: placa em maiúsculas; curta ou com espaço é recusada",
+                "ABC1D23".equals(FormatoDeEntrada.placa(" abc1d23 "))
+                        && FormatoDeEntrada.placa("AB1") == null && FormatoDeEntrada.placa("ABC 123") == null);
+        check("Formato: altura com vírgula ou ponto; negativa ou texto é recusada",
+                Double.valueOf(1.85).equals(FormatoDeEntrada.altura("1,85"))
+                        && Double.valueOf(2.1).equals(FormatoDeEntrada.altura("2.1"))
+                        && FormatoDeEntrada.altura("-1") == null && FormatoDeEntrada.altura("alto") == null);
+        check("Formato: data e hora estritas (31/02 não existe)",
+                LocalDateTime.of(2026, 11, 20, 18, 0).equals(FormatoDeEntrada.dataHora("20/11/2026 18:00"))
+                        && FormatoDeEntrada.dataHora("31/02/2026 10:00") == null
+                        && FormatoDeEntrada.dataHora("2026-11-20 18:00") == null);
+
+        bb.reiniciar();
+        FachadaEstacionamento f = new FachadaEstacionamento(bb, ctrl);
+        Vaga preferencial = bb.getVaga(Setor.SUBSOLO, "A1");
+        Color livrePreferencial = PainelSetor.corDaVaga(preferencial);
+        check("Mapa: vaga preferencial livre tem P, cor própria e convida a ocupar",
+                PainelSetor.textoDaVaga(preferencial).contains("A1 P")
+                        && PainelSetor.textoDaVaga(preferencial).contains("livre")
+                        && !livrePreferencial.equals(PainelSetor.corDaVaga(bb.getVaga(Setor.SUBSOLO, "B1")))
+                        && PainelSetor.dicaDaVaga(preferencial).contains("clique para ocupar"));
+
+        f.entrar(Setor.SUBSOLO, "JAN1E11", 1.70);
+        f.ocupar(Setor.SUBSOLO, "JAN1E11", "A1", MotivoPreferencial.GESTANTE);
+        Vaga ocupada = bb.getVaga(Setor.SUBSOLO, "A1");
+        check("Mapa: vaga ocupada mostra a placa, muda de cor e convida a desocupar",
+                PainelSetor.textoDaVaga(ocupada).contains("JAN1E11")
+                        && !PainelSetor.corDaVaga(ocupada).equals(livrePreferencial)
+                        && PainelSetor.dicaDaVaga(ocupada).contains("clique para desocupar"));
+        check("Ciclo: a linha mostra a requisição, quem respondeu e o resultado",
+                PainelCiclo.linha(bb.getUltimoResultado()).contains("OCUPAR SUBSOLO JAN1E11 A1 → SubsoloKS  ✓"));
+
+        ResultadoOperacao recusa = f.sair(Setor.SUBSOLO, "JAN1E11");
+        check("Ciclo: a recusa aparece com ⚠, numa linha só",
+                recusa != null && PainelCiclo.linha(recusa).contains("⚠ O veículo JAN1E11 ainda ocupa a vaga A1")
+                        && !PainelCiclo.linha(recusa).contains("\n"));
+        f.desocupar(Setor.SUBSOLO, "A1");
+        ResultadoOperacao saida = f.sair(Setor.SUBSOLO, "JAN1E11");
+        check("Ciclo: mensagem de duas linhas vira uma, separada por ·",
+                saida != null && saida.isSucesso() && PainelCiclo.linha(saida).contains(" · Tempo de permanência"));
+        bb.reiniciar();
+
+        check("Janela: o botão Gerar cabe na aba Relatórios em todos os relatórios (600 px)",
+                ConferenciaDeLayout.botaoGerarSempreVisivel(600));
+        check("Controle: a conferência de layout acusa um botão cortado (250 px)",
+                !ConferenciaDeLayout.botaoGerarSempreVisivel(250));
+    }
+
     // ---------------------------------------------------------- arquitetura
 
     private static void arquitetura() throws IOException {
@@ -422,13 +480,17 @@ public class SmokeTest {
                 !importa("src/aplicacao", "knowledge_sources") && !importa("src/persistencia", "knowledge_sources"));
         check("O pacote blackboard não importa fachada nem persistência",
                 !importa("src/blackboard", "aplicacao") && !importa("src/blackboard", "persistencia"));
+        check("Front-ends não importam especialistas nem o controlador",
+                !importa("src/ui", "knowledge_sources") && !importa("src/ui/janela", "knowledge_sources")
+                        && !importa("src/ui", "blackboard.BlackboardController")
+                        && !importa("src/ui/janela", "blackboard.BlackboardController"));
     }
 
     /** Algum arquivo da pasta tem "import pacote"? */
     private static boolean importa(String pasta, String pacote) throws IOException {
         try (Stream<Path> arquivos = Files.list(Path.of(pasta))) {
             for (Path p : (Iterable<Path>) arquivos::iterator) {
-                if (Files.readString(p).contains("import " + pacote)) return true;
+                if (Files.isRegularFile(p) && Files.readString(p).contains("import " + pacote)) return true;
             }
         }
         return false;
