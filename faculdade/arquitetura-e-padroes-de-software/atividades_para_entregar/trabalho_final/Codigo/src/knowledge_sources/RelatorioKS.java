@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -20,6 +18,8 @@ import java.util.function.Predicate;
  * Os tipos são despachados por switch + métodos privados (sem Strategy):
  * compartilham o mesmo contexto e não são escolhidos por um cliente estratégico.
  * O relatório COMPLETO reaproveita os mesmos blocos dos relatórios individuais.
+ * Os cálculos (médias, lotação, giro, clientes) ficam em {@link Estatisticas};
+ * aqui ficam a leitura do Blackboard e a montagem do texto.
  */
 public class RelatorioKS extends KnowledgeSource {
 
@@ -243,10 +243,10 @@ public class RelatorioKS extends KnowledgeSource {
             return linhas;
         }
         linhas.add(linhaMedia("Geral", fechados));
-        linhas.add(linhaMedia("Externo", filtrar(fechados, e -> e.getSetor() == Setor.EXTERNO)));
-        linhas.add(linhaMedia("Subsolo", filtrar(fechados, e -> e.getSetor() == Setor.SUBSOLO)));
-        linhas.add(linhaMedia("Comum", filtrar(fechados, e -> !usouPreferencial(e))));
-        linhas.add(linhaMedia("Preferencial", filtrar(fechados, this::usouPreferencial)));
+        linhas.add(linhaMedia("Externo", Estatisticas.filtrar(fechados,e -> e.getSetor() == Setor.EXTERNO)));
+        linhas.add(linhaMedia("Subsolo", Estatisticas.filtrar(fechados,e -> e.getSetor() == Setor.SUBSOLO)));
+        linhas.add(linhaMedia("Comum", Estatisticas.filtrar(fechados,e -> !usouPreferencial(e))));
+        linhas.add(linhaMedia("Preferencial", Estatisticas.filtrar(fechados,this::usouPreferencial)));
         linhas.add("");
         linhas.add("Estadias em aberto não entram no cálculo.");
         return linhas;
@@ -257,24 +257,8 @@ public class RelatorioKS extends KnowledgeSource {
         if (estadias.isEmpty()) {
             return prefixo + SEM_DADOS;
         }
-        return prefixo + Formatador.duracao(mediaPermanencia(estadias)) + " ("
+        return prefixo + Formatador.duracao(Estatisticas.mediaPermanencia(estadias)) + " ("
                 + estadias.size() + (estadias.size() == 1 ? " estadia fechada)" : " estadias fechadas)");
-    }
-
-    private Duration mediaPermanencia(List<Estadia> fechadas) {
-        List<Duration> duracoes = new ArrayList<>();
-        for (Estadia e : fechadas) {
-            duracoes.add(Duration.between(e.getEntrada(), e.getSaida()));
-        }
-        return media(duracoes);
-    }
-
-    private Duration media(List<Duration> duracoes) {
-        long segundos = 0;
-        for (Duration d : duracoes) {
-            segundos += d.getSeconds();
-        }
-        return Duration.ofSeconds(segundos / duracoes.size());
     }
 
     // ------------------------------------------------------------ PREFERENCIAIS
@@ -303,7 +287,8 @@ public class RelatorioKS extends KnowledgeSource {
         }
 
         linhas.add("Total de usos: " + usos.size() + " ("
-                + Formatador.percentual(usos.size(), totalOcupacoes()) + " das ocupações)");
+                + Formatador.percentual(usos.size(), Estatisticas.totalOcupacoes(blackboard.getEstadias()))
+                + " das ocupações)");
 
         List<String> porMotivo = new ArrayList<>();
         for (MotivoPreferencial m : MotivoPreferencial.values()) {
@@ -316,13 +301,10 @@ public class RelatorioKS extends KnowledgeSource {
                     porMotivo.subList(i, Math.min(i + 3, porMotivo.size()))));
         }
 
-        List<Duration> encerradas = new ArrayList<>();
-        for (Ocupacao o : usos) {
-            if (!o.isAberta()) encerradas.add(Duration.between(o.getInicio(), o.getFim()));
-        }
+        List<Duration> encerradas = Estatisticas.duracoesEncerradas(usos);
         linhas.add("Tempo médio na vaga: " + (encerradas.isEmpty()
                 ? SEM_DADOS + " (nenhuma ocupação encerrada)"
-                : Formatador.duracao(media(encerradas))));
+                : Formatador.duracao(Estatisticas.media(encerradas))));
         return linhas;
     }
 
@@ -339,12 +321,8 @@ public class RelatorioKS extends KnowledgeSource {
             linhas.add(SEM_DADOS);
             return linhas;
         }
-        int[] porHora = new int[24];
-        int[] porDia = new int[7];
-        for (Estadia e : estadias) {
-            porHora[e.getEntrada().getHour()]++;
-            porDia[e.getEntrada().getDayOfWeek().getValue() - 1]++;
-        }
+        int[] porHora = Estatisticas.entradasPorHora(estadias);
+        int[] porDia = Estatisticas.entradasPorDia(estadias);
 
         int primeira = 0;
         int ultima = 23;
@@ -376,32 +354,15 @@ public class RelatorioKS extends KnowledgeSource {
 
     /** Maior número de veículos estacionados ao mesmo tempo, e quando isso aconteceu. */
     private String linhaMaiorLotacao() {
-        record Marco(LocalDateTime quando, int variacao) {}
-        List<Marco> marcos = new ArrayList<>();
-        for (Estadia e : blackboard.getEstadias()) {
-            for (Ocupacao o : e.getOcupacoes()) {
-                marcos.add(new Marco(o.getInicio(), +1));
-                if (o.getFim() != null) marcos.add(new Marco(o.getFim(), -1));
-            }
-        }
-        if (marcos.isEmpty()) {
+        Estatisticas.Lotacao lotacao = Estatisticas.maiorLotacao(blackboard.getEstadias());
+        if (lotacao == null) {
             return "Maior lotação: " + SEM_DADOS;
-        }
-        marcos.sort(Comparator.comparing(Marco::quando).thenComparingInt(Marco::variacao));
-        int atual = 0;
-        int maior = 0;
-        LocalDateTime quando = null;
-        for (Marco m : marcos) {
-            atual += m.variacao();
-            if (atual > maior) {
-                maior = atual;
-                quando = m.quando();
-            }
         }
         int total = 0;
         for (Setor s : Setor.values()) total += blackboard.totalVagas(s);
-        return "Maior lotação: " + maior + " de " + total + " vagas (" + Formatador.percentual(maior, total)
-                + ") em " + Formatador.dataHoraCurta(quando);
+        return "Maior lotação: " + lotacao.veiculos() + " de " + total + " vagas ("
+                + Formatador.percentual(lotacao.veiculos(), total) + ") em "
+                + Formatador.dataHoraCurta(lotacao.quando());
     }
 
     private static String barra(int valor, int maximo) {
@@ -421,49 +382,31 @@ public class RelatorioKS extends KnowledgeSource {
 
     private List<String> linhasClientesFrequentes() {
         List<String> linhas = new ArrayList<>();
-        Map<String, List<Estadia>> porPlaca = new LinkedHashMap<>();
-        for (Estadia e : blackboard.getEstadias()) {
-            porPlaca.computeIfAbsent(e.getPlaca(), p -> new ArrayList<>()).add(e);
-        }
-        if (porPlaca.isEmpty()) {
+        List<Estadia> estadias = blackboard.getEstadias();
+        if (estadias.isEmpty()) {
             linhas.add(SEM_DADOS);
             return linhas;
         }
 
-        record Cliente(String placa, List<Estadia> visitas, LocalDateTime ultimaVisita) {}
-        List<Cliente> voltaram = new ArrayList<>();
-        for (Map.Entry<String, List<Estadia>> item : porPlaca.entrySet()) {
-            if (item.getValue().size() > 1) {
-                voltaram.add(new Cliente(item.getKey(), item.getValue(), ultimaEntrada(item.getValue())));
-            }
-        }
-        linhas.add("Placas distintas: " + porPlaca.size() + " · Voltaram (2 visitas ou mais): " + voltaram.size()
-                + " (" + Formatador.percentual(voltaram.size(), porPlaca.size()) + ")");
+        int distintas = Estatisticas.porPlaca(estadias).size();
+        List<Estatisticas.Cliente> voltaram = Estatisticas.clientesQueVoltaram(estadias);
+        linhas.add("Placas distintas: " + distintas + " · Voltaram (2 visitas ou mais): " + voltaram.size()
+                + " (" + Formatador.percentual(voltaram.size(), distintas) + ")");
         if (voltaram.isEmpty()) {
             linhas.add("Nenhuma placa com mais de uma visita.");
             return linhas;
         }
 
-        voltaram.sort(Comparator.comparingInt((Cliente c) -> c.visitas().size()).reversed()
-                .thenComparing(Cliente::ultimaVisita, Comparator.reverseOrder()));
         linhas.add("");
         linhas.add(String.format(FORMATO_FREQUENTES, "#", "Placa", "Visitas", "Permanência média", "Última visita"));
         for (int i = 0; i < Math.min(TOP_FREQUENTES, voltaram.size()); i++) {
-            Cliente c = voltaram.get(i);
-            List<Estadia> fechadas = filtrar(c.visitas(), e -> !e.isAberta());
+            Estatisticas.Cliente c = voltaram.get(i);
+            List<Estadia> fechadas = Estatisticas.filtrar(c.visitas(), e -> !e.isAberta());
             linhas.add(String.format(FORMATO_FREQUENTES, i + 1, c.placa(), c.visitas().size(),
-                    fechadas.isEmpty() ? "—" : Formatador.duracao(mediaPermanencia(fechadas)),
+                    fechadas.isEmpty() ? "—" : Formatador.duracao(Estatisticas.mediaPermanencia(fechadas)),
                     Formatador.dataHoraCurta(c.ultimaVisita())));
         }
         return linhas;
-    }
-
-    private static LocalDateTime ultimaEntrada(List<Estadia> estadias) {
-        LocalDateTime ultima = estadias.get(0).getEntrada();
-        for (Estadia e : estadias) {
-            if (e.getEntrada().isAfter(ultima)) ultima = e.getEntrada();
-        }
-        return ultima;
     }
 
     // ----------------------------------------------------------- GIRO_POR_VAGA
@@ -481,27 +424,13 @@ public class RelatorioKS extends KnowledgeSource {
         }
 
         LocalDateTime agora = LocalDateTime.now();
-        LocalDateTime inicio = estadias.get(0).getEntrada();
-        LocalDateTime fim = inicio;
-        boolean algumaAberta = false;
-        for (Estadia e : estadias) {
-            if (e.getEntrada().isBefore(inicio)) inicio = e.getEntrada();
-            if (e.getUltimoEvento().isAfter(fim)) fim = e.getUltimoEvento();
-            if (e.isAberta()) algumaAberta = true;
-        }
-        if (algumaAberta) fim = agora;
-        long periodo = Math.max(1, Duration.between(inicio, fim).getSeconds());
-        linhas.add("Período observado: " + Formatador.dataHoraCurta(inicio) + " a " + Formatador.dataHoraCurta(fim)
-                + " (" + Formatador.duracao(Duration.between(inicio, fim)) + ")");
+        Estatisticas.Periodo periodo = Estatisticas.periodoObservado(estadias, agora);
+        long segundosDoPeriodo = Math.max(1, periodo.duracao().getSeconds());
+        linhas.add("Período observado: " + Formatador.dataHoraCurta(periodo.inicio()) + " a "
+                + Formatador.dataHoraCurta(periodo.fim()) + " (" + Formatador.duracao(periodo.duracao()) + ")");
 
-        Map<String, long[]> uso = new LinkedHashMap<>();   // "SETOR:A1" -> {ocupações, segundos ocupados}
-        for (Estadia e : estadias) {
-            for (Ocupacao o : e.getOcupacoes()) {
-                long[] u = uso.computeIfAbsent(e.getSetor() + ":" + o.getIdVaga(), k -> new long[2]);
-                u[0]++;
-                u[1] += Duration.between(o.getInicio(), o.isAberta() ? agora : o.getFim()).getSeconds();
-            }
-        }
+        Map<String, Estatisticas.UsoDeVaga> uso = Estatisticas.usoPorVaga(estadias, agora);
+        Estatisticas.UsoDeVaga semUso = new Estatisticas.UsoDeVaga(0, Duration.ZERO);
 
         String maisDisputada = null;
         String maisOciosa = null;
@@ -511,16 +440,17 @@ public class RelatorioKS extends KnowledgeSource {
             linhas.add("");
             linhas.add(String.format(FORMATO_GIRO, s.name(), "Ocupações", "Tempo ocupado", "Uso do período"));
             for (Vaga v : blackboard.getVagas(s)) {
-                long[] u = uso.getOrDefault(s + ":" + v.getId(), new long[2]);
-                linhas.add(String.format(FORMATO_GIRO, v.getId() + (v.isPreferencial() ? " (P)" : ""), u[0],
-                        Formatador.duracao(Duration.ofSeconds(u[1])), Formatador.percentual(u[1], periodo)));
+                Estatisticas.UsoDeVaga u = uso.getOrDefault(Estatisticas.chaveDaVaga(s, v.getId()), semUso);
+                linhas.add(String.format(FORMATO_GIRO, v.getId() + (v.isPreferencial() ? " (P)" : ""), u.ocupacoes(),
+                        Formatador.duracao(u.tempoOcupado()),
+                        Formatador.percentual(u.tempoOcupado().getSeconds(), segundosDoPeriodo)));
                 String nome = s.descricao() + " " + v.getId();
-                if (u[0] > maxOcupacoes) {
-                    maxOcupacoes = u[0];
+                if (u.ocupacoes() > maxOcupacoes) {
+                    maxOcupacoes = u.ocupacoes();
                     maisDisputada = nome;
                 }
-                if (u[0] < minOcupacoes) {
-                    minOcupacoes = u[0];
+                if (u.ocupacoes() < minOcupacoes) {
+                    minOcupacoes = u.ocupacoes();
                     maisOciosa = nome;
                 }
             }
@@ -547,14 +477,14 @@ public class RelatorioKS extends KnowledgeSource {
         linhas.add("Tempo entre a cancela e a primeira vaga:");
         linhas.add(linhaEspera("Geral", estadias));
         for (Setor s : Setor.values()) {
-            linhas.add(linhaEspera(s.descricao(), filtrar(estadias, e -> e.getSetor() == s)));
+            linhas.add(linhaEspera(s.descricao(), Estatisticas.filtrar(estadias,e -> e.getSetor() == s)));
         }
-        List<Estadia> encerradas = filtrar(estadias, e -> !e.isAberta());
+        List<Estadia> encerradas = Estatisticas.filtrar(estadias,e -> !e.isAberta());
         long semVaga = encerradas.stream().filter(e -> e.getOcupacoes().isEmpty()).count();
         linhas.add("Saíram sem estacionar: " + semVaga + " ("
                 + Formatador.percentual(semVaga, encerradas.size()) + " das estadias encerradas)");
 
-        List<Estadia> circulando = filtrar(estadias, e -> e.getSituacao() == SituacaoVeiculo.CIRCULANDO);
+        List<Estadia> circulando = Estatisticas.filtrar(estadias,e -> e.getSituacao() == SituacaoVeiculo.CIRCULANDO);
         linhas.add("");
         linhas.add("Circulando agora: " + circulando.size());
         if (!circulando.isEmpty()) {
@@ -570,17 +500,12 @@ public class RelatorioKS extends KnowledgeSource {
     }
 
     private String linhaEspera(String rotulo, List<Estadia> estadias) {
-        List<Duration> esperas = new ArrayList<>();
-        for (Estadia e : estadias) {
-            if (!e.getOcupacoes().isEmpty()) {
-                esperas.add(Duration.between(e.getEntrada(), e.getOcupacoes().get(0).getInicio()));
-            }
-        }
+        List<Duration> esperas = Estatisticas.esperasAteEstacionar(estadias);
         String prefixo = String.format("  %-12s", rotulo + ":");
         if (esperas.isEmpty()) {
             return prefixo + SEM_DADOS;
         }
-        return prefixo + "média " + Formatador.duracao(media(esperas))
+        return prefixo + "média " + Formatador.duracao(Estatisticas.media(esperas))
                 + " · máximo " + Formatador.duracao(Collections.max(esperas))
                 + " (" + esperas.size() + (esperas.size() == 1 ? " estadia)" : " estadias)");
     }
@@ -610,23 +535,7 @@ public class RelatorioKS extends KnowledgeSource {
         return r;
     }
 
-    private int totalOcupacoes() {
-        int total = 0;
-        for (Estadia e : blackboard.getEstadias()) {
-            total += e.getOcupacoes().size();
-        }
-        return total;
-    }
-
     private List<Estadia> filtrarHistorico(Predicate<Estadia> filtro) {
-        return filtrar(blackboard.getEstadias(), filtro);
-    }
-
-    private List<Estadia> filtrar(List<Estadia> estadias, Predicate<Estadia> filtro) {
-        List<Estadia> r = new ArrayList<>();
-        for (Estadia e : estadias) {
-            if (filtro.test(e)) r.add(e);
-        }
-        return r;
+        return Estatisticas.filtrar(blackboard.getEstadias(), filtro);
     }
 }
