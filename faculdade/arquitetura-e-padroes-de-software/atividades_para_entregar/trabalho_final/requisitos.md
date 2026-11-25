@@ -43,6 +43,7 @@ O conjunto de E1 a E6 forma a **Descrição Arquitetural**: os documentos que ex
 | E5 | Diagramas de atividades, com as funcionalidades e as interações entre atores e módulos |
 | E6 | Diagrama de estados, se o sistema tiver máquina de estados. Ele tem três: a vaga (livre ou ocupada), o veículo (circulando ou estacionado) e a requisição no Blackboard |
 | E7 | Front-end simples, que facilite executar e demonstrar a arquitetura |
+| E8 | Roteiro de uso, que guie a utilização adequada do sistema (pedido do Matheus em 25/11/2026, além do enunciado) |
 
 ### Requisitos do sistema (R)
 
@@ -54,6 +55,7 @@ O conjunto de E1 a E6 forma a **Descrição Arquitetural**: os documentos que ex
 | R4 | Fazer os especialistas de setor atualizarem o Blackboard em quatro eventos: o veículo entra no setor, ocupa uma vaga, desocupa a vaga e sai do setor |
 | R5 | Ter um terceiro especialista, de relatórios, que analisa o histórico, as placas e os horários e entrega informação útil para a gerência |
 | R6 | Fazer os especialistas usarem o Blackboard de forma independente, sem comunicação direta entre eles |
+| R7 | Garantir que o sistema funcione depois das mudanças no código, sem ficar sujeito a bugs (pedido do Matheus em 25/11/2026, além do enunciado) |
 
 ## 3. Restrições e decisões
 
@@ -78,6 +80,12 @@ O conjunto de E1 a E6 forma a **Descrição Arquitetural**: os documentos que ex
 | Documentos | LaTeX (classe `article`), compilado na máquina com o `latexmk` | Mesmo estilo do trabalho de Metodologia Científica, com a revisão pelo diff |
 | Diagramas | PlantUML, que descreve o UML em texto, com o Graphviz para o posicionamento | O texto do diagrama fica no repositório e também pode ser revisado pelo diff |
 | Código no repositório | Extraído do `codigo_atualizado.zip` para `Codigo/`, sem as configurações do IntelliJ e os compilados; o zip original também fica guardado | O desenvolvimento passa a ser feito aqui, e o zip registra o que o grupo enviou |
+| Regras a mais nos setores | Recusar uma entrada com horário anterior à visita anterior da mesma placa, e qualquer evento sem placa | A primeira evita visitas sobrepostas ao reler o CSV; a segunda evita um travamento por placa vazia |
+| Relatório de preferenciais | Conta cada ocupação de vaga preferencial, com o tempo na vaga | Uma visita pode passar por mais de uma vaga, e é o uso da vaga que a gerência fiscaliza |
+| Base legal das preferenciais | Sai da tela de motivos e vai para a perspectiva de regulação do PDF da descrição do sistema | A tela citava só a Lei 10.048/2000, que trata de atendimento prioritário; o PDF tem espaço para as quatro leis |
+| Cálculos dos relatórios | Ficam na classe de apoio `Estatisticas`; o especialista de relatórios lê o Blackboard e monta o texto | O especialista passava de 600 linhas; a divisão não usa Strategy |
+| Roteiro de uso | Arquivo `roteiro-de-uso.md` nesta pasta, com link no README do código | Guia quem vai rodar e apresentar o sistema, passo a passo |
+| Garantia de funcionamento | Teste automático ampliado, teste de aceitação do roteiro, checklist manual da janela e revisão de código no fim | Cada mudança é conferida automaticamente, e o que não dá para automatizar (o clique na janela) tem lista de conferência |
 
 ## 4. Matriz de rastreabilidade
 
@@ -91,10 +99,12 @@ Situação: **pendente** (ainda não feito), **parcial** (existe, mas falta algo
 | E4 | `descricao-arquitetural/diagramas/casos-de-uso-*.pdf` | Abrir os diagramas: operador, sensor, administrador e gerente com as suas funcionalidades | pendente |
 | E5 | `descricao-arquitetural/diagramas/atividade-*.pdf` | Abrir os diagramas: raias para os atores e os módulos | pendente |
 | E6 | `descricao-arquitetural/diagramas/estados-*.pdf` | Abrir os diagramas: vaga, veículo e requisição | pendente |
-| E7 | `Codigo/src/ui/janela/` | Rodar `./run.sh` e seguir o roteiro de demonstração do `Codigo/README.md` | pendente |
-| R1 | `Codigo/src/blackboard/` | Ler o código e rodar o teste de fumaça (`SmokeTest`) | parcial |
-| R2 | `Codigo/src/blackboard/Blackboard.java` e `Codigo/src/model/` | Teste de fumaça e relatórios de ocupação e histórico | parcial |
+| E7 | `Codigo/src/ui/` (a CLI) e `Codigo/src/ui/janela/` (a janela) | Rodar `./run.sh` e seguir o `roteiro-de-uso.md` | parcial (a CLI está pronta; a janela vem na etapa 5) |
+| E8 | `roteiro-de-uso.md` | Seguir o roteiro do começo ao fim; o teste de aceitação executa o roteiro de demonstração | pendente |
+| R1 | `Codigo/src/blackboard/` | Ler o código e rodar o teste de fumaça (`SmokeTest`) | atendido |
+| R2 | `Codigo/src/blackboard/Blackboard.java` e `Codigo/src/model/` (vagas, estadias, ocupações e vagas preferenciais) | Teste de fumaça e relatórios de ocupação e histórico | atendido |
 | R3 | `Codigo/src/knowledge_sources/ExternoKS.java` e `SubsoloKS.java` | Teste de fumaça, cenários de setor | atendido |
-| R4 | `Codigo/src/knowledge_sources/EspecialistaDeSetor.java` | Teste de fumaça com os quatro eventos | pendente |
-| R5 | `Codigo/src/knowledge_sources/RelatorioKS.java` | Teste de fumaça, um caso por relatório | parcial |
+| R4 | `Codigo/src/knowledge_sources/EspecialistaDeSetor.java` | Teste de fumaça com os quatro eventos | atendido |
+| R5 | `Codigo/src/knowledge_sources/RelatorioKS.java` e `Estatisticas.java` (11 relatórios) | Teste de fumaça, um caso por relatório | atendido |
 | R6 | Teste de arquitetura do `SmokeTest` | O teste confere que nenhum especialista referencia outro | atendido |
+| R7 | `Codigo/testes/` (teste de fumaça e teste de aceitação), checklist da janela e revisão de código | O teste de fumaça (78 verificações hoje) e o de aceitação sem falhas; o checklist percorrido; a revisão sem pendências | parcial (o teste de fumaça cresce a cada etapa) |
