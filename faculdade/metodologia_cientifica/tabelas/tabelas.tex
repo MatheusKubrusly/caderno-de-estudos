@@ -1,0 +1,80 @@
+\documentclass[11pt]{report} % Default font size is 11pt, it can be changed here
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{multicol}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcommand{\specialcell}[2][c]{\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+\begin{document}
+	
+Tabela Simples (Tabela \ref{table:indexing})
+
+\begin{table}[!ht]
+	\centering
+	\small
+	\caption{Simple Table}
+	\label{table:indexing}
+	\begin{tabular}{L{4cm}C{2cm}R{2cm}}
+		A & B & C\\
+\hline
+		$a_1$ & $b_1$ & $c_1$ \\
+		$a_2$ & $b_2$ & $c_2$ \\
+		$a_3$ & $b_3$ & $c_3$ \\
+\hline
+	\end{tabular}
+\end{table}
+
+Tabela com célula com quebra de linhas (Tabela \ref{table:sc})
+
+\begin{table}[!ht]
+	\centering
+	\small
+	\caption{specialcell}
+	\label{table:sc}
+	\begin{tabular}{L{4cm}C{2cm}R{2cm}}
+		A & B & C\\
+\hline
+		\specialcell{$a_1$ \\ $a_2$ \\ $a_3$} & $b_1$ & $c_1$ \\
+\hline
+\end{tabular}
+\end{table}
+
+
+Tabela com rowspan (Tabela \ref{table:mr})
+
+\begin{table}[!ht]
+	\centering
+	\small
+	\caption{multirow}
+	\label{table:mr}
+	\begin{tabular}{L{4cm}C{2cm}R{2cm}}
+		A & B & C\\
+\hline
+		$a_1$ & $b_1$ & \multirow{3}{*}{$c_1$} \\
+		$a_2$ & $b_2$ \\
+		$a_3$ & $b_3$ \\
+\hline
+	\end{tabular}
+\end{table}
+
+
+\begin{table}[!ht]
+	\centering
+	\small
+	\caption{multirow}
+	\label{table:mr}
+	\begin{tabular}{L{4cm}C{2cm}R{2cm}}
+		A & B & C\\
+		\hline
+		$a_1$ & $b_1$ & {$c_1$} \\
+		\multicolumn{3}{l}{$a_2$} \\
+		$a_3$ & $b_3$ & {$c_3$} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\end{document}

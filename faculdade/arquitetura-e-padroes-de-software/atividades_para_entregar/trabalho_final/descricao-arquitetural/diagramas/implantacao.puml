@@ -1,0 +1,35 @@
+@startuml implantacao
+!include estilo.iuml
+title Diagrama de implantação
+
+node "Computador do operador\n(Linux, Windows ou macOS)" as pc {
+  node "JVM (JDK 17 ou mais novo)" <<ambiente de execução>> as jvm {
+    artifact "Classes compiladas (Codigo/out)\nponto de entrada: Main" as app {
+      component "ui\nJanelaPrincipal, CLI, Display" as ui
+      component "aplicacao\nFachadaEstacionamento" as aplicacao
+      component "blackboard\nBlackboard, BlackboardController" as bb
+      component "knowledge_sources\nExternoKS, SubsoloKS, RelatorioKS" as ks
+      component "persistencia\nRegistroDeEventos, CsvDeEventos" as pers
+      component "model, util\nVaga, Estadia, Requisicao..." as model
+    }
+  }
+  folder "Codigo/dados" as dados {
+    artifact "eventos.csv\n(uso registrado)" as eventos
+    artifact "cenario-demonstracao.csv\n(semana simulada)" as cenario
+  }
+}
+
+node "Cancelas e sensores de vaga\n(fora do escopo do protótipo)" as sensores #F5F5F5;line.dashed
+
+ui --> aplicacao : envia requisições
+aplicacao --> bb : publica e roda o ciclo
+bb --> ks : o controlador ativa\no especialista apto
+ks ..> bb : lê e escreve\n(sem falar com\noutro especialista)
+bb ..> ui : avisa (Observer)
+bb ..> pers : avisa (Observer)
+pers --> aplicacao : relê o uso\npela fachada
+pers --> eventos : grava e relê
+pers --> cenario : copia ao\ncarregar o cenário
+ks ..> model
+sensores ..> ui : no protótipo, o operador\nfaz o papel deles
+@enduml
