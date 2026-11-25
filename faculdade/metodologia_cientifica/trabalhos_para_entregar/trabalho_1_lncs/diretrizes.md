@@ -16,7 +16,7 @@ Regras para construir e revisar o `artigo.tex`, que é um **planejamento de estu
 
 - **Dados que pressupõem o trabalho pronto:** taxa de amostragem, número de participantes e de sessões, número do parecer do Comitê de Ética. O tamanho da amostra aparece como "definido por análise de poder a partir do estudo piloto".
 - **O relatório da iniciação científica** (`../DOC-20260930-WA0037.pdf`) serve só para corrigir a descrição do sistema. O artigo não o cita nem usa os números dele, porque ele não passou por revisão por pares (slide 05) e os números vêm de um único usuário.
-- **O sistema atual** é descrito de forma genérica, verdadeira para a versão publicada (Sousa e Guedes, SBCAS 2026) e para a atual: "módulos de sEMG de baixo custo que entregam o envelope do sinal, ligados a um Arduino". A montagem com dois zigomáticos aparece como *prevista*, e não como fato.
+- **O sistema atual** pode ser descrito pelo relatório da IC, em palavras e sem números, como sistema dos próprios autores, o que dispensa citação (slide 08); o artigo do SBCAS (Sousa e Guedes, 2026) continua citado como origem do jogo. O músculo exato não é nomeado, porque o relatório não o confirmou; a montagem com dois zigomáticos aparece como *prevista*, e não como fato (decisão do Matheus).
 - **Afirmações sem verificação**, como o filtro analógico de 20 a 450 Hz, que ainda não foi caracterizado.
 
 ## 3. Forma
@@ -34,6 +34,7 @@ Regras para construir e revisar o `artigo.tex`, que é um **planejamento de estu
 - `\citet{chave}` para a citação de autoridade ("Zhang et al. (2024) usam...") e `\citep{chave}` para a citação de ideia ("... (Zhang et al., 2024)") (slide 05; template).
 - Toda ideia alheia vem com a fonte, perto da informação; parágrafos que descrevem a própria proposta não precisam de citação (slide 08).
 - Só fontes revisadas por pares; pelo menos 10 artigos indexados no Scopus (template).
+- **Só fontes estreitamente ligadas ao tema.** Cada referência precisa acrescentar informação ao argumento; a que não agrega sai, mesmo que esteja no Scopus. Uma referência fora do Scopus pode ficar se for central para o tema, só não conta para os 10 (decisão do Matheus).
 - Cada referência nova tem o DOI conferido no Crossref, e o Matheus confere a indexação no Scopus. Os campos do `.bib` se limitam a autor, título, revista ou anais, ano, volume, páginas e DOI (slide 20).
 - Siglas e nomes próprios nos títulos do `.bib` vão entre chaves (`{sEMG}`), porque o estilo `plainnat` passa os títulos para minúsculas.
 - Afirmações sobre um trabalho citado só com base no que foi lido dele (resumo ou texto completo), e não em resumos de busca.

@@ -1,6 +1,9 @@
 *.swp
 venv/
 
+# PDFs das referências do artigo de Metodologia (direitos das editoras: não publicar)
+faculdade/metodologia_cientifica/trabalhos_para_entregar/trabalho_1_lncs/pdfs/
+
 # Arquivos auxiliares gerados pelo LaTeX
 *.aux
 *.log
