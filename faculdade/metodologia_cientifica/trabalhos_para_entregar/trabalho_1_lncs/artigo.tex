@@ -35,7 +35,7 @@
 \maketitle
 
 \begin{abstract}
-Jogos controlados por eletromiografia de superfície (sEMG) tornam mais motivadores os exercícios da reabilitação, mas exigem uma calibração a cada sessão, porque a recolocação dos eletrodos altera o sinal. Guardar a calibração anterior não basta, pois o padrão de ativação também muda quando o paciente melhora, e essa mudança deve ser registrada, e não compensada. Este trabalho propõe tratar a calibração entre sessões do EMGInvaders, um jogo controlado por sEMG facial, como um problema de aprendizado contínuo, sob a hipótese de que o reposicionamento dos eletrodos altera sobretudo a escala do sinal, e não o formato das contrações. O perfil de cada participante é formado pelos padrões de contração que se repetem, comparados pelo \textit{Matrix Profile} com uma distância insensível à escala, e é consolidado a cada sessão por \textit{replay}; durante a partida, o limiar de ativação acompanha a fadiga. A avaliação planejada compara a proposta com a calibração completa em sessões repetidas, quanto ao tempo de preparação, à retenção do perfil, aos disparos indevidos e à usabilidade. A contribuição esperada é um mecanismo, com seu protocolo de avaliação, para reduzir o tempo de preparação sem apagar o histórico do participante.
+Jogos controlados por eletromiografia de superfície (sEMG) tornam mais motivadores os exercícios da reabilitação, mas exigem uma calibração a cada sessão, porque a recolocação dos eletrodos altera o sinal. Guardar a calibração anterior não basta, pois o padrão de ativação também muda quando o paciente melhora, e essa mudança deve ser registrada, e não compensada. Este trabalho propõe tratar a calibração entre sessões do EMGInvaders, um jogo controlado por sEMG facial, como um problema de aprendizado contínuo, sob a hipótese de que o reposicionamento dos eletrodos altera sobretudo a escala do sinal, e não o formato das contrações. Propõe-se formar o perfil de cada participante pelos padrões de contração que se repetem, comparados pelo \textit{Matrix Profile} com uma distância insensível à escala, e comparar estratégias para consolidar esse perfil entre sessões e para ajustar o limiar de ativação à fadiga. A avaliação planejada compara a proposta com a calibração completa em sessões repetidas, quanto ao tempo de preparação, à retenção do perfil, aos disparos indevidos e à usabilidade. A contribuição esperada é um mecanismo, com seu protocolo de avaliação, para reduzir o tempo de preparação sem apagar o histórico do participante.
 
 \keywords{Eletromiografia de superfície \and Reabilitação facial \and Aprendizado contínuo \and \textit{Matrix Profile} \and Jogos sérios}
 \end{abstract}
@@ -54,7 +54,7 @@ Guardar a calibração e reutilizá-la na sessão seguinte não resolve o proble
 
 Há ainda uma dificuldade adicional: quando o sinal muda, não é evidente se o eletrodo foi recolocado, um artefato a compensar, ou se o paciente melhorou, um efeito a preservar. Este trabalho investiga, então, a seguinte pergunta de pesquisa: \textit{em sessões repetidas do EMGInvaders, um perfil baseado no formato das contrações reduz o tempo de preparação em relação à calibração completa, sem aumentar os disparos indevidos e sem perder o histórico do participante?} A hipótese central é que o reposicionamento dos eletrodos altera sobretudo a escala do sinal, isto é, sua amplitude como um todo, e não o formato das contrações, que descreve a sequência de início, sustentação e relaxamento.
 
-O objetivo geral é propor e avaliar um mecanismo de aprendizado contínuo de perfis de ativação para o EMGInvaders. Os objetivos específicos são: (i)~representar o perfil separando o formato da escala do sinal; (ii)~atualizar o perfil a cada sessão sem descartar as anteriores; (iii)~ajustar o limiar de ativação à fadiga, registrando-a como dado da sessão; e (iv)~definir um protocolo que compare a proposta com a calibração completa. A Seção~\ref{sec:revisao} apresenta os conceitos que fundamentam a proposta, e a Seção~\ref{sec:relacionados} compara os trabalhos mais próximos. As Seções~\ref{sec:metodologia} e~\ref{sec:avaliacao} descrevem a proposta e sua avaliação, e a Seção~\ref{sec:conclusao} reúne as contribuições esperadas, as limitações e o cronograma.
+O objetivo geral é propor e avaliar um mecanismo de aprendizado contínuo de perfis de ativação para o EMGInvaders. Os objetivos específicos são: (i)~representar o perfil separando o formato da escala do sinal; (ii)~atualizar o perfil a cada sessão sem descartar as anteriores; (iii)~ajustar o limiar de ativação à fadiga, registrando-a como dado da sessão; e (iv)~definir um protocolo que compare a proposta com a calibração completa. As Seções~\ref{sec:revisao} e~\ref{sec:relacionados} apresentam os conceitos e os trabalhos relacionados; as Seções~\ref{sec:metodologia} e~\ref{sec:avaliacao}, a proposta e sua avaliação; e a Seção~\ref{sec:conclusao}, as contribuições esperadas, as limitações e o cronograma.
 
 %=====================================================================
 \section{Revisão da Literatura}\label{sec:revisao}
@@ -64,21 +64,21 @@ O objetivo geral é propor e avaliar um mecanismo de aprendizado contínuo de pe
 
 Na contração, as unidades motoras recrutadas geram potenciais elétricos; um par de eletrodos sobre o músculo mede a diferença entre eles, e um terceiro, de referência, fica em região eletricamente inativa~\citep{hermens2000seniam}. Para controlar um jogo, costuma-se usar o envelope do sinal, versão retificada e suavizada que representa a intensidade da contração. Na face, os músculos são finos e próximos, o que favorece a captação da atividade de músculos vizinhos, o \textit{crosstalk}, e torna o posicionamento dos eletrodos mais crítico~\citep{franz2024facial}.
 
-Três fontes de mudança alteram o sinal, cada uma com um tratamento diferente. O reposicionamento dos eletrodos entre sessões degrada os sistemas treinados para reconhecer padrões de contração~\citep{young2011electrode}. A fadiga, dentro da sessão, reduz a amplitude e altera o conteúdo de frequência do sinal~\citep{cifrek2009fatigue}. A recuperação motora modifica o próprio padrão de ativação: na paralisia facial, o índice de lateralidade, que compara a amplitude dos dois lados do rosto, acompanha a gravidade clínica~\citep{machetanz2022facial}. Ao contrário das duas primeiras, a recuperação não é uma perturbação, e sim o efeito buscado pelo tratamento.
+Três fontes de mudança alteram o sinal, cada uma com um tratamento diferente. O reposicionamento dos eletrodos entre sessões degrada os sistemas treinados para reconhecer padrões de contração~\citep{young2011electrode}. A fadiga, dentro da sessão, reduz a amplitude e altera o conteúdo de frequência do sinal~\citep{cifrek2009fatigue}. A recuperação motora modifica o próprio padrão de ativação: na paralisia facial, o índice de lateralidade, que compara a amplitude dos dois lados do rosto, acompanha a gravidade clínica~\citep{machetanz2022facial}.
 
 \subsection{Matrix Profile}
 
 O \textit{Matrix Profile} é uma estrutura para a análise de séries temporais que associa a cada trecho de comprimento $m$ a distância até o trecho mais parecido em outra posição da série~\citep{yeh2016matrix}. Seus vales indicam \textit{motifs}, padrões que se repetem, e seus picos indicam \textit{discords}, trechos atípicos.
 
-A propriedade decisiva para esta proposta é a distância euclidiana $z$-\hspace{0pt}normalizada: antes da comparação, cada trecho é transformado para média zero e desvio-padrão unitário, de modo que a distância considera apenas o formato, e não a escala nem o nível médio~\citep{yeh2016matrix}. Se o reposicionamento altera sobretudo a escala, uma representação construída sobre essa distância tende a ser estável entre sessões e sensível às mudanças de formato da recuperação. Como a literatura consultada não confirma essa distinção para a sEMG facial, ela é tratada como hipótese, testada pelo protocolo da Seção~\ref{sec:avaliacao}.
+A propriedade decisiva para esta proposta é a distância euclidiana $z$-\hspace{0pt}normalizada: antes da comparação, cada trecho é transformado para média zero e desvio-padrão unitário, de modo que a distância considera apenas o formato, e não a escala nem o nível médio~\citep{yeh2016matrix}. Se o reposicionamento altera sobretudo a escala, uma representação construída sobre essa distância tende a ser estável entre sessões e sensível às mudanças de formato da recuperação; como a literatura consultada não confirma essa distinção para a sEMG facial, ela é a hipótese testada na Seção~\ref{sec:avaliacao}.
 
 \subsection{Aprendizado Contínuo}\label{sec:aprendizado}
 
-O aprendizado contínuo trata de incorporar informação nova ao longo do tempo sem descartar o que já foi aprendido~\citep{parisi2019continual}. Sua dificuldade central é o esquecimento catastrófico: ao ajustar um modelo aos dados recentes, o desempenho sobre os dados antigos cai de forma abrupta~\citep{kirkpatrick2017overcoming}. Entre as estratégias propostas, a de interesse direto aqui é o \textit{replay}, que mantém uma memória com exemplos do que já foi observado e os reapresenta junto aos dados novos durante a atualização~\citep{parisi2019continual}.
+O aprendizado contínuo trata de incorporar informação nova ao longo do tempo sem descartar o que já foi aprendido~\citep{parisi2019continual}. Sua dificuldade central é o esquecimento catastrófico: ao ajustar um modelo aos dados recentes, o desempenho sobre os dados antigos cai de forma abrupta~\citep{kirkpatrick2017overcoming}. As estratégias formam três famílias~\citep{parisi2019continual}: a regularização, que restringe a mudança dos parâmetros importantes para as tarefas antigas~\citep{kirkpatrick2017overcoming}; as arquiteturas dinâmicas, que ampliam o modelo; e o \textit{replay}, que reapresenta exemplos guardados junto aos dados novos. Só o \textit{replay} dispensa um modelo com parâmetros treináveis, pois a memória pode guardar trechos do sinal; por isso, ele é a primeira família investigada.
 
-A questão prática do \textit{replay} é escolher os exemplos que entram na memória, cuja capacidade é limitada. No iCaRL, os exemplares de cada classe são escolhidos de modo que sua média se aproxime da média da classe, em vez de sorteados~\citep{rebuffi2017icarl}. O sorteio ignora o conteúdo: aplicado a uma sessão de jogo, guardaria sobretudo trechos de repouso, que ocupam a maior parte do tempo.
+A questão prática do \textit{replay} é escolher os exemplos que entram na memória, de capacidade limitada. No iCaRL, eles são escolhidos de modo que sua média se aproxime da média da classe~\citep{rebuffi2017icarl}; o sorteio, ao contrário, ignora o conteúdo e, numa sessão de jogo, guardaria sobretudo trechos de repouso.
 
-No EMGInvaders, cada sessão corresponde a uma tarefa, a plasticidade consiste em acompanhar a mudança do padrão de ativação, e a estabilidade, em preservar o registro das sessões anteriores. As duas abordagens se articulam na memória de \textit{replay}: como os \textit{motifs} são os trechos que mais se repetem, selecioná-los guarda os padrões típicos de contração do participante.
+No EMGInvaders, cada sessão corresponde a uma tarefa, a plasticidade consiste em acompanhar a mudança do padrão de ativação, e a estabilidade, em preservar o registro das sessões anteriores. As duas abordagens se articulam na memória de \textit{replay}: como os \textit{motifs} são os trechos que mais se repetem, selecioná-los é uma forma candidata de guardar os padrões típicos de contração do participante.
 
 %=====================================================================
 \section{Trabalhos Relacionados}\label{sec:relacionados}
@@ -108,7 +108,7 @@ A Tabela~\ref{tab:relacionados} resume a comparação. Nenhum dos trabalhos enco
 \citet{chen2024lifelong} & Membro sup. & Cinemática & Aprendizado contínuo & Não \\
 \citet{zhang2024replay} & Membro sup. & Gestos & \textit{Replay} entre dias & Não \\
 \midrule
-Esta proposta & Face & Jogo & Perfil consolidado por \textit{replay} & Sim (a avaliar) \\
+Esta proposta & Face & Jogo & Perfil consolidado entre sessões & Sim (a avaliar) \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -137,48 +137,43 @@ A camada de adaptação opera fora do laço do jogo, porque o cálculo do \texti
 ]
 \node[box] (sensor) {Módulos de sEMG\\envelope do sinal};
 \node[box, right=of sensor] (arduino) {Arduino\\digitalização};
-\node[box, right=of arduino] (det) {Detecção\\limiar $\tau_j$};
+\node[box, right=of arduino] (det) {Detecção\\limiar adaptativo};
 \node[box, right=of det] (game) {Jogo\\ação da nave};
 \node[box, below=of arduino] (verif) {Verificação\\do perfil};
 \node[mem, below=of det] (mem) {Memória de perfis\\\textit{motifs}};
-\node[box, below=of game] (cons) {Consolidação\\\textit{replay}};
+\node[box, below=of game] (cons) {Consolidação\\do perfil};
 
 \draw[ar] (sensor) -- (arduino);
 \draw[ar] (arduino) -- (det);
 \draw[ar] (det) -- (game);
 \draw[ar] (arduino) -- node[lab, left] {início} (verif);
 \draw[ar] (mem) -- (verif);
-\draw[ar] (verif.north east) -- node[lab, right, pos=0.25] {$b,\,p_0$} (det.south west);
+\draw[ar] (verif.north east) -- node[lab, right, pos=0.25] {escala} (det.south west);
 \draw[ar] (game) -- node[lab, right] {fim} (cons);
 \draw[arb] (cons) -- (mem);
 
 \node[lay] at ([xshift=-0.35cm]sensor.west) {Tempo real};
 \node[lay] at ([xshift=-0.35cm]sensor.west |- verif) {Adaptação};
 \end{tikzpicture}
-\caption{Arquitetura proposta. No início da sessão, a verificação compara o sinal com o perfil e devolve ao detector a escala ($b$, $p_0$); ao final, a consolidação atualiza a memória (seta tracejada). O retângulo cinza é o dado guardado entre sessões.}
+\caption{Arquitetura proposta. A seta tracejada indica a atualização da memória ao final da sessão, e o retângulo cinza, o dado guardado entre sessões.}
 \label{fig:arquitetura}
 \end{figure}
 
 \subsection{Perfil e Consolidação entre Sessões}
 
-O perfil de um participante é o conjunto de \textit{motifs} extraídos de suas sessões anteriores. Para cada \textit{motif}, o perfil guarda separadamente o formato $z$-\hspace{0pt}normalizado e a amplitude correspondente. A separação é intencional: o formato é a parte que se espera estável sob reposicionamento, e a amplitude é a parte recalibrada a cada sessão.
+Propõe-se representar o perfil de um participante pelo conjunto de \textit{motifs} extraídos de suas sessões anteriores. Para cada \textit{motif}, o perfil guarda separadamente o formato $z$-\hspace{0pt}normalizado e a amplitude correspondente. A separação é intencional: o formato é a parte que se espera estável sob reposicionamento, e a amplitude é a parte recalibrada a cada sessão.
 
-No início de cada sessão, após o login, o jogo registra alguns segundos de contrações e calcula a distância $z$-\hspace{0pt}normalizada entre os \textit{motifs} desse trecho e os do perfil. Se a menor distância fica abaixo de um limiar de aceitação $\theta$, o perfil é aceito, e uma calibração curta reestima apenas o nível de repouso $b$ e a amplitude típica $p_0$. Caso contrário, o jogo executa a calibração completa e registra a distância observada como possível mudança de formato.
+No início de cada sessão, após o login, o jogo registra alguns segundos de contrações e calcula a distância $z$-\hspace{0pt}normalizada entre os \textit{motifs} desse trecho e os do perfil. Se a menor distância fica abaixo de um limiar de aceitação $\theta$, o perfil é aceito, e uma calibração curta reestima apenas o nível de repouso e a amplitude típica das contrações. Caso contrário, o jogo executa a calibração completa e registra a distância observada como possível mudança de formato.
 
-Ao final da sessão, o perfil é consolidado por \textit{replay}: ele resulta da união entre os \textit{motifs} da sessão e os já armazenados, e não da substituição dos antigos. Atingida a capacidade $K$ da memória, permanecem os \textit{motifs} mais representativos, isto é, os de menor distância no \textit{Matrix Profile}, que mais se repetiram. Uma fração $\rho$ da memória, porém, fica reservada às sessões antigas, para que o perfil não convirja para o estado recente e perca a trajetória do participante.
+Ao final da sessão, o perfil é atualizado pela união entre os \textit{motifs} da sessão e os já armazenados, e não pela substituição dos antigos. Quando a memória atinge sua capacidade, é preciso escolher o que permanece, e a pesquisa compara três critérios: manter os \textit{motifs} que mais se repetiram, com uma parte da memória reservada às sessões antigas, para que o perfil não convirja para o estado recente; selecionar por agrupamento, como \citet{zhang2024replay}; e sortear, como referência. A escolha ocorre no estudo piloto, pela métrica de retenção da Seção~\ref{sec:avaliacao}.
 
-Os parâmetros $m$ (em segundos, para que seu significado não dependa da taxa de amostragem), $K$, $\rho$ e $\theta$ são definidos num estudo piloto. O limiar $\theta$ é o mais sensível: um valor permissivo aceita perfis que já não descrevem o participante, e um valor restritivo elimina o ganho de tempo; o piloto o escolhe pelo compromisso entre a aceitação correta e a indevida, estimada com perfis de outros participantes.
+O comprimento $m$ das janelas (em segundos, para que seu significado não dependa da taxa de amostragem), a capacidade da memória e o limiar $\theta$ também são definidos no piloto. O limiar $\theta$ é o mais sensível: permissivo, aceita perfis que já não descrevem o participante; restritivo, elimina o ganho de tempo. O piloto o escolhe pelo compromisso entre a aceitação correta e a indevida, estimada com perfis de outros participantes.
 
 \subsection{Limiar Adaptativo}
 
-A detecção de ativação por comparação com um limiar acima do nível de repouso é um procedimento clássico na sEMG~\citep{hodges1996onset}. Nesta proposta, o limiar acompanha a amplitude típica das contrações ao longo da partida, por meio de uma média móvel exponencial dos picos detectados:
-\begin{align}
-\tilde{p}_j &= \alpha\, a_j + (1-\alpha)\, p_{j-1}, \label{eq:media}\\
-p_j &= \min\bigl\{\max\{\tilde{p}_j,\,(1-\delta)\,p_0\},\,(1+\delta)\,p_0\bigr\}, \qquad \tau_j = b + \kappa\,(p_j - b), \label{eq:faixa}
-\end{align}
-em que $a_j$ é o pico da $j$-ésima contração detectada, $b$ é o nível de repouso, $p_0$ é a amplitude típica estimada na calibração, $\alpha \in (0,1)$ controla a velocidade de adaptação, $\kappa \in (0,1)$ define a fração da amplitude típica que caracteriza uma contração e $\delta$ limita a variação de $p_j$ em torno de $p_0$.
+A detecção de ativação por comparação com um limiar acima do nível de repouso é um procedimento clássico na sEMG~\citep{hodges1996onset}, mas um limiar fixo deixa de servir quando a fadiga reduz a amplitude das contrações. O ajuste do limiar precisa, então, atender a dois requisitos: acompanhar essa queda ao longo da partida e mantê-la visível nos dados, porque a fadiga é uma informação que o terapeuta deseja observar.
 
-A faixa da Equação~\eqref{eq:faixa} responde a uma decisão clínica, e não técnica: se o limiar acompanhasse toda a queda de amplitude, o jogo seguiria responsivo, mas a fadiga, que o terapeuta deseja observar, desapareceria dos dados. Por isso, a razão $p_j/p_0$ é registrada ao longo da sessão como medida da deriva por fadiga.
+A pesquisa compara duas formas de ajuste: atualizar o limiar continuamente, como fração da amplitude típica das contrações recentes, ou recalibrar a escala em pausas curtas da partida, com uma contração de referência. Em ambas, o ajuste fica limitado a uma faixa em torno do valor calibrado, para não esconder a fadiga, e a diferença entre os dois valores é registrada como medida da deriva. A escolha ocorre no piloto, pelo critério de manter estável a taxa de gestos reconhecidos sem aumentar os disparos em repouso.
 
 %=====================================================================
 \section{Proposta de Avaliação Experimental}\label{sec:avaliacao}
@@ -188,7 +183,7 @@ A faixa da Equação~\eqref{eq:faixa} responde a uma decisão clínica, e não t
 
 A avaliação compara duas condições com os mesmos participantes. Na condição~A, o \textit{baseline}, o EMGInvaders executa a calibração completa a cada sessão, como faz hoje e como fazem os jogos de \citet{seo2022emg} e \citet{boulay2024serious}. Na condição~C, o jogo usa o perfil consolidado, a calibração curta e o limiar adaptativo.
 
-O delineamento é cruzado: cada participante realiza uma sequência de sessões em cada condição, separadas por dias para que ocorra o reposicionamento dos eletrodos, e a ordem das condições é sorteada para equilibrar o aprendizado do jogo. Na primeira sessão de~C, o perfil é criado pela calibração completa, e as comparações usam as sessões seguintes. A montagem, a versão do jogo e a duração da partida ficam fixas e documentadas. O número de participantes e de sessões é definido por análise de poder a partir do estudo piloto, com poder de 80\% e $\alpha = 0{,}05$.
+O delineamento previsto é cruzado: cada participante realiza uma sequência de sessões em cada condição, separadas por dias para que ocorra o reposicionamento dos eletrodos, e a ordem das condições é sorteada para equilibrar o aprendizado do jogo. Ele é preferido a dois grupos independentes porque, com poucos participantes, comparar cada pessoa consigo mesma reduz o peso das diferenças individuais; o desenho é revisto depois do estudo piloto. Na primeira etapa, os participantes são adultos saudáveis, recorte que viabiliza a coleta e a aprovação ética. Na primeira sessão de~C, o perfil é criado pela calibração completa, e as comparações usam as seguintes, com montagem, versão do jogo e duração da partida fixas e documentadas. O número de participantes e de sessões é definido por análise de poder a partir do estudo piloto, com poder de 80\% e $\alpha = 0{,}05$.
 
 Como a coleta envolve seres humanos e dados vinculados ao participante ao longo do tempo, ela depende da aprovação do Comitê de Ética em Pesquisa e da assinatura do Termo de Consentimento Livre e Esclarecido (TCLE), conforme as Resoluções 466/2012 e 510/2016 do Conselho Nacional de Saúde. O protocolo prevê explicitamente as sessões repetidas e o armazenamento do perfil vinculado ao login.
 
@@ -215,21 +210,21 @@ Usabilidade & Escore SUS ao fim de cada sessão & Igual ou maior \\
 \end{tabularx}
 \end{table}
 
-A métrica de retenção traduz o esquecimento para este contexto: depois que o perfil é atualizado pelas sessões~2 a~$n$, verifica-se se ele ainda aceita o registro da sessão~1, e uma queda progressiva indica que a consolidação não preserva o histórico. Calculada também para uma versão que substitui o perfil a cada sessão, essa medida isola o efeito do \textit{replay}.
+A métrica de retenção traduz o esquecimento para este contexto: depois das atualizações pelas sessões~2 a~$n$, o perfil ainda deve aceitar o registro da sessão~1. Calculada também para uma versão que substitui o perfil a cada sessão, ela isola o efeito da consolidação.
 
-Como a amostra é pequena e não há garantia de normalidade, as comparações entre A e C usam o teste de Wilcoxon pareado, bilateral, com $\alpha = 0{,}05$, sobre a média de cada participante em cada condição. Cada comparação relata a mediana da diferença, o intervalo de confiança de 95\% e o tamanho de efeito $r = Z/\sqrt{N}$, que informa a magnitude da diferença. Os testes e os critérios de exclusão de sessões são definidos antes da coleta, para que a análise não dependa dos dados observados.
+O teste estatístico é escolhido pelo diagnóstico dos dados: se a normalidade das diferenças pareadas entre A e C se sustenta (teste de Shapiro-Wilk e gráfico Q-Q), usa-se o teste $t$ pareado; caso contrário, o de Wilcoxon pareado, ambos bilaterais, com $\alpha = 0{,}05$. Cada comparação relata a diferença, o intervalo de confiança de 95\% e um tamanho de efeito, que informa a magnitude da diferença. Esse procedimento e os critérios de exclusão de sessões são definidos antes da coleta, para que a análise não dependa dos dados observados.
 
-Quanto às ameaças à validade interna, o participante melhora no jogo ao longo das sessões, efeito controlado pelo sorteio da ordem das condições; além disso, quem posiciona os eletrodos conhece a condição, e por isso a montagem segue um procedimento escrito, igual nas duas. Quanto à validade externa, a primeira etapa prevê adultos saudáveis, o que não permite observar a mudança de formato causada pela recuperação, e os resultados se limitam à montagem e ao hardware descritos.
+Quanto às ameaças à validade interna, o participante melhora no jogo ao longo das sessões, efeito controlado pelo sorteio da ordem das condições; além disso, quem posiciona os eletrodos conhece a condição, e por isso a montagem segue um procedimento escrito, igual nas duas. Quanto à validade externa, a amostra de adultos saudáveis não permite observar a mudança de formato causada pela recuperação, e os resultados se limitam à montagem e ao hardware descritos.
 
 %=====================================================================
 \section{Considerações Finais e Cronograma}\label{sec:conclusao}
 %=====================================================================
 
-Espera-se que o trabalho produza três contribuições: a formulação da calibração entre sessões em sEMG como um problema de aprendizado contínuo (Seção~\ref{sec:aprendizado}); o uso da separação entre escala e formato como critério para distinguir o artefato da evolução clínica e para escolher o que a memória de \textit{replay} guarda; e um protocolo de avaliação replicável, com métricas de retenção adaptadas à reabilitação.
+Espera-se que o trabalho produza três contribuições: a formulação da calibração entre sessões em sEMG como um problema de aprendizado contínuo (Seção~\ref{sec:aprendizado}); o uso da separação entre escala e formato como critério para distinguir o artefato da evolução clínica e para orientar o que a memória do perfil guarda; e um protocolo de avaliação replicável, com métricas de retenção adaptadas à reabilitação.
 
-Algumas limitações são conhecidas desde o planejamento. A hipótese de que o reposicionamento altera sobretudo a escala pode não se confirmar na face, onde o \textit{crosstalk} é frequente; nesse caso, a proposta precisa de outra representação do perfil. A aquisição limita-se ao envelope de dois canais, o que exclui as análises de frequência, e a amostra de adultos saudáveis restringe a avaliação à estabilidade e à retenção. Como trabalhos futuros, a coleta com pacientes permitirá avaliar a plasticidade, e a detecção de mudanças durante a sessão, como o descolamento de um eletrodo, poderá reajustar a escala sem esperar a sessão seguinte.
+Algumas limitações são conhecidas desde o planejamento. A hipótese de que o reposicionamento altera sobretudo a escala pode não se confirmar na face, onde o \textit{crosstalk} é frequente; nesse caso, a proposta precisa de outra representação do perfil. A aquisição limita-se ao envelope de dois canais, o que exclui as análises de frequência, e a amostra de adultos saudáveis restringe a avaliação à estabilidade e à retenção. Como trabalhos futuros, a coleta com pacientes permitirá avaliar a plasticidade, e a detecção do descolamento de um eletrodo durante a sessão poderá reajustar a escala de imediato.
 
-A Tabela~\ref{tab:cronograma} apresenta o cronograma, de janeiro a junho de 2027. A submissão ao Comitê de Ética ocorre no primeiro mês, em paralelo à revisão da literatura, porque é o caminho crítico: sem a aprovação, nem o piloto nem a coleta podem começar. As reuniões com o orientador, a cada dois meses, revisam o andamento antes de cada etapa.
+A Tabela~\ref{tab:cronograma} apresenta o cronograma, de janeiro a junho de 2027. A submissão ao Comitê de Ética ocorre no primeiro mês, em paralelo à revisão da literatura, porque é o caminho crítico: sem a aprovação, nem o piloto nem a coleta podem começar.
 
 \begin{table}[htb]
 \centering
@@ -242,8 +237,7 @@ A Tabela~\ref{tab:cronograma} apresenta o cronograma, de janeiro a junho de 2027
 \cmidrule(l){2-7}
  & jan & fev & mar & abr & mai & jun \\
 \midrule
-Revisão da literatura & X & X & & & & \\
-Submissão ao Comitê de Ética & X & X & & & & \\
+Revisão da literatura e submissão ao Comitê de Ética & X & X & & & & \\
 Implementação do perfil e da consolidação & & X & X & & & \\
 Estudo piloto e definição dos parâmetros & & & X & & & \\
 Limiar adaptativo e integração ao jogo & & & X & X & & \\
@@ -263,6 +257,6 @@ Os autores agradecem à Coordenação de Aperfeiçoamento de Pessoal de Nível S
 
 \section*{Uso de Inteligência Artificial Generativa}
 
-Este texto foi elaborado com o apoio do Claude Code (modelo Claude Opus 5.5, da Anthropic), em novembro de 2026, para: (i)~reestruturar o rascunho dos autores no formato do template; (ii)~buscar referências candidatas e conferir seus DOIs no Crossref; e (iii)~redigir o texto a partir das decisões dos autores sobre o tema, a pergunta, a avaliação e o escopo. Os autores conferiram a indexação das referências na Scopus, leram os resumos dos trabalhos citados, revisaram o texto e respondem pelo seu conteúdo.
+Este texto foi elaborado com o apoio do Claude Code (Claude Opus 5.5, Anthropic), em novembro de 2026, para reestruturar o rascunho dos autores no formato do template, buscar referências candidatas e conferir seus DOIs no Crossref, e redigir o texto a partir das decisões dos autores sobre o tema, a pergunta, a avaliação e o escopo. Os autores conferiram a indexação das referências na Scopus, leram os resumos dos trabalhos citados, revisaram o texto e respondem pelo seu conteúdo.
 
 \end{document}
