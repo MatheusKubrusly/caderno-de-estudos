@@ -225,6 +225,7 @@ public class SmokeTest {
         executar(ocupar(Setor.SUBSOLO, "EEE5E55", "A1", MotivoPreferencial.IDOSO).setMomento(t.plusMinutes(4)));
         executar(desocupar(Setor.SUBSOLO, "A1").setMomento(t.plusMinutes(94)));
         executar(sair(Setor.SUBSOLO, "EEE5E55").setMomento(t.plusMinutes(97)));
+        executar(entrar(Setor.EXTERNO, "EEE5E55", null).setMomento(t.plusMinutes(120)));
         executar(entrar(Setor.EXTERNO, "XYZ9K88", null));
         executar(ocupar(Setor.EXTERNO, "XYZ9K88", "C2", null));
         executar(entrar(Setor.SUBSOLO, "DDD4D44", 1.85));
@@ -266,13 +267,34 @@ public class SmokeTest {
         check("TEMPO_MEDIO usa só estadias fechadas",
                 contem("Geral:") && contem("1h 37min") && contem("(1 estadia fechada)"));
 
+        executar(relatorio(TipoRelatorio.HORARIOS_DE_PICO, null, null, null));
+        check("HORARIOS_DE_PICO mostra horas, dias e a maior lotação",
+                contem("Entradas por hora") && contem("Pico:") && contem("Domingo")
+                        && contem("Maior lotação: 2 de 25"));
+
+        executar(relatorio(TipoRelatorio.CLIENTES_FREQUENTES, null, null, null));
+        check("CLIENTES_FREQUENTES conta quem voltou",
+                contem("Placas distintas: 4") && contem("Voltaram (2 visitas ou mais): 1") && contem("EEE5E55"));
+
+        executar(relatorio(TipoRelatorio.GIRO_POR_VAGA, null, null, null));
+        check("GIRO_POR_VAGA lista as vagas e aponta a mais disputada",
+                contem("Período observado") && contem("A1 (P)") && contem("Mais disputada"));
+
+        executar(relatorio(TipoRelatorio.TEMPO_ATE_ESTACIONAR, null, null, null));
+        check("TEMPO_ATE_ESTACIONAR mede a espera e lista quem circula",
+                contem("máximo 4min") && contem("Circulando agora: 2") && contem("KKK1K11"));
+
         executar(relatorio(TipoRelatorio.COMPLETO, null, null, null));
         Relatorio completo = relatorioNovo();
-        check("COMPLETO reúne as quatro seções",
+        check("COMPLETO reúne as oito seções",
                 completo != null && completo.getTitulo().equals("RELATÓRIO COMPLETO")
                         && contem("OCUPAÇÃO POR SETOR")
                         && contem("TEMPO MÉDIO DE PERMANÊNCIA")
+                        && contem("TEMPO ATÉ ESTACIONAR")
                         && contem("USO DE VAGAS PREFERENCIAIS")
+                        && contem("HORÁRIOS DE PICO")
+                        && contem("GIRO POR VAGA")
+                        && contem("CLIENTES FREQUENTES")
                         && contem("HISTÓRICO GERAL"));
         check("COMPLETO cabe em 90 colunas",
                 completo != null && completo.getLinhas().stream().allMatch(l -> l.length() <= 90));

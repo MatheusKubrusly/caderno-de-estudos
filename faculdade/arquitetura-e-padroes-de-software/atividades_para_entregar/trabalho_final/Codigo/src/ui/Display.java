@@ -92,14 +92,10 @@ public class Display implements Observer {
     public void renderizarMenuRelatorios() {
         System.out.println();
         System.out.println("RELATÓRIOS");
-        System.out.println("  1. Ocupação por setor");
-        System.out.println("  2. Histórico geral");
-        System.out.println("  3. Histórico por placa");
-        System.out.println("  4. Histórico por período");
-        System.out.println("  5. Tempo médio de permanência");
-        System.out.println("  6. Uso de vagas preferenciais");
-        System.out.println("  7. Relatório completo (todos os relatórios)");
-        System.out.println("  0. Voltar");
+        for (TipoRelatorio t : TipoRelatorio.values()) {
+            System.out.println(String.format("  %2d. %s", t.ordinal() + 1, t.rotulo()));
+        }
+        System.out.println("   0. Voltar");
     }
 
     /** Lista numerada, na mesma ordem em que a CLI a recebeu do Blackboard. */
