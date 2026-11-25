@@ -3,7 +3,10 @@ package ui;
 import blackboard.Blackboard;
 import blackboard.Observer;
 import model.*;
+import util.Formatador;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +52,11 @@ public class Display implements Observer {
         System.out.println("╔" + "═".repeat(w) + "╗");
         System.out.println("║" + String.format("%-" + w + "s", "   ESTACIONAMENTO — SHOPPING CENTER") + "║");
         System.out.println("╠" + "═".repeat(w) + "╣");
-        System.out.println("║" + String.format("%-" + w + "s", "  1. Entrar no estacionamento") + "║");
-        System.out.println("║" + String.format("%-" + w + "s", "  2. Sair do estacionamento") + "║");
-        System.out.println("║" + String.format("%-" + w + "s", "  3. Relatórios") + "║");
+        System.out.println("║" + String.format("%-" + w + "s", "  1. Entrar no setor (cancela)") + "║");
+        System.out.println("║" + String.format("%-" + w + "s", "  2. Ocupar uma vaga") + "║");
+        System.out.println("║" + String.format("%-" + w + "s", "  3. Desocupar uma vaga") + "║");
+        System.out.println("║" + String.format("%-" + w + "s", "  4. Sair do setor (cancela)") + "║");
+        System.out.println("║" + String.format("%-" + w + "s", "  5. Relatórios") + "║");
         System.out.println("║" + String.format("%-" + w + "s", "  0. Encerrar o sistema") + "║");
         System.out.println("╚" + "═".repeat(w) + "╝");
     }
@@ -62,10 +67,12 @@ public class Display implements Observer {
         System.out.println();
         System.out.println("Selecione o setor:");
         System.out.println("  1. " + ex.descricao() + "  — Comuns: " + blackboard.vagasLivresComuns(ex) + "/"
-                + blackboard.totalComuns(ex) + " livres");
+                + blackboard.totalComuns(ex) + " livres  |  Circulando: "
+                + blackboard.getVeiculosCirculando(ex).size());
         System.out.println("  2. " + su.descricao() + "  — Comuns: " + blackboard.vagasLivresComuns(su) + "/"
                 + blackboard.totalComuns(su) + " livres  |  Preferenciais: "
-                + blackboard.vagasLivresPreferenciais(su) + "/" + blackboard.totalPreferenciais(su) + " livres");
+                + blackboard.vagasLivresPreferenciais(su) + "/" + blackboard.totalPreferenciais(su)
+                + " livres  |  Circulando: " + blackboard.getVeiculosCirculando(su).size());
         System.out.println("  0. Voltar");
     }
 
@@ -92,6 +99,19 @@ public class Display implements Observer {
         System.out.println("  5. Tempo médio de permanência");
         System.out.println("  6. Uso de vagas preferenciais");
         System.out.println("  7. Relatório completo (todos os relatórios)");
+        System.out.println("  0. Voltar");
+    }
+
+    /** Lista numerada, na mesma ordem em que a CLI a recebeu do Blackboard. */
+    public void renderizarVeiculosCirculando(List<Estadia> circulando) {
+        LocalDateTime agora = LocalDateTime.now();
+        System.out.println();
+        System.out.println("Veículos circulando:");
+        for (int i = 0; i < circulando.size(); i++) {
+            Estadia e = circulando.get(i);
+            System.out.println("  " + (i + 1) + ". " + e.getPlaca() + "  — circulando há "
+                    + Formatador.duracao(Duration.between(e.getUltimoEvento(), agora)));
+        }
         System.out.println("  0. Voltar");
     }
 

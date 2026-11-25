@@ -6,7 +6,7 @@ public class Vaga {
     private final int posicao;
     private final TipoVaga tipo;
     private StatusVaga status = StatusVaga.LIVRE;
-    private RegistroLog registroAtual;   // log aberto, ou null se livre
+    private Estadia estadiaAtual;        // estadia do veículo na vaga, ou null se livre
 
     public Vaga(char fileira, int posicao, TipoVaga tipo) {
         this.fileira = fileira;
@@ -19,8 +19,8 @@ public class Vaga {
     public char getFileira() { return fileira; }
     public int getPosicao() { return posicao; }
     public void setStatus(StatusVaga status) { this.status = status; }
-    public RegistroLog getRegistroAtual() { return registroAtual; }
-    public void setRegistroAtual(RegistroLog registroAtual) { this.registroAtual = registroAtual; }
+    public Estadia getEstadiaAtual() { return estadiaAtual; }
+    public void setEstadiaAtual(Estadia estadiaAtual) { this.estadiaAtual = estadiaAtual; }
 
     public boolean isLivre() {
         return status == StatusVaga.LIVRE;

@@ -21,8 +21,8 @@ public class RelatorioKS extends KnowledgeSource {
     private static final String SEM_DADOS = "sem dados";
     private static final int LARGURA_SECAO = 80;
     private static final String FORMATO_OCUPACAO = "%-8s %6s %7s %7s %7s %6s %7s";
-    private static final String FORMATO_PRESENTES = "%-8s  %-7s  %-4s  %-11s  %s";
-    private static final String FORMATO_HISTORICO = "%-8s  %-7s  %-4s  %-11s  %-11s  %-13s  %s";
+    private static final String FORMATO_PRESENTES = "%-8s  %-7s  %-10s  %-11s  %s";
+    private static final String FORMATO_HISTORICO = "%-8s  %-7s  %-6s  %-11s  %-11s  %-13s  %s";
 
     public RelatorioKS(Blackboard blackboard) {
         super(blackboard);
@@ -84,7 +84,7 @@ public class RelatorioKS extends KnowledgeSource {
         adicionarSecao(linhas, "OCUPAÇÃO POR SETOR", linhasOcupacao());
         adicionarSecao(linhas, "TEMPO MÉDIO DE PERMANÊNCIA", linhasTempoMedio());
         adicionarSecao(linhas, "USO DE VAGAS PREFERENCIAIS", linhasPreferenciais());
-        adicionarSecao(linhas, "HISTÓRICO GERAL", linhasHistorico(blackboard.getHistorico()));
+        adicionarSecao(linhas, "HISTÓRICO GERAL", linhasHistorico(blackboard.getEstadias()));
 
         while (!linhas.isEmpty() && linhas.get(linhas.size() - 1).isEmpty()) {
             linhas.remove(linhas.size() - 1);
@@ -147,7 +147,7 @@ public class RelatorioKS extends KnowledgeSource {
 
     private List<String> linhasVeiculosPresentes() {
         List<String> linhas = new ArrayList<>();
-        List<RegistroLog> presentes = filtrarHistorico(RegistroLog::isAberto);
+        List<Estadia> presentes = filtrarHistorico(Estadia::isAberta);
 
         linhas.add("Veículos no estacionamento: " + presentes.size());
         if (presentes.isEmpty()) {
@@ -157,11 +157,12 @@ public class RelatorioKS extends KnowledgeSource {
         linhas.add(String.format(FORMATO_PRESENTES,
                 "Placa", "Setor", "Vaga", "Entrada", "Permanência"));
         LocalDateTime agora = LocalDateTime.now();
-        for (RegistroLog l : presentes) {
+        for (Estadia e : presentes) {
+            Ocupacao atual = e.getOcupacaoAtual();
             linhas.add(String.format(FORMATO_PRESENTES,
-                    l.getPlaca(), l.getSetor().name(), l.getIdVaga(),
-                    Formatador.dataHoraCurta(l.getEntrada()),
-                    Formatador.duracao(Duration.between(l.getEntrada(), agora))));
+                    e.getPlaca(), e.getSetor().name(), atual != null ? atual.getIdVaga() : "circulando",
+                    Formatador.dataHoraCurta(e.getEntrada()),
+                    Formatador.duracao(Duration.between(e.getEntrada(), agora))));
         }
         return linhas;
     }
@@ -170,7 +171,7 @@ public class RelatorioKS extends KnowledgeSource {
 
     private Relatorio gerarHistoricoGeral() {
         return new Relatorio(TipoRelatorio.HISTORICO_GERAL, "HISTÓRICO GERAL",
-                linhasHistorico(blackboard.getHistorico()));
+                linhasHistorico(blackboard.getEstadias()));
     }
 
     private Relatorio gerarHistoricoPorPlaca(String placa) {
@@ -187,25 +188,25 @@ public class RelatorioKS extends KnowledgeSource {
                 "HISTÓRICO DE " + Formatador.dataHora(inicio) + " A " + Formatador.dataHora(fim), linhas);
     }
 
-    private List<String> linhasHistorico(List<RegistroLog> logs) {
+    private List<String> linhasHistorico(List<Estadia> estadias) {
         List<String> linhas = new ArrayList<>();
-        if (logs.isEmpty()) {
+        if (estadias.isEmpty()) {
             linhas.add(SEM_DADOS);
             return linhas;
         }
         linhas.add(String.format(FORMATO_HISTORICO,
                 "Placa", "Setor", "Vaga", "Entrada", "Saída", "Permanência", "Motivo"));
-        for (RegistroLog l : logs) {
-            String saida = l.isAberto() ? "—" : Formatador.dataHoraCurta(l.getSaida());
-            String perm = l.isAberto() ? "em aberto"
-                    : Formatador.duracao(Duration.between(l.getEntrada(), l.getSaida()));
-            String motivo = l.getMotivo() == null ? "—" : l.getMotivo().rotulo().toUpperCase();
+        for (Estadia e : estadias) {
+            String saida = e.isAberta() ? "—" : Formatador.dataHoraCurta(e.getSaida());
+            String perm = e.isAberta() ? "em aberto"
+                    : Formatador.duracao(Duration.between(e.getEntrada(), e.getSaida()));
+            String motivo = e.getMotivo() == null ? "—" : e.getMotivo().rotulo().toUpperCase();
             linhas.add(String.format(FORMATO_HISTORICO,
-                    l.getPlaca(), l.getSetor().name(), l.getIdVaga(),
-                    Formatador.dataHoraCurta(l.getEntrada()), saida, perm, motivo));
+                    e.getPlaca(), e.getSetor().name(), e.getVagas(),
+                    Formatador.dataHoraCurta(e.getEntrada()), saida, perm, motivo));
         }
         linhas.add("");
-        linhas.add("Total: " + logs.size() + (logs.size() == 1 ? " registro" : " registros"));
+        linhas.add("Total: " + estadias.size() + (estadias.size() == 1 ? " estadia" : " estadias"));
         return linhas;
     }
 
@@ -216,37 +217,45 @@ public class RelatorioKS extends KnowledgeSource {
     }
 
     private List<String> linhasTempoMedio() {
-        List<RegistroLog> fechados = filtrarHistorico(l -> !l.isAberto());
+        List<Estadia> fechados = filtrarHistorico(e -> !e.isAberta());
         List<String> linhas = new ArrayList<>();
         if (fechados.isEmpty()) {
             linhas.add(SEM_DADOS + " (nenhuma estadia encerrada)");
             return linhas;
         }
         linhas.add(linhaMedia("Geral", fechados));
-        linhas.add(linhaMedia("Externo", filtrar(fechados, l -> l.getSetor() == Setor.EXTERNO)));
-        linhas.add(linhaMedia("Subsolo", filtrar(fechados, l -> l.getSetor() == Setor.SUBSOLO)));
-        linhas.add(linhaMedia("Comum", filtrar(fechados, l -> !isPreferencial(l))));
-        linhas.add(linhaMedia("Preferencial", filtrar(fechados, this::isPreferencial)));
+        linhas.add(linhaMedia("Externo", filtrar(fechados, e -> e.getSetor() == Setor.EXTERNO)));
+        linhas.add(linhaMedia("Subsolo", filtrar(fechados, e -> e.getSetor() == Setor.SUBSOLO)));
+        linhas.add(linhaMedia("Comum", filtrar(fechados, e -> !usouPreferencial(e))));
+        linhas.add(linhaMedia("Preferencial", filtrar(fechados, this::usouPreferencial)));
         linhas.add("");
         linhas.add("Estadias em aberto não entram no cálculo.");
         return linhas;
     }
 
-    private String linhaMedia(String rotulo, List<RegistroLog> logs) {
+    private String linhaMedia(String rotulo, List<Estadia> estadias) {
         String prefixo = String.format("%-14s", rotulo + ":");
-        if (logs.isEmpty()) {
+        if (estadias.isEmpty()) {
             return prefixo + SEM_DADOS;
         }
-        return prefixo + Formatador.duracao(mediaPermanencia(logs)) + " ("
-                + logs.size() + (logs.size() == 1 ? " estadia fechada)" : " estadias fechadas)");
+        return prefixo + Formatador.duracao(mediaPermanencia(estadias)) + " ("
+                + estadias.size() + (estadias.size() == 1 ? " estadia fechada)" : " estadias fechadas)");
     }
 
-    private Duration mediaPermanencia(List<RegistroLog> fechados) {
-        long segundos = 0;
-        for (RegistroLog l : fechados) {
-            segundos += Duration.between(l.getEntrada(), l.getSaida()).getSeconds();
+    private Duration mediaPermanencia(List<Estadia> fechadas) {
+        List<Duration> duracoes = new ArrayList<>();
+        for (Estadia e : fechadas) {
+            duracoes.add(Duration.between(e.getEntrada(), e.getSaida()));
         }
-        return Duration.ofSeconds(segundos / fechados.size());
+        return media(duracoes);
+    }
+
+    private Duration media(List<Duration> duracoes) {
+        long segundos = 0;
+        for (Duration d : duracoes) {
+            segundos += d.getSeconds();
+        }
+        return Duration.ofSeconds(segundos / duracoes.size());
     }
 
     // ------------------------------------------------------------ PREFERENCIAIS
@@ -266,21 +275,20 @@ public class RelatorioKS extends KnowledgeSource {
         }
         linhas.add("Ocupação atual: " + String.join(" | ", situacao));
 
-        List<RegistroLog> usos = filtrarHistorico(this::isPreferencial);
-        int totalEstadias = blackboard.getHistorico().size();
+        List<Ocupacao> usos = ocupacoesPreferenciais();
         if (usos.isEmpty()) {
             linhas.add("Total de usos: 0");
             linhas.add("Por motivo: " + SEM_DADOS);
-            linhas.add("Permanência média: " + SEM_DADOS);
+            linhas.add("Tempo médio na vaga: " + SEM_DADOS);
             return linhas;
         }
 
         linhas.add("Total de usos: " + usos.size() + " ("
-                + Formatador.percentual(usos.size(), totalEstadias) + " das estadias)");
+                + Formatador.percentual(usos.size(), totalOcupacoes()) + " das ocupações)");
 
         List<String> porMotivo = new ArrayList<>();
         for (MotivoPreferencial m : MotivoPreferencial.values()) {
-            long n = usos.stream().filter(l -> l.getMotivo() == m).count();
+            long n = usos.stream().filter(o -> o.getMotivo() == m).count();
             porMotivo.add(m.rotulo().toUpperCase() + " " + n);
         }
         for (int i = 0; i < porMotivo.size(); i += 3) {
@@ -289,29 +297,57 @@ public class RelatorioKS extends KnowledgeSource {
                     porMotivo.subList(i, Math.min(i + 3, porMotivo.size()))));
         }
 
-        List<RegistroLog> fechados = filtrar(usos, l -> !l.isAberto());
-        linhas.add("Permanência média: " + (fechados.isEmpty()
-                ? SEM_DADOS + " (nenhuma estadia encerrada)"
-                : Formatador.duracao(mediaPermanencia(fechados))));
+        List<Duration> encerradas = new ArrayList<>();
+        for (Ocupacao o : usos) {
+            if (!o.isAberta()) encerradas.add(Duration.between(o.getInicio(), o.getFim()));
+        }
+        linhas.add("Tempo médio na vaga: " + (encerradas.isEmpty()
+                ? SEM_DADOS + " (nenhuma ocupação encerrada)"
+                : Formatador.duracao(media(encerradas))));
         return linhas;
     }
 
     // ------------------------------------------------------------------ apoio
 
-    /** O tipo da vaga não é guardado no log: é derivado de Vaga.tipo (setor + idVaga). */
-    private boolean isPreferencial(RegistroLog l) {
-        Vaga v = blackboard.getVaga(l.getSetor(), l.getIdVaga());
+    /** O tipo da vaga não é guardado na estadia: é derivado de Vaga.tipo (setor + idVaga). */
+    private boolean isPreferencial(Setor setor, String idVaga) {
+        Vaga v = blackboard.getVaga(setor, idVaga);
         return v != null && v.isPreferencial();
     }
 
-    private List<RegistroLog> filtrarHistorico(Predicate<RegistroLog> filtro) {
-        return filtrar(blackboard.getHistorico(), filtro);
+    private boolean usouPreferencial(Estadia e) {
+        for (Ocupacao o : e.getOcupacoes()) {
+            if (isPreferencial(e.getSetor(), o.getIdVaga())) return true;
+        }
+        return false;
     }
 
-    private List<RegistroLog> filtrar(List<RegistroLog> logs, Predicate<RegistroLog> filtro) {
-        List<RegistroLog> r = new ArrayList<>();
-        for (RegistroLog l : logs) {
-            if (filtro.test(l)) r.add(l);
+    private List<Ocupacao> ocupacoesPreferenciais() {
+        List<Ocupacao> r = new ArrayList<>();
+        for (Estadia e : blackboard.getEstadias()) {
+            for (Ocupacao o : e.getOcupacoes()) {
+                if (isPreferencial(e.getSetor(), o.getIdVaga())) r.add(o);
+            }
+        }
+        return r;
+    }
+
+    private int totalOcupacoes() {
+        int total = 0;
+        for (Estadia e : blackboard.getEstadias()) {
+            total += e.getOcupacoes().size();
+        }
+        return total;
+    }
+
+    private List<Estadia> filtrarHistorico(Predicate<Estadia> filtro) {
+        return filtrar(blackboard.getEstadias(), filtro);
+    }
+
+    private List<Estadia> filtrar(List<Estadia> estadias, Predicate<Estadia> filtro) {
+        List<Estadia> r = new ArrayList<>();
+        for (Estadia e : estadias) {
+            if (filtro.test(e)) r.add(e);
         }
         return r;
     }

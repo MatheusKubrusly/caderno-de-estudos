@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 
 /**
  * Item de trabalho publicado no Blackboard (DTO, não é Command).
- * Campos não aplicáveis ao tipo ficam null.
+ * Campos não aplicáveis ao tipo ficam null. {@code momento} é o horário do evento:
+ * a tela usa a hora atual; a releitura do registro de eventos, a hora gravada.
  */
 public class Requisicao {
     private TipoRequisicao tipo;
@@ -16,6 +17,7 @@ public class Requisicao {
     private TipoRelatorio tipoRelatorio;
     private LocalDateTime inicio;
     private LocalDateTime fim;
+    private LocalDateTime momento;
 
     public TipoRequisicao getTipo() { return tipo; }
     public Setor getSetor() { return setor; }
@@ -26,6 +28,7 @@ public class Requisicao {
     public TipoRelatorio getTipoRelatorio() { return tipoRelatorio; }
     public LocalDateTime getInicio() { return inicio; }
     public LocalDateTime getFim() { return fim; }
+    public LocalDateTime getMomento() { return momento; }
 
     public Requisicao setTipo(TipoRequisicao tipo) { this.tipo = tipo; return this; }
     public Requisicao setSetor(Setor setor) { this.setor = setor; return this; }
@@ -36,4 +39,5 @@ public class Requisicao {
     public Requisicao setTipoRelatorio(TipoRelatorio tipoRelatorio) { this.tipoRelatorio = tipoRelatorio; return this; }
     public Requisicao setInicio(LocalDateTime inicio) { this.inicio = inicio; return this; }
     public Requisicao setFim(LocalDateTime fim) { this.fim = fim; return this; }
+    public Requisicao setMomento(LocalDateTime momento) { this.momento = momento; return this; }
 }

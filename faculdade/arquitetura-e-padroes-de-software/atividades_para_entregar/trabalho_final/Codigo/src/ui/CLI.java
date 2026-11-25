@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -42,11 +43,13 @@ public class CLI {
             boolean ativo = true;
             while (ativo) {
                 display.renderizarMenu();
-                int opcao = lerInteiro("Opção: ", 0, 3);
+                int opcao = lerInteiro("Opção: ", 0, 5);
                 switch (opcao) {
-                    case 1 -> fluxoEntrada();
-                    case 2 -> fluxoSaida();
-                    case 3 -> fluxoRelatorio();
+                    case 1 -> fluxoEntrar();
+                    case 2 -> fluxoOcupar();
+                    case 3 -> fluxoDesocupar();
+                    case 4 -> fluxoSair();
+                    case 5 -> fluxoRelatorio();
                     default -> ativo = false;
                 }
             }
@@ -59,41 +62,67 @@ public class CLI {
     // ------------------------------------------------------------------ fluxos
 
     /**
-     * Mantém o operador na mesma matriz em caso de rejeição: apenas pede outra vaga,
-     * preservando setor, placa e altura já validada. `0` na vaga volta à seleção de setor
-     * (para trocar placa/altura); `0` no setor volta ao menu principal.
+     * Entrada pela cancela do setor. Em caso de recusa, pede de novo só o dado recusado:
+     * a placa, se o veículo já está no estacionamento; senão, a altura (regra do Subsolo).
+     * `0` na altura volta à seleção de setor; `0` no setor volta ao menu principal.
      */
-    private void fluxoEntrada() {
+    private void fluxoEntrar() {
         while (true) {
             Setor setor = escolherSetor();
             if (setor == null) return;
 
             // Buffer de entrada: existe só até a publicação da Requisicao.
             // Não é estado de domínio — o Blackboard ainda não foi tocado.
-            Double alturaValidada = null;
+            Double altura = null;
             if (setor == Setor.SUBSOLO) {
-                alturaValidada = lerAlturaValidada();
-                if (alturaValidada == null) continue;  // 0 na altura: volta ao setor
+                altura = lerAltura();
+                if (altura == null) continue;
             }
-            String placaInformada = lerPlaca();
+            String placa = lerPlaca();
 
-            if (escolherVagaEEstacionar(setor, placaInformada, alturaValidada)) return;
-            // 0 na vaga: volta ao setor para revisar placa/altura
+            while (true) {
+                Requisicao req = new Requisicao()
+                        .setTipo(TipoRequisicao.ENTRAR)
+                        .setSetor(setor)
+                        .setPlaca(placa)
+                        .setAltura(altura);
+                if (publicarEExecutar(req)) return;
+
+                // Recusado: o Display já mostrou o motivo; pede de novo só o dado recusado.
+                if (blackboard.getEstadiaAberta(placa) != null) {
+                    placa = lerPlaca();
+                } else if (setor == Setor.SUBSOLO) {
+                    altura = lerAltura();
+                    if (altura == null) break;
+                } else {
+                    return;
+                }
+            }
         }
     }
 
-    /** Repete apenas a escolha de vaga até o KS aceitar ou o operador desistir. */
-    private boolean escolherVagaEEstacionar(Setor setor, String placaInformada, Double alturaValidada) {
+    /** Escolhe um veículo que está circulando no setor e repete só a escolha de vaga até o KS aceitar. */
+    private void fluxoOcupar() {
+        while (true) {
+            Setor setor = escolherSetor();
+            if (setor == null) return;
+            Estadia veiculo = escolherVeiculoCirculando(setor);
+            if (veiculo == null) continue;
+            if (escolherVagaEOcupar(setor, veiculo.getPlaca())) return;
+            // 0 na vaga: volta ao setor
+        }
+    }
+
+    private boolean escolherVagaEOcupar(Setor setor, String placa) {
         while (true) {
             display.renderizarMatriz(setor);
-            String idVaga = lerVaga(setor, "Escolha uma vaga (ex.: A1, 0 para voltar): ");
+            String idVaga = lerVaga(setor, "Escolha a vaga para " + placa + " (ex.: A1, 0 para voltar): ");
             if (idVaga == null) return false;
 
             Requisicao req = new Requisicao()
-                    .setTipo(TipoRequisicao.ENTRADA)
+                    .setTipo(TipoRequisicao.OCUPAR)
                     .setSetor(setor)
-                    .setPlaca(placaInformada)
-                    .setAltura(alturaValidada)
+                    .setPlaca(placa)
                     .setIdVaga(idVaga);
 
             Vaga vaga = blackboard.getVaga(setor, idVaga);
@@ -109,22 +138,22 @@ public class CLI {
         }
     }
 
-    private void fluxoSaida() {
+    private void fluxoDesocupar() {
         while (true) {
             Setor setor = escolherSetor();
             if (setor == null) return;
-            if (escolherVagaELiberar(setor)) return;
+            if (escolherVagaEDesocupar(setor)) return;
         }
     }
 
-    private boolean escolherVagaELiberar(Setor setor) {
+    private boolean escolherVagaEDesocupar(Setor setor) {
         while (true) {
             display.renderizarMatriz(setor);
-            String idVaga = lerVaga(setor, "Escolha a vaga para liberar (ex.: B3, 0 para voltar): ");
+            String idVaga = lerVaga(setor, "Escolha a vaga para desocupar (ex.: B3, 0 para voltar): ");
             if (idVaga == null) return false;
 
             Requisicao req = new Requisicao()
-                    .setTipo(TipoRequisicao.SAIDA).setSetor(setor).setIdVaga(idVaga);
+                    .setTipo(TipoRequisicao.DESOCUPAR).setSetor(setor).setIdVaga(idVaga);
 
             if (publicarEExecutar(req)) {
                 display.renderizarMatriz(setor);
@@ -132,6 +161,14 @@ public class CLI {
             }
             // Rejeitado: repete a matriz para escolher outra vaga.
         }
+    }
+
+    /** Saída pela cancela. Se o KS recusar (por exemplo, veículo ainda na vaga), o motivo fica na tela. */
+    private void fluxoSair() {
+        Setor setor = escolherSetor();
+        if (setor == null) return;
+        publicarEExecutar(new Requisicao()
+                .setTipo(TipoRequisicao.SAIR).setSetor(setor).setPlaca(lerPlaca()));
     }
 
     private void fluxoRelatorio() {
@@ -154,6 +191,7 @@ public class CLI {
 
     /** A requisição só chega ao Blackboard quando está completa. Devolve true se o KS aceitou. */
     private boolean publicarEExecutar(Requisicao req) {
+        if (req.getMomento() == null) req.setMomento(LocalDateTime.now());
         ResultadoOperacao anterior = blackboard.getUltimoResultado();
         blackboard.publicarRequisicao(req);
         controller.executarCiclo();
@@ -187,24 +225,17 @@ public class CLI {
         }
     }
 
-    /**
-     * A altura é validada pelo SubsoloKS ANTES de coletar placa e vaga, para o operador
-     * não avançar sabendo que o veículo não pode entrar. A regra continua no especialista:
-     * a CLI apenas publica uma Requisicao(VALIDAR_ALTURA) e lê o ResultadoOperacao.
-     */
-    private Double lerAlturaValidada() {
-        while (true) {
-            Double altura = lerAltura();
-            if (altura == null) return null;
-
-            Requisicao validacao = new Requisicao()
-                    .setTipo(TipoRequisicao.VALIDAR_ALTURA)
-                    .setSetor(Setor.SUBSOLO)
-                    .setAltura(altura);
-
-            if (publicarEExecutar(validacao)) return altura;
-            // Rejeitada: o Display já mostrou o motivo; pede a altura novamente.
+    /** Lista os veículos circulando no setor e devolve o escolhido; null se não houver nenhum ou se o operador digitar 0. */
+    private Estadia escolherVeiculoCirculando(Setor setor) {
+        List<Estadia> circulando = blackboard.getVeiculosCirculando(setor);
+        if (circulando.isEmpty()) {
+            display.renderizarAviso("Nenhum veículo circulando no setor " + setor.descricao()
+                    + ". Registre uma entrada antes.");
+            return null;
         }
+        display.renderizarVeiculosCirculando(circulando);
+        int opcao = lerInteiro("Veículo: ", 0, circulando.size());
+        return opcao == 0 ? null : circulando.get(opcao - 1);
     }
 
     private String lerPlaca() {

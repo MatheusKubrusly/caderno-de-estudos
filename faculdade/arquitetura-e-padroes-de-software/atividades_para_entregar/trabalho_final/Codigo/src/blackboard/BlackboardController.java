@@ -1,6 +1,7 @@
 package blackboard;
 
 import knowledge_sources.KnowledgeSource;
+import model.Requisicao;
 import model.ResultadoOperacao;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 public class BlackboardController {
 
     private static final int MAX_CICLOS = 10;
+    private static final String ORIGEM = "Controlador";
 
     private final Blackboard blackboard;
     private final List<KnowledgeSource> knowledgeSources;
@@ -27,9 +29,10 @@ public class BlackboardController {
             if (!executarVarredura()) break;
         }
 
-        if (blackboard.getRequisicaoPendente() != null) {
-            blackboard.publicarResultado(
-                    ResultadoOperacao.erro("Nenhum especialista apto para a requisição."));
+        Requisicao pendente = blackboard.getRequisicaoPendente();
+        if (pendente != null) {
+            blackboard.publicarResultado(ResultadoOperacao.erro(
+                    ORIGEM, pendente, "Nenhum especialista apto para a requisição."));
             blackboard.consumirRequisicao();
         }
     }
@@ -43,8 +46,8 @@ public class BlackboardController {
                     return true;
                 }
             } catch (RuntimeException e) {
-                blackboard.publicarResultado(
-                        ResultadoOperacao.erro("Erro inesperado: " + e.getMessage()));
+                blackboard.publicarResultado(ResultadoOperacao.erro(
+                        ks.nome(), blackboard.getRequisicaoPendente(), "Erro inesperado: " + e.getMessage()));
                 blackboard.consumirRequisicao();
                 return true;
             }

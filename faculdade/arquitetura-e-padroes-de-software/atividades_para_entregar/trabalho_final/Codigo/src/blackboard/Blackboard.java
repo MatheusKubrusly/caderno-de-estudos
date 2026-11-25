@@ -14,7 +14,7 @@ import java.util.Map;
  * Memória compartilhada da arquitetura Blackboard.
  *
  * Padrões: Singleton (instância única) e Subject do Observer.
- * Todo o estado de domínio vive aqui: vagas, histórico, requisição pendente,
+ * Todo o estado de domínio vive aqui: vagas, estadias (o histórico), requisição pendente,
  * último resultado e último relatório. Os KS são stateless.
  */
 public final class Blackboard {
@@ -22,12 +22,13 @@ public final class Blackboard {
     private static Blackboard instancia;
 
     private final Map<Setor, Map<String, Vaga>> vagas = new EnumMap<>(Setor.class);
-    private final List<RegistroLog> historico = new ArrayList<>();
+    private final List<Estadia> estadias = new ArrayList<>();
     private final List<Observer> observers = new ArrayList<>();
 
     private Requisicao requisicaoPendente;
     private ResultadoOperacao ultimoResultado;
     private Relatorio ultimoRelatorio;
+    private int lotesAbertos;            // > 0 enquanto executarEmLote() roda
 
     private Blackboard() {
         popularVagas();
@@ -87,23 +88,41 @@ public final class Blackboard {
         return Collections.unmodifiableList(new ArrayList<>(vagas.get(setor).values()));
     }
 
-    public synchronized List<RegistroLog> getHistorico() {
-        return Collections.unmodifiableList(new ArrayList<>(historico));
+    public synchronized List<Estadia> getEstadias() {
+        return Collections.unmodifiableList(new ArrayList<>(estadias));
     }
 
-    public synchronized List<RegistroLog> buscarPorPlaca(String placa) {
-        List<RegistroLog> r = new ArrayList<>();
-        for (RegistroLog l : historico) {
-            if (l.getPlaca().equalsIgnoreCase(placa.trim())) r.add(l);
+    public synchronized List<Estadia> buscarPorPlaca(String placa) {
+        List<Estadia> r = new ArrayList<>();
+        for (Estadia e : estadias) {
+            if (e.getPlaca().equalsIgnoreCase(placa.trim())) r.add(e);
         }
         return Collections.unmodifiableList(r);
     }
 
     /** Filtra pela data/hora de ENTRADA dentro de [inicio, fim]. */
-    public synchronized List<RegistroLog> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
-        List<RegistroLog> r = new ArrayList<>();
-        for (RegistroLog l : historico) {
-            if (!l.getEntrada().isBefore(inicio) && !l.getEntrada().isAfter(fim)) r.add(l);
+    public synchronized List<Estadia> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
+        List<Estadia> r = new ArrayList<>();
+        for (Estadia e : estadias) {
+            if (!e.getEntrada().isBefore(inicio) && !e.getEntrada().isAfter(fim)) r.add(e);
+        }
+        return Collections.unmodifiableList(r);
+    }
+
+    /** Estadia em andamento da placa, em qualquer setor, ou null se o veículo está fora. */
+    public synchronized Estadia getEstadiaAberta(String placa) {
+        if (placa == null) return null;
+        for (Estadia e : estadias) {
+            if (e.isAberta() && e.getPlaca().equalsIgnoreCase(placa.trim())) return e;
+        }
+        return null;
+    }
+
+    /** Veículos que entraram no setor e não estão numa vaga (ainda não estacionaram ou já desocuparam). */
+    public synchronized List<Estadia> getVeiculosCirculando(Setor setor) {
+        List<Estadia> r = new ArrayList<>();
+        for (Estadia e : estadias) {
+            if (e.getSetor() == setor && e.getSituacao() == SituacaoVeiculo.CIRCULANDO) r.add(e);
         }
         return Collections.unmodifiableList(r);
     }
@@ -148,18 +167,26 @@ public final class Blackboard {
                 .filter(v -> v.isLivre() && v.isPreferencial()).count();
     }
 
-    // -------------------------------------------- escrita atômica (vaga + log)
+    // ------------------------------------- escrita atômica (uma por evento)
 
-    public synchronized void registrarEntrada(Vaga vaga, RegistroLog log) {
-        vaga.setStatus(StatusVaga.OCUPADA);
-        vaga.setRegistroAtual(log);
-        historico.add(log);
+    public synchronized void registrarEntrada(Estadia estadia) {
+        estadias.add(estadia);
     }
 
-    public synchronized void registrarSaida(Vaga vaga, LocalDateTime saida) {
-        vaga.getRegistroAtual().setSaida(saida);
+    public synchronized void registrarOcupacao(Estadia estadia, Vaga vaga, Ocupacao ocupacao) {
+        estadia.adicionarOcupacao(ocupacao);
+        vaga.setStatus(StatusVaga.OCUPADA);
+        vaga.setEstadiaAtual(estadia);
+    }
+
+    public synchronized void registrarDesocupacao(Vaga vaga, LocalDateTime fim) {
+        vaga.getEstadiaAtual().getOcupacaoAtual().setFim(fim);
         vaga.setStatus(StatusVaga.LIVRE);
-        vaga.setRegistroAtual(null);
+        vaga.setEstadiaAtual(null);
+    }
+
+    public synchronized void registrarSaida(Estadia estadia, LocalDateTime saida) {
+        estadia.setSaida(saida);
     }
 
     // ------------------------------------------------ publicação de resultados
@@ -178,6 +205,39 @@ public final class Blackboard {
         notificarObservers();
     }
 
+    // ------------------------------------------------------------- manutenção
+
+    /** Volta ao estado inicial: todas as vagas livres e nenhuma estadia. */
+    public void reiniciar() {
+        synchronized (this) {
+            vagas.clear();
+            popularVagas();
+            estadias.clear();
+            requisicaoPendente = null;
+            ultimoResultado = null;
+            ultimoRelatorio = null;
+        }
+        notificarObservers();
+    }
+
+    /**
+     * Executa várias requisições seguidas (por exemplo, ao reler o registro de eventos)
+     * sem notificar os observers a cada uma; eles são avisados uma vez, no fim.
+     */
+    public void executarEmLote(Runnable tarefa) {
+        synchronized (this) {
+            lotesAbertos++;
+        }
+        try {
+            tarefa.run();
+        } finally {
+            synchronized (this) {
+                lotesAbertos--;
+            }
+        }
+        notificarObservers();
+    }
+
     // ---------------------------------------------------------------- observer
 
     public synchronized void adicionarObserver(Observer o) {
@@ -187,6 +247,7 @@ public final class Blackboard {
     private void notificarObservers() {
         List<Observer> copia;
         synchronized (this) {
+            if (lotesAbertos > 0) return;
             copia = new ArrayList<>(observers);
         }
         for (Observer o : copia) {

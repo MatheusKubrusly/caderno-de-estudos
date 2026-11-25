@@ -26,9 +26,21 @@ public abstract class KnowledgeSource {
         return true;
     }
 
+    /** Nome do especialista, usado como origem dos resultados que ele publica. */
+    public String nome() {
+        return getClass().getSimpleName();
+    }
+
+    /** Publica um sucesso no Blackboard; o Display é quem o exibe. */
+    protected void sucesso(String mensagem) {
+        blackboard.publicarResultado(
+                ResultadoOperacao.ok(nome(), blackboard.getRequisicaoPendente(), mensagem));
+    }
+
     /** Publica uma rejeição no Blackboard; o Display é quem a exibe. */
     protected void erro(String mensagem) {
-        blackboard.publicarResultado(ResultadoOperacao.erro(mensagem));
+        blackboard.publicarResultado(
+                ResultadoOperacao.erro(nome(), blackboard.getRequisicaoPendente(), mensagem));
     }
 
     protected abstract boolean condition();
