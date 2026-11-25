@@ -1,2 +1,12 @@
 *.swp
 venv/
+
+# Arquivos auxiliares gerados pelo LaTeX
+*.aux
+*.log
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.out
+*.synctex.gz
