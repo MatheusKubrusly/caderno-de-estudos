@@ -154,7 +154,7 @@ public class SmokeTest {
         executar(entrar(Setor.EXTERNO, "HHH8H88", null));
         executar(ocupar(Setor.EXTERNO, "HHH8H88", "B3", null));
         check("Vaga ocupada: erro e o ocupante continua o mesmo",
-                recusou() && bb.getVaga(Setor.EXTERNO, "B3").getEstadiaAtual().getPlaca().equals("AAA1A11"));
+                recusou() && bb.getVaga(Setor.EXTERNO, "B3").getOcupacaoAtual().getPlaca().equals("AAA1A11"));
 
         executar(ocupar(Setor.EXTERNO, "HHH8H88", "Z9", null));
         check("Vaga inexistente: erro", recusou());
@@ -183,7 +183,7 @@ public class SmokeTest {
         executar(desocupar(Setor.SUBSOLO, "A1"));
         check("Desocupar: libera a vaga e o veículo volta a circular",
                 sucesso() && bb.getVaga(Setor.SUBSOLO, "A1").isLivre()
-                        && bb.getVaga(Setor.SUBSOLO, "A1").getEstadiaAtual() == null
+                        && bb.getVaga(Setor.SUBSOLO, "A1").getOcupacaoAtual() == null
                         && situacao("CCC3C33") == SituacaoVeiculo.CIRCULANDO
                         && !bb.getEstadiaAberta("CCC3C33").getOcupacoes().get(0).isAberta());
 

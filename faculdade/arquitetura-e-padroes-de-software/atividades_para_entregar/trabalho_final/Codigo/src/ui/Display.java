@@ -80,7 +80,7 @@ public class Display implements Observer {
         int w = 54;
         System.out.println();
         System.out.println("┌─ VAGA PREFERENCIAL " + "─".repeat(w - 20) + "┐");
-        System.out.println("│" + String.format("%-" + w + "s", " Informe o motivo de uso (Lei nº 10.048/2000):") + "│");
+        System.out.println("│" + String.format("%-" + w + "s", " Informe o motivo de uso:") + "│");
         MotivoPreferencial[] motivos = MotivoPreferencial.values();
         for (int i = 0; i < motivos.length; i++) {
             System.out.println("│" + String.format("%-" + w + "s", " " + (i + 1) + ". " + motivos[i].descricao()) + "│");

@@ -176,13 +176,13 @@ public final class Blackboard {
     public synchronized void registrarOcupacao(Estadia estadia, Vaga vaga, Ocupacao ocupacao) {
         estadia.adicionarOcupacao(ocupacao);
         vaga.setStatus(StatusVaga.OCUPADA);
-        vaga.setEstadiaAtual(estadia);
+        vaga.setOcupacaoAtual(ocupacao);
     }
 
     public synchronized void registrarDesocupacao(Vaga vaga, LocalDateTime fim) {
-        vaga.getEstadiaAtual().getOcupacaoAtual().setFim(fim);
+        vaga.getOcupacaoAtual().setFim(fim);
         vaga.setStatus(StatusVaga.LIVRE);
-        vaga.setEstadiaAtual(null);
+        vaga.setOcupacaoAtual(null);
     }
 
     public synchronized void registrarSaida(Estadia estadia, LocalDateTime saida) {

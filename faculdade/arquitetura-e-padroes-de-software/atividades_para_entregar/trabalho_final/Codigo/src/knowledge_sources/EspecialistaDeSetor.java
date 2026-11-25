@@ -129,7 +129,7 @@ public abstract class EspecialistaDeSetor extends KnowledgeSource {
         }
 
         MotivoPreferencial motivo = vaga.isPreferencial() ? r.getMotivo() : null;
-        blackboard.registrarOcupacao(estadia, vaga, new Ocupacao(vaga.getId(), momento, motivo));
+        blackboard.registrarOcupacao(estadia, vaga, new Ocupacao(placa, vaga.getId(), momento, motivo));
         sucesso("Veículo " + placa + " estacionado em " + vaga.getId()
                 + (motivo != null ? " (Preferencial - " + motivo.rotulo() + ")" : "")
                 + " — " + Formatador.hora(momento));
@@ -145,8 +145,9 @@ public abstract class EspecialistaDeSetor extends KnowledgeSource {
             erro("Vaga " + vaga.getId() + " já está desocupada.");
             return;
         }
-        Estadia estadia = vaga.getEstadiaAtual();
-        if (estadia == null || estadia.getOcupacaoAtual() == null) {
+        Ocupacao ocupacao = vaga.getOcupacaoAtual();
+        Estadia estadia = ocupacao == null ? null : blackboard.getEstadiaAberta(ocupacao.getPlaca());
+        if (estadia == null || estadia.getOcupacaoAtual() != ocupacao) {
             erro("Vaga " + vaga.getId() + " não possui ocupação em aberto.");
             return;
         }
@@ -156,7 +157,7 @@ public abstract class EspecialistaDeSetor extends KnowledgeSource {
             return;
         }
 
-        LocalDateTime inicio = estadia.getOcupacaoAtual().getInicio();
+        LocalDateTime inicio = ocupacao.getInicio();
         blackboard.registrarDesocupacao(vaga, momento);
         sucesso("Vaga " + vaga.getId() + " liberada — " + estadia.getPlaca()
                 + " voltou a circular às " + Formatador.hora(momento)
