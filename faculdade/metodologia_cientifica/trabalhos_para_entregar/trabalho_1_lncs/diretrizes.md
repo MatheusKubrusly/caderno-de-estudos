@@ -57,6 +57,7 @@ Regras para construir e revisar o `artigo.tex`, que é um **planejamento de estu
 
 ## 7. Como o trabalho anda
 
+- Os conselhos dos slides da disciplina são seguidos fielmente, porque garantem a estrutura do artigo. Quando um corte ou uma mudança contrariar um slide, o Claude avisa e pergunta antes (decisão do Matheus).
 - O Claude escreve e edita em trechos pequenos, para o Matheus revisar pelo diff.
 - Tudo o que depende da opinião do Matheus vira pergunta com opções, com a recomendada primeiro.
 - Commit e push esperam o "pode" do Matheus.
