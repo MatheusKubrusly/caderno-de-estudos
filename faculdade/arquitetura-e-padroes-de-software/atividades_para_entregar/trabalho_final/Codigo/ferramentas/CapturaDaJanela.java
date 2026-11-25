@@ -21,6 +21,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Gera imagens da janela sem mostrá-la na tela, para conferir o visual e ilustrar o roteiro
@@ -33,6 +34,7 @@ import java.util.List;
 public class CapturaDaJanela {
 
     public static void main(String[] args) throws Exception {
+        Locale.setDefault(Locale.forLanguageTag("pt-BR"));
         Path pasta = Path.of(args.length > 0 ? args[0] : ".");
         Files.createDirectories(pasta);
         Path cenario = Path.of("dados", "cenario-demonstracao.csv");

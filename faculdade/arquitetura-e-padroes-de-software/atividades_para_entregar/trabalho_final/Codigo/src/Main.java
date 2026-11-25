@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /** Composition root: cria e conecta todos os componentes. */
 public class Main {
@@ -26,6 +27,7 @@ public class Main {
 
     public static void main(String[] args) {
         Terminal.configurarUtf8();
+        Locale.setDefault(Locale.forLanguageTag("pt-BR"));   // botões das caixas de diálogo em português
 
         Blackboard blackboard = Blackboard.getInstance();
 

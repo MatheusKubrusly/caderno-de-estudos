@@ -14,6 +14,7 @@ import ui.janela.ConferenciaDeLayout;
 import ui.janela.PainelCiclo;
 import ui.janela.PainelSetor;
 
+import javax.swing.UIManager;
 import java.awt.Color;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -24,6 +25,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 /**
@@ -394,7 +396,7 @@ public class SmokeTest {
 
     // --------------------------------------------- front-ends (sem abrir a tela)
 
-    private static void frontEnds() {
+    private static void frontEnds() throws IOException {
         titulo("Front-ends (a parte que não depende da tela)");
         check("Formato: placa em maiúsculas; curta ou com espaço é recusada",
                 "ABC1D23".equals(FormatoDeEntrada.placa(" abc1d23 "))
@@ -442,6 +444,9 @@ public class SmokeTest {
                 ConferenciaDeLayout.botaoGerarSempreVisivel(600));
         check("Controle: a conferência de layout acusa um botão cortado (250 px)",
                 !ConferenciaDeLayout.botaoGerarSempreVisivel(250));
+        check("Janela: botões das caixas de diálogo em português (a Main define pt-BR)",
+                "Sim".equals(UIManager.getString("OptionPane.yesButtonText", Locale.forLanguageTag("pt-BR")))
+                        && Files.readString(Path.of("src/Main.java")).contains("Locale.forLanguageTag(\"pt-BR\")"));
     }
 
     // ---------------------------------------------------------- arquitetura
