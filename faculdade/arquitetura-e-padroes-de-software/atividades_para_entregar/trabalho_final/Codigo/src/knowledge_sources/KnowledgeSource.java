@@ -1,0 +1,37 @@
+package knowledge_sources;
+
+import blackboard.Blackboard;
+import model.ResultadoOperacao;
+
+/**
+ * Template Method: o esqueleto do ciclo (condition -> execute) é fixo em run().
+ * Cada especialista implementa apenas condition() e execute().
+ *
+ * Contrato: condition() não tem efeito colateral; execute() atualiza o Blackboard
+ * e publica o resultado nele (nunca imprime).
+ */
+public abstract class KnowledgeSource {
+
+    protected final Blackboard blackboard;
+
+    protected KnowledgeSource(Blackboard blackboard) {
+        this.blackboard = blackboard;
+    }
+
+    public final boolean run() {
+        if (!condition()) {
+            return false;
+        }
+        execute();
+        return true;
+    }
+
+    /** Publica uma rejeição no Blackboard; o Display é quem a exibe. */
+    protected void erro(String mensagem) {
+        blackboard.publicarResultado(ResultadoOperacao.erro(mensagem));
+    }
+
+    protected abstract boolean condition();
+
+    protected abstract void execute();
+}

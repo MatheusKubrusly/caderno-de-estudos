@@ -1,0 +1,15 @@
+out/
+.idea/
+*.iml
+Codigo/dados/eventos.csv
+*.aux
+*.log
+*.toc
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.lof
+*.lot
