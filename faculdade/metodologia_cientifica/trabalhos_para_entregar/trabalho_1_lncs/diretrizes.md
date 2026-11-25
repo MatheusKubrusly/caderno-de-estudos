@@ -50,6 +50,7 @@ Regras para construir e revisar o `artigo.tex`, que é um **planejamento de estu
 - No máximo **10 páginas, contando referências e a seção de IA**.
 - Referências em `\small`, sem espaço extra, e DOI no formato curto do template ("doi: 10....").
 - Agradecimentos: só a CAPES, pelo acesso ao Portal de Periódicos. Autores: campo a preencher.
+- Seção de IA generativa: uma frase, com o texto definido pelo Matheus (uso da IA nas buscas no Scopus e na localização de referências).
 - Compilação local, no VS Code, com `latexmk -pdf artigo.tex` (precisa do pacote `texlive-publishers`, que traz a `llncs`).
 
 ## 7. Como o trabalho anda
