@@ -1,3 +1,4 @@
+import aplicacao.FachadaEstacionamento;
 import blackboard.Blackboard;
 import blackboard.BlackboardController;
 import knowledge_sources.EspecialistaDeSetor;
@@ -6,12 +7,16 @@ import knowledge_sources.KnowledgeSource;
 import knowledge_sources.RelatorioKS;
 import knowledge_sources.SubsoloKS;
 import model.*;
+import persistencia.CsvDeEventos;
+import persistencia.RegistroDeEventos;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -41,6 +46,8 @@ public class SmokeTest {
         manutencao();
         cenarios();
         relatorios();
+        fachada();
+        registro();
         arquitetura();
 
         System.out.println();
@@ -300,6 +307,85 @@ public class SmokeTest {
                 completo != null && completo.getLinhas().stream().allMatch(l -> l.length() <= 90));
     }
 
+    // -------------------------------------------------------------- fachada
+
+    private static void fachada() {
+        titulo("Fachada");
+        bb.reiniciar();
+        FachadaEstacionamento f = new FachadaEstacionamento(bb, ctrl);
+        ResultadoOperacao r = f.entrar(Setor.EXTERNO, "FAC1A00", null);
+        check("entrar devolve a resposta do especialista à própria requisição",
+                r != null && r.isSucesso() && "ExternoKS".equals(r.getOrigem())
+                        && r.getRequisicao().getMomento() != null);
+        check("Relatório aceito é devolvido; relatório recusado devolve null",
+                f.gerarRelatorio(TipoRelatorio.OCUPACAO, null, null, null) != null
+                        && f.gerarRelatorio(TipoRelatorio.HISTORICO_POR_PLACA, null, null, null) == null);
+        bb.reiniciar();
+    }
+
+    // ------------------------------------------------- registro em CSV e cenário
+
+    private static void registro() throws IOException {
+        titulo("Registro em CSV e cenário");
+        Path arquivo = Files.createTempFile("eventos", ".csv");
+        Files.delete(arquivo);
+        FachadaEstacionamento f = new FachadaEstacionamento(bb, ctrl);
+        RegistroDeEventos registro = new RegistroDeEventos(bb, f, arquivo);
+        bb.reiniciar();
+        bb.adicionarObserver(registro);
+
+        LocalDateTime t = LocalDateTime.of(2026, 11, 20, 18, 0);
+        f.enviar(entrar(Setor.SUBSOLO, "RRR1R11", 1.80).setMomento(t));
+        f.enviar(ocupar(Setor.SUBSOLO, "RRR1R11", "A1", MotivoPreferencial.PCD).setMomento(t.plusMinutes(3)));
+        f.enviar(desocupar(Setor.SUBSOLO, "A1").setMomento(t.plusMinutes(60)));
+        f.enviar(sair(Setor.SUBSOLO, "RRR1R11").setMomento(t.plusMinutes(62)));
+        f.enviar(entrar(Setor.EXTERNO, "SSS2S22", null).setMomento(t.plusMinutes(5)));
+        f.enviar(ocupar(Setor.EXTERNO, "SSS2S22", "C3", null).setMomento(t.plusMinutes(8)));
+        f.enviar(ocupar(Setor.EXTERNO, "NAOENTROU", "C4", null).setMomento(t.plusMinutes(9)));
+        f.gerarRelatorio(TipoRelatorio.OCUPACAO, null, null, null);
+        List<String> gravadas = Files.readAllLines(arquivo);
+        check("Grava só os eventos aceitos (cabeçalho + 6 linhas; recusa e relatório ficam de fora)",
+                gravadas.size() == 7 && gravadas.get(0).equals(CsvDeEventos.CABECALHO)
+                        && gravadas.get(2).equals("2026-11-20T18:03:00;OCUPAR;SUBSOLO;RRR1R11;;A1;PCD"));
+
+        bb.reiniciar();
+        RegistroDeEventos.Leitura leitura = registro.carregar();
+        check("Reler o arquivo reconstrói o Blackboard pelos especialistas",
+                leitura.aceitos() == 6 && leitura.problemas().isEmpty()
+                        && bb.getEstadias().size() == 2 && !bb.getVaga(Setor.EXTERNO, "C3").isLivre()
+                        && bb.buscarPorPlaca("RRR1R11").get(0).getMotivo() == MotivoPreferencial.PCD);
+        check("Reler não duplica linhas", Files.readAllLines(arquivo).size() == 7);
+
+        Files.writeString(arquivo, "isto não é um evento\n2026-11-20T19:00:00;OCUPAR;EXTERNO;ZZZ0Z00;;C4;\n",
+                StandardOpenOption.APPEND);
+        bb.reiniciar();
+        leitura = registro.carregar();
+        check("Linha malformada e evento recusado são informados e pulados",
+                leitura.aceitos() == 6 && leitura.problemas().size() == 2
+                        && leitura.problemas().get(0).startsWith("linha 8")
+                        && leitura.problemas().get(1).contains("recusada"));
+
+        leitura = registro.carregarCenario(Path.of("dados/cenario-demonstracao.csv"));
+        List<Estadia> estadias = bb.getEstadias();
+        check("Cenário de demonstração: nenhuma recusa", leitura.problemas().isEmpty() && leitura.aceitos() > 1000);
+        check("Cenário: semana de 16 a 22/11/2026, com todas as estadias encerradas",
+                !estadias.isEmpty() && estadias.stream().noneMatch(Estadia::isAberta)
+                        && estadias.stream().allMatch(e -> !e.getEntrada().toLocalDate().isBefore(LocalDate.of(2026, 11, 16))
+                                && !e.getEntrada().toLocalDate().isAfter(LocalDate.of(2026, 11, 22))));
+        check("Cenário: tem uso preferencial, troca de vaga e clientes que voltaram",
+                estadias.stream().anyMatch(e -> e.getMotivo() != null)
+                        && estadias.stream().anyMatch(e -> e.getOcupacoes().size() > 1)
+                        && estadias.stream().map(Estadia::getPlaca).distinct().count() < estadias.size());
+        check("Cenário copiado por cima do registro", Files.readAllLines(arquivo).size() == leitura.aceitos() + 1);
+
+        registro.zerar();
+        check("Zerar deixa só o cabeçalho e o Blackboard vazio",
+                Files.readAllLines(arquivo).equals(List.of(CsvDeEventos.CABECALHO)) && bb.getEstadias().isEmpty());
+
+        bb.removerObserver(registro);
+        Files.deleteIfExists(arquivo);
+    }
+
     // ---------------------------------------------------------- arquitetura
 
     private static void arquitetura() throws IOException {
@@ -332,6 +418,20 @@ public class SmokeTest {
 
         boolean bbLimpo = !Files.readString(Path.of("src/blackboard/Blackboard.java")).contains("knowledge_sources");
         check("Blackboard não importa KS", bbLimpo);
+        check("Fachada e persistência não importam especialistas",
+                !importa("src/aplicacao", "knowledge_sources") && !importa("src/persistencia", "knowledge_sources"));
+        check("O pacote blackboard não importa fachada nem persistência",
+                !importa("src/blackboard", "aplicacao") && !importa("src/blackboard", "persistencia"));
+    }
+
+    /** Algum arquivo da pasta tem "import pacote"? */
+    private static boolean importa(String pasta, String pacote) throws IOException {
+        try (Stream<Path> arquivos = Files.list(Path.of(pasta))) {
+            for (Path p : (Iterable<Path>) arquivos::iterator) {
+                if (Files.readString(p).contains("import " + pacote)) return true;
+            }
+        }
+        return false;
     }
 
     // ---------------------------------------------------------------- apoio

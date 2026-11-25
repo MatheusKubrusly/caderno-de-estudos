@@ -244,6 +244,10 @@ public final class Blackboard {
         observers.add(o);
     }
 
+    public synchronized void removerObserver(Observer o) {
+        observers.remove(o);
+    }
+
     private void notificarObservers() {
         List<Observer> copia;
         synchronized (this) {
