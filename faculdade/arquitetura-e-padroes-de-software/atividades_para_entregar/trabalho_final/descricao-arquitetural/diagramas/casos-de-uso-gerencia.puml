@@ -1,0 +1,42 @@
+@startuml casos-de-uso-gerencia
+!include estilo.iuml
+title Casos de uso da gerência
+left to right direction
+
+actor "Gerente do shopping" as gerente
+
+rectangle "Sistema de vagas do shopping" {
+  usecase "Emitir relatório\ngerencial" as UC
+  usecase "Informar a placa" as placa
+  usecase "Informar o período" as periodo
+
+  usecase "Ocupação por setor" as R1
+  usecase "Histórico geral" as R2
+  usecase "Histórico por placa" as R3
+  usecase "Histórico por período" as R4
+  usecase "Tempo médio de\npermanência" as R5
+  usecase "Uso de vagas\npreferenciais" as R6
+  usecase "Horários de pico" as R7
+  usecase "Clientes frequentes" as R8
+  usecase "Giro por vaga" as R9
+  usecase "Tempo até estacionar" as R10
+  usecase "Relatório completo\n(todos os relatórios)" as R11
+}
+
+gerente --> UC
+
+R3 .> placa : <<include>>
+R4 .> periodo : <<include>>
+
+UC <|-- R11
+UC <|-- R10
+UC <|-- R9
+UC <|-- R8
+UC <|-- R7
+UC <|-- R6
+UC <|-- R5
+UC <|-- R4
+UC <|-- R3
+UC <|-- R2
+UC <|-- R1
+@enduml

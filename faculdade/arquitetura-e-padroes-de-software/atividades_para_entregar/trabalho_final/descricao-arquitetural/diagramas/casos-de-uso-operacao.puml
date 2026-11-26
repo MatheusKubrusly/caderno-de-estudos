@@ -1,0 +1,41 @@
+@startuml casos-de-uso-operacao
+!include estilo.iuml
+title Casos de uso da operação
+left to right direction
+
+actor "Operador da cancela" as operador
+actor "Sensor de vaga" as sensor
+actor "Administrador" as admin
+
+rectangle "Sistema de vagas do shopping" {
+  usecase "Registrar entrada" as UC1
+  usecase "Validar a altura\n(só no Subsolo)" as UC1a
+  usecase "Registrar saída" as UC4
+  usecase "Desocupar e sair\n(atalho da janela)" as UC4a
+  usecase "Registrar desocupação\nde vaga" as UC3
+  usecase "Registrar ocupação\nde vaga" as UC2
+  usecase "Informar o motivo\npreferencial\n(vagas A1 e A2 do Subsolo)" as UC2a
+  usecase "Consultar o mapa\nde vagas" as UC5
+  usecase "Carregar o cenário\nde demonstração" as UC6
+  usecase "Zerar os dados" as UC7
+}
+
+operador --> UC1
+operador --> UC4
+operador --> UC5
+sensor --> UC3
+sensor --> UC2
+admin --> UC5
+admin --> UC6
+admin --> UC7
+
+UC1 <.. UC1a : <<extend>>
+UC4 <.. UC4a : <<extend>>
+UC4a ..> UC3 : <<include>>
+UC2 <.. UC2a : <<extend>>
+
+note bottom of sensor
+  No protótipo, o operador faz o papel
+  do sensor clicando na vaga do mapa.
+end note
+@enduml

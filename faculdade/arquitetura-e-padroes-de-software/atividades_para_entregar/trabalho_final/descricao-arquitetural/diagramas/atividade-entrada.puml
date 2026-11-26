@@ -1,0 +1,50 @@
+@startuml atividade-entrada
+!include estilo.iuml
+title Atividade: registrar a entrada na cancela
+
+|Operador da cancela|
+start
+:Escolhe o setor e digita a placa
+(no Subsolo, também a altura);
+:Clica em "Entrar";
+|Janela|
+if (A placa está num formato válido?) then (não)
+  :Avisa "Formato inválido";
+  stop
+endif
+if (Setor Subsolo sem altura válida?) then (sim)
+  :Avisa "Informe a altura em metros";
+  stop
+endif
+:Envia ENTRAR pela fachada;
+|Fachada e controlador|
+:Publica a requisição no Blackboard
+e ativa o especialista do setor;
+|Especialista do setor|
+if (A placa veio vazia?) then (sim)
+  :Recusa: "Informe a placa";
+elseif (A placa já está dentro,
+em qualquer setor?) then (sim)
+  :Recusa: "Registre a saída antes
+  de uma nova entrada";
+elseif (O horário é anterior ao último
+evento dessa placa?) then (sim)
+  :Recusa: evento fora de ordem;
+elseif (Gancho problemaNaEntrada:
+Subsolo sem altura ou acima de 2,10 m?) then (sim)
+  :Recusa: altura obrigatória
+  ou acima do máximo;
+else (não)
+  :registrarEntrada: cria a estadia aberta,
+  e o veículo passa a circular no setor;
+  :Publica o resultado aceito;
+  |Registro de eventos|
+  :Grava a linha ENTRAR em eventos.csv;
+endif
+|Janela|
+:Mostra o resultado na barra de status
+e no painel do ciclo (✓ ou ⚠);
+:Se aceito, limpa os campos
+e a placa aparece em "Circulando";
+stop
+@enduml

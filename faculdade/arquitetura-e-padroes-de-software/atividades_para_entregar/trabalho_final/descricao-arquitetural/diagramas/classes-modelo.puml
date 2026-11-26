@@ -1,0 +1,109 @@
+@startuml classes-modelo
+!include estilo.iuml
+title Modelo de dados guardado no Blackboard
+
+class Vaga {
+  - id : String
+  - fileira : char
+  - posicao : int
+  - tipo : TipoVaga
+  - status : StatusVaga
+  + isLivre() : boolean
+  + isPreferencial() : boolean
+}
+
+class Estadia {
+  - placa : String
+  - setor : Setor
+  - altura : Double
+  - entrada : LocalDateTime
+  - saida : LocalDateTime
+  + isAberta() : boolean
+  + getOcupacaoAtual() : Ocupacao
+  + getSituacao() : SituacaoVeiculo
+  + getUltimoEvento() : LocalDateTime
+}
+
+class Ocupacao {
+  - placa : String
+  - idVaga : String
+  - inicio : LocalDateTime
+  - fim : LocalDateTime
+  - motivo : MotivoPreferencial
+  + isAberta() : boolean
+}
+
+class Requisicao {
+  - tipo : TipoRequisicao
+  - setor : Setor
+  - placa : String
+  - altura : Double
+  - idVaga : String
+  - motivo : MotivoPreferencial
+  - tipoRelatorio : TipoRelatorio
+  - inicio, fim : LocalDateTime
+  - momento : LocalDateTime
+}
+
+class ResultadoOperacao {
+  - sucesso : boolean
+  - origem : String
+  - mensagem : String
+}
+
+class Relatorio {
+  - titulo : String
+  - linhas : List<String>
+}
+
+enum Setor {
+  EXTERNO
+  SUBSOLO
+}
+enum TipoVaga {
+  COMUM
+  PREFERENCIAL
+}
+enum StatusVaga {
+  LIVRE
+  OCUPADA
+}
+enum SituacaoVeiculo {
+  CIRCULANDO
+  ESTACIONADO
+}
+enum TipoRequisicao {
+  ENTRAR
+  OCUPAR
+  DESOCUPAR
+  SAIR
+  RELATORIO
+  + isEvento() : boolean
+}
+enum MotivoPreferencial {
+  PCD
+  TEA
+  IDOSO
+  GESTANTE
+  LACTANTE
+  CRIANCA_COLO
+}
+enum TipoRelatorio {
+  OCUPACAO
+  HISTORICO_GERAL
+  ...
+  COMPLETO
+  + rotulo() : String
+}
+
+Estadia *--> "*" Ocupacao : ocupacoes
+Vaga --> "0..1" Ocupacao : ocupacaoAtual
+ResultadoOperacao --> "1" Requisicao : requisicao
+Relatorio --> TipoRelatorio
+Requisicao ..> TipoRequisicao
+Estadia ..> SituacaoVeiculo : calcula
+Vaga ..> TipoVaga
+Vaga ..> StatusVaga
+Ocupacao ..> MotivoPreferencial
+Estadia ..> Setor
+@enduml

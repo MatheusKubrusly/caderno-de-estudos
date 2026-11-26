@@ -1,0 +1,54 @@
+@startuml atividade-carregar-cenario
+!include estilo.iuml
+title Atividade: carregar o cenário de demonstração (releitura do CSV)
+
+|Administrador|
+start
+:Menu "Dados" > "Carregar cenário
+de demonstração…";
+|Janela|
+if (Confirma a troca do uso registrado?) then (não)
+  stop
+endif
+|Registro de eventos|
+:Copia cenario-demonstracao.csv
+por cima de eventos.csv;
+|Blackboard|
+:reiniciar(): todas as vagas livres
+e nenhuma estadia;
+|Registro de eventos|
+:Lê todas as linhas de eventos.csv;
+|Blackboard|
+:executarEmLote(): segura os avisos
+aos observers até o fim do lote;
+|Registro de eventos|
+repeat
+  :Pega a próxima linha;
+  if (Linha vazia ou cabeçalho?) then (sim)
+  elseif (A linha está bem formada?) then (não)
+    :Anota o problema com o número da linha;
+  else (sim)
+    :Monta a requisição com o horário gravado
+    e a envia pela fachada;
+    |Especialistas|
+    :O especialista do setor confere as regras
+    e reescreve o evento no Blackboard,
+    como se ele acontecesse agora;
+    |Registro de eventos|
+    if (O evento foi aceito?) then (sim)
+      :Conta mais um aceito;
+    else (não)
+      :Anota a recusa com o motivo;
+    endif
+  endif
+repeat while (Há mais linhas?) is (sim)
+->não;
+:Marca o último resultado como já visto,
+para não gravar de novo o que foi relido;
+|Blackboard|
+:Fim do lote: avisa os observers uma vez só;
+|Janela|
+:Redesenha os mapas e mostra o resumo
+(no cenário: "2204 eventos relidos.");
+stop
+@enduml

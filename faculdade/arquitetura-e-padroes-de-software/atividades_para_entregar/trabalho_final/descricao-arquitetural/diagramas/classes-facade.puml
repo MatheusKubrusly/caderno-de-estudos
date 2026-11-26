@@ -1,0 +1,44 @@
+@startuml classes-facade
+!include estilo.iuml
+title Facade: um ponto de entrada para os três clientes
+
+package "Clientes" {
+  class JanelaPrincipal
+  class CLI
+  class RegistroDeEventos
+}
+
+class FachadaEstacionamento <<Facade>> {
+  + entrar(setor, placa, altura) : ResultadoOperacao
+  + ocupar(setor, placa, idVaga, motivo) : ResultadoOperacao
+  + desocupar(setor, idVaga) : ResultadoOperacao
+  + sair(setor, placa) : ResultadoOperacao
+  + gerarRelatorio(tipo, placa, inicio, fim) : Relatorio
+  + enviar(r : Requisicao) : ResultadoOperacao
+}
+
+package "Subsistema Blackboard" {
+  class Requisicao
+  class Blackboard {
+    + publicarRequisicao(r : Requisicao)
+    + getUltimoResultado() : ResultadoOperacao
+    + getUltimoRelatorio() : Relatorio
+  }
+  class BlackboardController {
+    + executarCiclo()
+  }
+}
+
+JanelaPrincipal --> FachadaEstacionamento
+CLI --> FachadaEstacionamento
+RegistroDeEventos --> FachadaEstacionamento : reenvia cada\nlinha do CSV
+FachadaEstacionamento ..> Requisicao : monta
+FachadaEstacionamento --> Blackboard
+FachadaEstacionamento --> BlackboardController
+
+note right of FachadaEstacionamento
+  enviar(): preenche o horário, se faltar;
+  publica a requisição; roda o ciclo;
+  e devolve só o resultado desta requisição.
+end note
+@enduml

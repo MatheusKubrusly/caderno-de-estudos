@@ -1,0 +1,28 @@
+@startuml estados-veiculo
+!include estilo.iuml
+title Estados de um veículo (uma estadia num setor)
+
+state "Fora do estacionamento" as Fora : sem estadia aberta
+
+state "No setor (estadia aberta)" as Dentro {
+  state Circulando : procura vaga\naparece na lista "Circulando"
+  state Estacionado : ocupa uma vaga
+
+  [*] --> Circulando
+  Circulando --> Estacionado : OCUPAR aceito\n/ nova ocupação na estadia
+  Estacionado --> Circulando : DESOCUPAR aceito\n/ fecha a ocupação
+  Estacionado --> Estacionado : SAIR recusado\n("Registre a desocupação\nantes da saída")
+}
+
+[*] --> Fora
+Fora --> Dentro : ENTRAR aceito\n[placa fora de qualquer setor,\nhorário em ordem e, no Subsolo,\naltura até 2,10 m]
+Circulando --> Fora : SAIR aceito\n/ fecha a estadia com o horário de saída
+Dentro --> Fora : reiniciar()
+
+note right of Dentro
+  A situação é calculada a partir da estadia
+  (getSituacao): com ocupação aberta, ESTACIONADO;
+  sem ela, CIRCULANDO. Não há um campo guardado
+  em dois lugares.
+end note
+@enduml

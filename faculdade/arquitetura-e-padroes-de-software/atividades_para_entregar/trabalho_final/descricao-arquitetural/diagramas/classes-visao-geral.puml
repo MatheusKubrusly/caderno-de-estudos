@@ -1,0 +1,71 @@
+@startuml classes-visao-geral
+!include estilo.iuml
+title Visão geral das classes, por pacote
+hide members
+hide circle
+
+package ui {
+  class JanelaPrincipal
+  class CLI
+  class Display
+}
+package aplicacao {
+  class FachadaEstacionamento
+}
+package blackboard {
+  class Blackboard
+  class BlackboardController
+  interface Observer
+}
+package knowledge_sources {
+  abstract class KnowledgeSource
+  abstract class EspecialistaDeSetor
+  class ExternoKS
+  class SubsoloKS
+  class RelatorioKS
+  class Estatisticas
+}
+package persistencia {
+  class RegistroDeEventos
+  class CsvDeEventos
+}
+package model {
+  class Vaga
+  class Estadia
+  class Ocupacao
+  class Requisicao
+  class ResultadoOperacao
+  class Relatorio
+}
+
+JanelaPrincipal ..|> Observer
+Display ..|> Observer
+RegistroDeEventos ..|> Observer
+Blackboard o--> "*" Observer : avisa
+
+JanelaPrincipal --> FachadaEstacionamento
+CLI --> FachadaEstacionamento
+CLI --> Display
+RegistroDeEventos --> FachadaEstacionamento : relê o CSV
+RegistroDeEventos ..> CsvDeEventos
+
+FachadaEstacionamento --> Blackboard : publica
+FachadaEstacionamento --> BlackboardController : roda o ciclo
+BlackboardController --> "*" KnowledgeSource : ativa
+BlackboardController --> Blackboard
+
+KnowledgeSource <|-- EspecialistaDeSetor
+KnowledgeSource <|-- RelatorioKS
+EspecialistaDeSetor <|-- ExternoKS
+EspecialistaDeSetor <|-- SubsoloKS
+RelatorioKS ..> Estatisticas
+KnowledgeSource --> Blackboard : lê e escreve
+
+Blackboard *--> "25" Vaga
+Blackboard *--> "*" Estadia
+Estadia *--> "*" Ocupacao
+Vaga --> "0..1" Ocupacao : atual
+Blackboard --> "0..1" Requisicao : pendente
+Blackboard --> "0..1" ResultadoOperacao : último
+Blackboard --> "0..1" Relatorio : último
+@enduml

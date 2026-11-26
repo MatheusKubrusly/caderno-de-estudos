@@ -1,0 +1,53 @@
+@startuml classes-singleton-observer
+!include estilo.iuml
+title Singleton e Observer no Blackboard
+
+class Blackboard <<Singleton>> <<Subject>> {
+  - {static} instancia : Blackboard
+  - observers : List<Observer>
+  - lotesAbertos : int
+  - Blackboard()
+  + {static} getInstance() : Blackboard
+  + adicionarObserver(o : Observer)
+  + removerObserver(o : Observer)
+  + publicarResultado(r : ResultadoOperacao)
+  + publicarRelatorio(r : Relatorio)
+  + executarEmLote(tarefa : Runnable)
+  + reiniciar()
+  - notificarObservers()
+}
+
+interface Observer {
+  + atualizar()
+}
+
+class JanelaPrincipal {
+  + atualizar()
+}
+class Display {
+  + atualizar()
+}
+class RegistroDeEventos {
+  + atualizar()
+}
+
+Blackboard o--> "*" Observer : observers
+JanelaPrincipal ..|> Observer
+Display ..|> Observer
+RegistroDeEventos ..|> Observer
+
+note right of Blackboard
+  Um só Blackboard na aplicação: o construtor é privado
+  e getInstance() é synchronized.
+  Enquanto executarEmLote() roda (a releitura do CSV),
+  os avisos ficam adiados e saem uma vez só no fim.
+end note
+note bottom of JanelaPrincipal
+  Redesenha na thread da interface
+  (SwingUtilities.invokeLater).
+end note
+note bottom of RegistroDeEventos
+  Grava em eventos.csv só
+  os eventos aceitos.
+end note
+@enduml

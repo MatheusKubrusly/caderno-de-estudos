@@ -1,0 +1,23 @@
+@startuml estados-vaga
+!include estilo.iuml
+title Estados de uma vaga
+
+[*] --> Livre : o Blackboard cria as 25 vagas\n(Externo A1–C5, Subsolo A1–B5)
+
+state Livre : verde no mapa
+state Livre : sem ocupação atual
+state Ocupada : vermelha no mapa
+state Ocupada : aponta para a ocupação atual\n(placa, início e motivo)
+
+Livre --> Ocupada : OCUPAR aceito\n[a placa circula no setor\ne, na preferencial, há motivo]
+Ocupada --> Livre : DESOCUPAR aceito\n/ fecha a ocupação com o horário de fim
+Ocupada --> Livre : reiniciar()\n(carregar cenário ou zerar dados)
+
+Livre --> Livre : OCUPAR recusado\n(sem entrada, preferencial sem motivo...)
+Ocupada --> Ocupada : OCUPAR recusado\n("está ocupada. Escolha outra")
+
+note bottom of Ocupada
+  Uma requisição recusada nunca muda o estado:
+  o especialista publica a recusa e não escreve no Blackboard.
+end note
+@enduml

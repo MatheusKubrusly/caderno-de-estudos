@@ -1,0 +1,54 @@
+@startuml atividade-ocupacao
+!include estilo.iuml
+title Atividade: registrar a ocupação de uma vaga
+
+|Sensor de vaga (operador)|
+start
+:Clica numa vaga livre (verde) do mapa;
+|Janela|
+if (Há veículo circulando no setor?) then (não)
+  :Avisa "Registre uma entrada
+  na cancela antes";
+  stop
+endif
+:Abre a escolha da placa entre
+os veículos que circulam no setor;
+if (A vaga é preferencial?) then (sim)
+  :Pede também o motivo de uso
+  (PCD, TEA, idoso, gestante, lactante,
+  criança de colo ou "nenhum dos anteriores");
+endif
+if (O operador confirmou?) then (não)
+  stop
+endif
+:Envia OCUPAR pela fachada;
+|Fachada e controlador|
+:Publica a requisição no Blackboard
+e ativa o especialista do setor;
+|Especialista do setor|
+if (A placa não entrou neste setor?) then (sim)
+  :Recusa: "Registre a entrada antes";
+elseif (O veículo já ocupa outra vaga?) then (sim)
+  :Recusa: "Registre a desocupação antes";
+elseif (A vaga não existe ou está ocupada?) then (sim)
+  :Recusa: "Escolha outra";
+elseif (O horário é anterior ao último
+evento da estadia?) then (sim)
+  :Recusa: evento fora de ordem;
+elseif (Gancho problemaNaOcupacao:
+vaga preferencial sem motivo?) then (sim)
+  :Recusa: "exige um motivo válido";
+else (não)
+  :registrarOcupacao: a vaga fica ocupada
+  e a estadia ganha uma ocupação
+  (com o motivo, se for preferencial);
+  :Publica o resultado aceito;
+  |Registro de eventos|
+  :Grava a linha OCUPAR em eventos.csv;
+endif
+|Janela|
+:Mostra o resultado; se aceito,
+a vaga fica vermelha e a placa
+sai da lista "Circulando";
+stop
+@enduml

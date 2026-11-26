@@ -1,0 +1,63 @@
+@startuml atividade-desocupacao-e-saida
+!include estilo.iuml
+title Atividade: desocupar a vaga e sair (com o atalho da janela)
+
+|Operador da cancela|
+start
+:Digita a placa e clica em "Sair";
+|Janela|
+:Envia SAIR pela fachada;
+|Especialista do setor|
+if (A placa está neste setor?) then (não)
+  :Recusa: "não está no setor";
+  |Janela|
+  :Mostra a recusa;
+  stop
+endif
+|Especialista do setor|
+if (O veículo ainda ocupa uma vaga?) then (sim)
+  :Recusa: "Registre a desocupação
+  antes da saída";
+  |Janela|
+  :Oferece o atalho
+  "Desocupar a vaga e registrar a saída?";
+  |Operador da cancela|
+  if (Aceita o atalho?) then (não)
+    :A vaga continua ocupada;
+    stop
+  endif
+  |Janela|
+  :Envia DESOCUPAR pela fachada
+  (requisição própria);
+  |Especialista do setor|
+  if (A vaga existe, está ocupada e o
+  horário respeita a ordem?) then (sim)
+    :registrarDesocupacao: a vaga fica livre
+    e o veículo volta a circular;
+    |Registro de eventos|
+    :Grava a linha DESOCUPAR;
+  else (não)
+    |Especialista do setor|
+    :Recusa a desocupação;
+    |Janela|
+    :Mostra a recusa e não envia a saída;
+    stop
+  endif
+  |Janela|
+  :Envia SAIR de novo pela fachada;
+  |Especialista do setor|
+endif
+if (O horário é anterior ao último
+evento da estadia?) then (sim)
+  :Recusa: evento fora de ordem;
+else (não)
+  |Especialista do setor|
+  :registrarSaida: fecha a estadia
+  com o horário de saída;
+  |Registro de eventos|
+  :Grava a linha SAIR;
+endif
+|Janela|
+:Mostra o resultado e o tempo de permanência;
+stop
+@enduml

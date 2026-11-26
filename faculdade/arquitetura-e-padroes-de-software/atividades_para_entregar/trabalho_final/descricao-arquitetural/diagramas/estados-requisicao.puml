@@ -1,0 +1,26 @@
+@startuml estados-requisicao
+!include estilo.iuml
+title Estados de uma requisição no Blackboard
+
+state Pendente : guardada no Blackboard,\nà espera do controlador
+state "Em avaliação" as Avaliacao : o controlador pergunta a cada\nespecialista, na ordem: condition()
+state Atendida {
+  state Aceita : o especialista escreveu no Blackboard\ne publicou o resultado aceito (ou o relatório)
+  state Recusada : resultado recusado, com o motivo,\nsem escrita nos dados
+}
+state Consumida : o lugar de requisição pendente\nfica vazio para a próxima
+
+[*] --> Pendente : a fachada publica\n(publicarRequisicao)
+Pendente --> Avaliacao : o controlador inicia o ciclo
+Avaliacao --> Aceita : um especialista disse "sim"\n[e as regras foram respeitadas]
+Avaliacao --> Recusada : um especialista disse "sim"\n[e uma regra foi violada]
+Avaliacao --> Recusada : nenhum especialista disse "sim"\n(origem: Controlador)
+Avaliacao --> Recusada : erro inesperado no especialista
+Atendida --> Consumida : consumirRequisicao()
+Consumida --> [*] : a fachada devolve o resultado
+
+note bottom of Atendida
+  Nos dois casos, o resultado (ou o relatório) é publicado no Blackboard,
+  e os observers (janela, CLI e registro de eventos) são avisados.
+end note
+@enduml

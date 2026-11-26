@@ -1,0 +1,53 @@
+@startuml atividade-ciclo-do-blackboard
+!include estilo.iuml
+title Atividade: um ciclo do Blackboard
+
+|Fachada|
+start
+:Recebe a requisição
+(entrar, ocupar, desocupar, sair ou relatório);
+if (A requisição tem horário?) then (não)
+  :Preenche com o horário atual;
+else (sim)
+endif
+|Blackboard|
+:Guarda a requisição como pendente;
+|Controlador|
+repeat
+  :Pega o próximo especialista da lista
+  (ExternoKS, SubsoloKS, RelatorioKS);
+  |Especialista|
+  :run() chama condition():
+  "esta requisição é comigo?";
+  |Controlador|
+repeat while (Respondeu "não" e ainda há especialista?) is (sim)
+->não;
+if (Nenhum especialista disse "sim"?) then (sim)
+  :Publica "Nenhum especialista apto"
+  (origem: Controlador);
+else (não)
+  |Especialista|
+  :execute(): lê o Blackboard
+  e confere as regras;
+  if (A requisição respeita as regras?) then (sim)
+    :Escreve no Blackboard: o evento (registrarEntrada,
+    registrarOcupacao, registrarDesocupacao ou
+    registrarSaida) ou o relatório (publicarRelatorio);
+    :No evento, sucesso() publica o resultado aceito;
+  else (não)
+    :erro(): publica o resultado recusado,
+    com o motivo, sem escrever nos dados;
+  endif
+endif
+|Blackboard|
+:Guarda o resultado (ou o relatório)
+e avisa os observers;
+|Observers|
+:A janela ou a CLI redesenham,
+e o registro de eventos grava o evento aceito;
+|Controlador|
+:Consome a requisição pendente;
+|Fachada|
+:Devolve o resultado desta requisição;
+stop
+@enduml
