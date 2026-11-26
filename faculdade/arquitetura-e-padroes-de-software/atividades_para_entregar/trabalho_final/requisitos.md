@@ -28,6 +28,12 @@ Texto passado pelo Matheus em 25/11/2026. As frases de pedido da conversa ("quer
 >
 > A arquitetura é a "Arquitetura de Memória Compartilhada: Blackboard" e o propósito principal é desenvolver um sistema inteligente de gerenciamento de estacionamento. Para isso, devo criar um sistema para gerenciar as vagas de estacionamento de um shopping center, armazenar no Blackboard dados como quantidade e localização das vagas, vagas ocupadas e disponíveis, histórico de utilização por placa, horários de entrada e saída dos veículos e informações sobre áreas preferenciais, criar dois módulos especialistas representando diferentes setores do estacionamento (por exemplo, setor A e setor B), que devem atualizar o Blackboard sempre que um veículo entrar, sair, ocupar e desocupar uma vaga e, por fim, criar um terceiro módulo especialista para emissão de relatórios. Esse módulo deve analisar as informações disponíveis no Blackboard, histórico, placas, horários e fornecer todo o tipo de informação que possa ser interessante para uma gerência. Além disso, o sistema deve permitir que os módulos especialistas utilizem o Blackboard de forma independente, sem comunicação direta entre eles.
 
+Os slides do enunciado, passados pelo Matheus em 25/11/2026, acrescentam três pontos:
+
+> - O arquivo de entrega deverá estar compactado em formato zip ou rar e conter: código fonte do sistema desenvolvido; documentação.
+> - Atenção: Diagramas devem ser legíveis! Um diagrama que não se consegue ler o que está nele, é um diagrama não entregue.
+> - Critério de avaliação: avaliação do sistema, pelo uso correto da arquitetura e padrões de software (5,0); conformidade da documentação (3,0); apresentação (2,0), de 15 a 20 minutos, explicando o problema proposto, os *concerns* e o sistema como solução, demonstrando todas as funcionalidades do sistema desenvolvido, com todos os integrantes do grupo presentes.
+
 ## 2. Entregáveis e requisitos
 
 ### Entregáveis (E)
@@ -44,6 +50,10 @@ O conjunto de E1 a E6 forma a **Descrição Arquitetural**: os documentos que ex
 | E6 | Diagrama de estados, se o sistema tiver máquina de estados. Ele tem três: a vaga (livre ou ocupada), o veículo (circulando ou estacionado) e a requisição no Blackboard |
 | E7 | Front-end simples, que facilite executar e demonstrar a arquitetura |
 | E8 | Roteiro de uso, que guie a utilização adequada do sistema (pedido do Matheus em 25/11/2026, além do enunciado) |
+| E9 | Arquivo de entrega em zip ou rar, com o código-fonte e a documentação |
+| E10 | Apresentação de 15 a 20 minutos: o problema, as preocupações, o sistema como solução e a demonstração de todas as funcionalidades |
+
+Os diagramas de E3 a E6 precisam ser legíveis. O critério adotado é que a menor letra de cada diagrama tenha pelo menos 7 pt quando ele é impresso numa folha A4, em pé ou deitada.
 
 ### Requisitos do sistema (R)
 
@@ -101,6 +111,8 @@ Situação: **pendente** (ainda não feito), **parcial** (existe, mas falta algo
 | E6 | `descricao-arquitetural/diagramas/estados-*.pdf` | Abrir os diagramas: vaga, veículo e requisição | atendido |
 | E7 | `Codigo/src/ui/` (a CLI) e `Codigo/src/ui/janela/` (a janela) | Rodar `./run.sh` e seguir o `roteiro-de-uso.md` | atendido |
 | E8 | `roteiro-de-uso.md` | Seguir o roteiro do começo ao fim; o teste de aceitação (`TesteDeAceitacao`) executa o roteiro de demonstração | atendido |
+| E9 | Zip de entrega com o `Codigo/` (sem `out/`, `.idea/` e `dados/eventos.csv`), os dois PDFs, os diagramas em PDF e o roteiro de uso | Abrir o zip e conferir a lista de arquivos | pendente |
+| E10 | Roteiro da apresentação | Ensaiar com o tempo marcado | pendente (fica para depois, por decisão do Matheus em 25/11/2026) |
 | R1 | `Codigo/src/blackboard/` | Ler o código e rodar o teste de fumaça (`SmokeTest`) | atendido |
 | R2 | `Codigo/src/blackboard/Blackboard.java` e `Codigo/src/model/` (vagas, estadias, ocupações e vagas preferenciais) | Teste de fumaça e relatórios de ocupação e histórico | atendido |
 | R3 | `Codigo/src/knowledge_sources/ExternoKS.java` e `SubsoloKS.java` | Teste de fumaça, cenários de setor | atendido |

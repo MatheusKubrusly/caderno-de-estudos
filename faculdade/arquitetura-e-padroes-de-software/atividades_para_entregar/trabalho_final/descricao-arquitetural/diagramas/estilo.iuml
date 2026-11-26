@@ -4,9 +4,10 @@ skinparam shadowing false
 skinparam roundCorner 8
 skinparam backgroundColor white
 skinparam arrowColor #37474F
-skinparam arrowFontSize 11
+skinparam arrowFontSize 12
 skinparam titleFontSize 15
 skinparam classAttributeIconSize 0
+hide circle
 skinparam packageStyle rectangle
 skinparam noteBackgroundColor #FFFDE7
 skinparam noteBorderColor #BDBDBD

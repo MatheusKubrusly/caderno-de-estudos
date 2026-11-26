@@ -5,49 +5,42 @@ title Atividade: um ciclo do Blackboard
 |Fachada|
 start
 :Recebe a requisição
-(entrar, ocupar, desocupar, sair ou relatório);
-if (A requisição tem horário?) then (não)
-  :Preenche com o horário atual;
+e preenche o horário,
+se faltar;
+|Blackboard|
+:Guarda como
+pendente;
+|Controlador|
+repeat
+  :Chama run() do
+  próximo especialista;
+  |Especialista|
+  :run() chama
+  condition() e, se
+  true, execute():
+  lê o Blackboard,
+  confere as regras
+  e escreve ou recusa;
+  |Controlador|
+repeat while (Devolveu
+false e há
+outro?) is (sim)
+->não;
+if (Algum devolveu
+true?) then (não)
+  :Publica "Nenhum
+  especialista apto";
 else (sim)
 endif
 |Blackboard|
-:Guarda a requisição como pendente;
+:Guarda o resultado
+e avisa os
+observers;
 |Controlador|
-repeat
-  :Pega o próximo especialista da lista
-  (ExternoKS, SubsoloKS, RelatorioKS);
-  |Especialista|
-  :run() chama condition():
-  "esta requisição é comigo?";
-  |Controlador|
-repeat while (Respondeu "não" e ainda há especialista?) is (sim)
-->não;
-if (Nenhum especialista disse "sim"?) then (sim)
-  :Publica "Nenhum especialista apto"
-  (origem: Controlador);
-else (não)
-  |Especialista|
-  :execute(): lê o Blackboard
-  e confere as regras;
-  if (A requisição respeita as regras?) then (sim)
-    :Escreve no Blackboard: o evento (registrarEntrada,
-    registrarOcupacao, registrarDesocupacao ou
-    registrarSaida) ou o relatório (publicarRelatorio);
-    :No evento, sucesso() publica o resultado aceito;
-  else (não)
-    :erro(): publica o resultado recusado,
-    com o motivo, sem escrever nos dados;
-  endif
-endif
-|Blackboard|
-:Guarda o resultado (ou o relatório)
-e avisa os observers;
-|Observers|
-:A janela ou a CLI redesenham,
-e o registro de eventos grava o evento aceito;
-|Controlador|
-:Consome a requisição pendente;
+:Consome a
+requisição;
 |Fachada|
-:Devolve o resultado desta requisição;
+:Devolve o
+resultado;
 stop
 @enduml

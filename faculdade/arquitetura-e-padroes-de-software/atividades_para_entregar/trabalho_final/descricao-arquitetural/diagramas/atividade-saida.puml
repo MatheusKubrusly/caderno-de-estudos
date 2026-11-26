@@ -1,0 +1,55 @@
+@startuml atividade-saida
+!include estilo.iuml
+title Atividade: registrar a saída
+
+|Operador|
+start
+:Digita a placa
+e clica em
+"Registrar
+saída";
+|Janela|
+if (Placa no
+formato?) then (não)
+  :Mostra a caixa
+  "Formato
+  inválido";
+  stop
+else (sim)
+endif
+:Envia SAIR
+pela fachada;
+|Especialista|
+if (Alguma regra
+violada?) then (sim)
+  :Recusa pela 1ª
+  regra violada:
+  1. placa vazia
+  (CLI ou CSV)
+  2. não está
+  neste setor
+  3. ainda ocupa
+  uma vaga (*)
+  4. horário antes
+  do último evento;
+else (não)
+  :registrarSaida:
+  fecha a estadia;
+  |Registro|
+  :Grava a linha
+  SAIR no CSV;
+endif
+|Janela|
+:Mostra ✓ ou ⚠ e
+o tempo de
+permanência,
+se aceito;
+stop
+note right
+  (*) A janela
+  oferece o atalho
+  "desocupar e
+  sair" (diagrama
+  próprio).
+end note
+@enduml

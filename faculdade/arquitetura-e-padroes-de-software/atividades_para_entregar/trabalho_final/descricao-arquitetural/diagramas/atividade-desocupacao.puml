@@ -1,0 +1,44 @@
+@startuml atividade-desocupacao
+!include estilo.iuml
+title Atividade: registrar a desocupação
+
+|Sensor|
+start
+:Clica numa vaga
+ocupada (vermelha);
+|Janela|
+:Pergunta "Desocupar
+a vaga …?";
+|Sensor|
+if (Responde Sim?) then (não)
+  stop
+else (sim)
+endif
+|Janela|
+:Envia DESOCUPAR
+pela fachada;
+|Especialista|
+if (Alguma regra
+violada?) then (sim)
+  :Recusa pela 1ª
+  regra violada:
+  1. vaga inexistente
+  ou já livre
+  2. sem ocupação
+  em aberto
+  3. horário antes
+  do último evento;
+else (não)
+  :registrarDesocupacao:
+  vaga livre, veículo
+  volta a circular;
+  |Registro|
+  :Grava a linha
+  DESOCUPAR no CSV;
+endif
+|Janela|
+:Mostra ✓ ou ⚠ e o
+tempo na vaga,
+se aceito;
+stop
+@enduml

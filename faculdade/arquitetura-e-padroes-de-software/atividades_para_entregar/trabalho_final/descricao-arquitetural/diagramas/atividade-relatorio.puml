@@ -1,51 +1,52 @@
 @startuml atividade-relatorio
 !include estilo.iuml
-title Atividade: emitir um relatório gerencial
+title Atividade: emitir um relatório
 
 |Gerente|
 start
-:Escolhe um dos 11 relatórios na aba "Relatórios";
-if (Histórico por placa?) then (sim)
-  :Digita a placa;
-elseif (Histórico por período?) then (sim)
-  :Digita o início e o fim (dd/MM/aaaa HH:mm);
-else (outro)
-endif
-:Clica em "Gerar";
+:Escolhe um dos
+11 relatórios (e
+a placa ou o
+período, se for
+o caso) e clica
+em "Gerar";
 |Janela|
-if (A placa ou alguma data está
-num formato inválido (ex.: 31/02)?) then (sim)
-  :Avisa "Formato inválido";
+if (Placa e datas
+no formato?) then (não)
+  :Mostra a caixa
+  "Formato
+  inválido"
+  (ex.: 31/02);
   stop
+else (sim)
 endif
-:Envia RELATORIO pela fachada;
-|Fachada e controlador|
-:Publica a requisição no Blackboard;
-:ExternoKS e SubsoloKS respondem "não"
-(não é um evento de setor);
-:RelatorioKS responde "sim" e executa;
+:Envia
+RELATORIO
+pela fachada;
+|Controlador|
+:Pergunta a cada
+especialista,
+e só o RelatorioKS
+aceita;
 |RelatorioKS|
-if (Falta a placa no histórico por placa?) then (sim)
-  :Recusa: "Informe a placa";
-elseif (Falta o início ou o fim do período?) then (sim)
-  :Recusa: "Informe o início e o fim";
-elseif (O início é posterior ao fim?) then (sim)
-  :Recusa: "Período inválido";
+if (Alguma regra
+violada?) then (sim)
+  :Recusa pela 1ª
+  regra violada:
+  1. falta a placa
+  2. falta o início
+  ou o fim
+  3. início depois
+  do fim;
 else (não)
-  :Lê do Blackboard as vagas e as estadias;
-  :Calcula os números com a classe de apoio
-  Estatisticas (médias, picos, giro, esperas);
-  :Monta o texto do relatório escolhido
-  (o completo junta as seções de todos);
-  :publicarRelatorio: guarda o relatório no Blackboard;
+  :Lê vagas e
+  estadias e calcula
+  com Estatisticas;
+  :publicarRelatorio;
 endif
 |Janela|
-:Avisada pelo Blackboard (Observer):
-mostra o relatório em fonte monoespaçada
-ou a recusa na barra de status;
-note right
-  O registro de eventos também é avisado,
-  mas não grava nada: relatório não é evento.
-end note
+:Mostra o
+relatório ou
+a recusa;
 stop
 @enduml
