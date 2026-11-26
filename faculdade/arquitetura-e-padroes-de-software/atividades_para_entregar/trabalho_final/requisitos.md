@@ -93,18 +93,18 @@ Situação: **pendente** (ainda não feito), **parcial** (existe, mas falta algo
 
 | Código | Onde é atendido | Como conferir | Situação |
 |---|---|---|---|
-| E1 | `descricao-arquitetural/padroes-de-software.pdf` | Ler o PDF: Blackboard, Singleton, Observer, Template Method e Facade, cada um com o motivo, e os padrões descartados | pendente |
-| E2 | `descricao-arquitetural/descricao-do-sistema.pdf` | Ler o PDF: problema, solução, preocupações, pontos de vista e perspectivas | pendente |
-| E3 | `descricao-arquitetural/diagramas/implantacao.pdf` | Abrir o diagrama: os módulos aparecem dentro da JVM | pendente |
-| E4 | `descricao-arquitetural/diagramas/casos-de-uso-*.pdf` | Abrir os diagramas: operador, sensor, administrador e gerente com as suas funcionalidades | pendente |
-| E5 | `descricao-arquitetural/diagramas/atividade-*.pdf` | Abrir os diagramas: raias para os atores e os módulos | pendente |
-| E6 | `descricao-arquitetural/diagramas/estados-*.pdf` | Abrir os diagramas: vaga, veículo e requisição | pendente |
-| E7 | `Codigo/src/ui/` (a CLI) e `Codigo/src/ui/janela/` (a janela) | Rodar `./run.sh` e seguir o `roteiro-de-uso.md` | parcial (a CLI está pronta; a janela vem na etapa 5) |
-| E8 | `roteiro-de-uso.md` | Seguir o roteiro do começo ao fim; o teste de aceitação executa o roteiro de demonstração | pendente |
+| E1 | `descricao-arquitetural/padroes-de-software.pdf` | Ler o PDF: Blackboard, Singleton, Observer, Template Method e Facade, cada um com o motivo, e os padrões descartados | atendido |
+| E2 | `descricao-arquitetural/descricao-do-sistema.pdf` | Ler o PDF: problema, solução, preocupações, pontos de vista e perspectivas | atendido |
+| E3 | `descricao-arquitetural/diagramas/implantacao.pdf` | Abrir o diagrama: os módulos aparecem dentro da JVM | atendido |
+| E4 | `descricao-arquitetural/diagramas/casos-de-uso-*.pdf` | Abrir os diagramas: operador, sensor, administrador e gerente com as suas funcionalidades | atendido |
+| E5 | `descricao-arquitetural/diagramas/atividade-*.pdf` | Abrir os diagramas: raias para os atores e os módulos | atendido |
+| E6 | `descricao-arquitetural/diagramas/estados-*.pdf` | Abrir os diagramas: vaga, veículo e requisição | atendido |
+| E7 | `Codigo/src/ui/` (a CLI) e `Codigo/src/ui/janela/` (a janela) | Rodar `./run.sh` e seguir o `roteiro-de-uso.md` | atendido |
+| E8 | `roteiro-de-uso.md` | Seguir o roteiro do começo ao fim; o teste de aceitação (`TesteDeAceitacao`) executa o roteiro de demonstração | atendido |
 | R1 | `Codigo/src/blackboard/` | Ler o código e rodar o teste de fumaça (`SmokeTest`) | atendido |
 | R2 | `Codigo/src/blackboard/Blackboard.java` e `Codigo/src/model/` (vagas, estadias, ocupações e vagas preferenciais) | Teste de fumaça e relatórios de ocupação e histórico | atendido |
 | R3 | `Codigo/src/knowledge_sources/ExternoKS.java` e `SubsoloKS.java` | Teste de fumaça, cenários de setor | atendido |
 | R4 | `Codigo/src/knowledge_sources/EspecialistaDeSetor.java` | Teste de fumaça com os quatro eventos | atendido |
 | R5 | `Codigo/src/knowledge_sources/RelatorioKS.java` e `Estatisticas.java` (11 relatórios) | Teste de fumaça, um caso por relatório | atendido |
-| R6 | Teste de arquitetura do `SmokeTest` | O teste confere que nenhum especialista referencia outro | atendido |
-| R7 | `Codigo/testes/` (teste de fumaça e teste de aceitação), checklist da janela e revisão de código | O teste de fumaça (78 verificações hoje) e o de aceitação sem falhas; o checklist percorrido; a revisão sem pendências | parcial (o teste de fumaça cresce a cada etapa) |
+| R6 | Teste de arquitetura do `SmokeTest` | O teste confere que nenhum especialista cita outro | atendido |
+| R7 | `Codigo/testes/` (teste de fumaça e teste de aceitação), checklist da janela e revisão de código | O `SmokeTest` (90 verificações) e o `TesteDeAceitacao` (23) sem falhas; o roteiro de testes da janela percorrido; a revisão de código sem pendências (nível médio, em 25/11/2026: cinco achados no teste de aceitação, todos corrigidos) | parcial (falta a rodada final do roteiro de testes da janela) |
