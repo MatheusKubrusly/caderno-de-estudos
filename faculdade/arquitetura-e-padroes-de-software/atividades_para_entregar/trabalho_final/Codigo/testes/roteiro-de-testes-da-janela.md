@@ -177,7 +177,7 @@ Cada teste tem um código (J01, J02…), os passos e o resultado esperado. A tab
 
 Cada linha é um teste numa rodada. Numa rodada nova, acrescente as linhas dos testes refeitos, com a nova data. Em "Passou", use **sim**, **não**, **parcial** ou **não executado**; em "Observação", descreva o que apareceu de diferente.
 
-As duas rodadas de 25/11/2026 foram gravadas em vídeo pelo Matheus e conferidas pelo Claude nos quadros do vídeo. A segunda refez só os testes que ficaram em aberto na primeira.
+As duas primeiras rodadas de 25/11/2026 foram gravadas em vídeo pelo Matheus e conferidas pelo Claude nos quadros do vídeo. A segunda refez só os testes que ficaram em aberto na primeira. A terceira foi um uso livre da janela pelo Matheus, sem gravação.
 
 | Teste | Data | Passou | Observação |
 |---|---|---|---|
@@ -202,3 +202,4 @@ As duas rodadas de 25/11/2026 foram gravadas em vídeo pelo Matheus e conferidas
 | J09 | 25/11/2026 (2ª rodada) | sim | Feito na vaga A1, com o motivo PCD; depois do "Não", a A1 continuou vermelha. Achado: os botões da pergunta apareciam em inglês ("Yes" e "No"); corrigido para português, com um teste automático |
 | J15 | 25/11/2026 (2ª rodada) | parcial | O botão Gerar apareceu na linha de cima, e o relatório do período foi gerado. A data `31/02/2026 10:00` não foi testada na janela (o teste automático do formato já a recusa) |
 | J17 | 25/11/2026 (2ª rodada) | sim | Ao reabrir depois de zerar, nenhuma nota de "Registro de uso" |
+| J01–J18 | 25/11/2026 (3ª rodada) | sim | O Matheus usou a janela sem gravar e não encontrou problemas; a rodada gravada foi dispensada. Os botões "Sim" e "Não" da J09 e a data `31/02/2026` da J15 não foram conferidos especificamente na tela e seguem cobertos pelo teste automático |

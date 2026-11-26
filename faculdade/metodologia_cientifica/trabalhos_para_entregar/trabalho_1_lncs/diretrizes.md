@@ -56,7 +56,7 @@ Regras para construir e revisar o `artigo.tex`, que é um **planejamento de estu
 - Template oficial: classe `llncs`, `natbib` com `[round,authoryear]`, estilo `plainnat`, Agradecimentos antes das referências e a seção de IA generativa depois delas.
 - As instruções pedem **entre 6 e 10 páginas**, contando referências e a seção de IA. Decisão do Matheus (25/11): passar uma ou duas páginas é aceitável, sem abusar, numa política conservadora; o risco de perder pontos pelo requisito fica registrado.
 - Referências em `\small`, sem espaço extra, e DOI no formato curto do template ("doi: 10....").
-- Agradecimentos: só a CAPES, pelo acesso ao Portal de Periódicos. Autores: campo a preencher.
+- Agradecimentos: só a CAPES, pelo acesso ao Portal de Periódicos. Autores: os três discentes, separados por `\and`; o cabeçalho das páginas pares fica sem nomes, com `\authorrunning{~}`, porque citar só um dos três seria injusto (decisão do Matheus, 25/11). Vazio, o campo imprimiria uma frase padrão em inglês.
 - Seção de IA generativa: uma frase, com o texto definido pelo Matheus (uso da IA nas buscas no Scopus e na localização de referências).
 - Compilação local, no VS Code, com `latexmk -pdf artigo.tex` (precisa do pacote `texlive-publishers`, que traz a `llncs`).
 
