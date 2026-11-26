@@ -35,19 +35,4 @@ Blackboard o--> "*" Observer : observers
 JanelaPrincipal ..|> Observer
 Display ..|> Observer
 RegistroDeEventos ..|> Observer
-
-note right of Blackboard
-  Um só Blackboard na aplicação: o construtor é privado
-  e getInstance() é synchronized.
-  Enquanto executarEmLote() roda (a releitura do CSV),
-  os avisos ficam adiados e saem uma vez só no fim.
-end note
-note bottom of JanelaPrincipal
-  Redesenha na thread da interface
-  (SwingUtilities.invokeLater).
-end note
-note bottom of RegistroDeEventos
-  Grava em eventos.csv só
-  os eventos aceitos.
-end note
 @enduml

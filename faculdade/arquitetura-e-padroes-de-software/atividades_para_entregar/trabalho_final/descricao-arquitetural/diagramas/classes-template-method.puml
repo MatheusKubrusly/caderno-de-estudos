@@ -52,19 +52,4 @@ KnowledgeSource <|-- RelatorioKS
 EspecialistaDeSetor <|-- ExternoKS
 EspecialistaDeSetor <|-- SubsoloKS
 RelatorioKS ..> Estatisticas
-
-note right of KnowledgeSource
-  run(), o método-modelo:
-  se condition() for falso, devolve false;
-  senão, chama execute() e devolve true.
-end note
-note right of EspecialistaDeSetor
-  Os quatro fluxos ficam aqui, iguais nos dois setores.
-  Os ganchos devolvem null (sem problema) por padrão;
-  o Subsolo os sobrescreve com a altura até 2,10 m
-  e o motivo nas vagas preferenciais.
-end note
-note bottom of ExternoKS
-  Só diz qual é o seu setor.
-end note
 @enduml

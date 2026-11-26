@@ -35,10 +35,4 @@ RegistroDeEventos --> FachadaEstacionamento : reenvia cada\nlinha do CSV
 FachadaEstacionamento ..> Requisicao : monta
 FachadaEstacionamento --> Blackboard
 FachadaEstacionamento --> BlackboardController
-
-note right of FachadaEstacionamento
-  enviar(): preenche o horário, se faltar;
-  publica a requisição; roda o ciclo;
-  e devolve só o resultado desta requisição.
-end note
 @enduml
